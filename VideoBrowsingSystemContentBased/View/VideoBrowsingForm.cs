@@ -78,6 +78,8 @@ namespace VideoBrowsingSystemContentBased
             textSpotingIndexStorage = new IndexStorage(Config.TEXTSPOTTING_INDEX_STORAGE);
             textSpotingIndexStorage.OpenIndexStore();
 
+            mappingVideoName = FileManager.GetInstance().GetDictionaryVideoName(Config.MAPPING_VIDEO_NAME_PATH);
+
         }
 
         public void InitLayout()
@@ -236,6 +238,7 @@ namespace VideoBrowsingSystemContentBased
             }
 
             ClearAndAddImagesToPanelShot(files.ToList(), pnFrameShot);
+            Console.WriteLine(mappingVideoName[frame.VideoId]);
         }
     }
 }
