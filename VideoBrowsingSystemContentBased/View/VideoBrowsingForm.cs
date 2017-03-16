@@ -115,7 +115,7 @@ namespace VideoBrowsingSystemContentBased
             {
                
                 String fileName = Path.GetFileName(text.FileName);
-                Frame frame = Utils.Decoder.DecodeFrameFromName(text.FileName);
+                Frame frame = Utils.Decoder.DecodeFrameFromName(fileName);
 
                 String root = Path.Combine(pathFolderParent, String.Format("TRECVID2016_{0}", frame.VideoId));
                 fileName = Path.Combine(root, fileName);
