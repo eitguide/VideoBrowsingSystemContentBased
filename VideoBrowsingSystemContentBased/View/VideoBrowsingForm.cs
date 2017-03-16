@@ -109,7 +109,17 @@ namespace VideoBrowsingSystemContentBased
                 }
             }
 
-            ClearAndAddImagesToPanelFrame(result.Select(x => x.FileName).ToList(), pnListFrame);
+            List<String> listPath = new List<string>();
+            String pathFolderParent = @"I:\net\dl380g7a\export\ddn11a2\ledduy\trecvid-avs\keyframe-5\tv2016\test.iacc.3/";
+            foreach (TextSpot text in result)
+            {
+                String fileName = Path.GetFileName(text.FileName);
+                fileName = Path.Combine(pathFolderParent, fileName);
+                listPath.Add(fileName);
+
+            }
+
+            ClearAndAddImagesToPanelFrame(listPath, pnListFrame);
             
         }
 
