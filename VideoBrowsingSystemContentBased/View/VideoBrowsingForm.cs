@@ -100,6 +100,11 @@ namespace VideoBrowsingSystemContentBased
                 return;
 
             List<TextSpot> result = Searching.SearchByQuery(textSpotingIndexStorage, Config.TOP_RANK, textQuery, SearchType.ORC);
+            if (result == null)
+            {
+                MessageBox.Show(string.Format("'{0}' not found", textQuery));
+                return;
+            }
 
             if (result != null && result.Count >= 0)
             {
@@ -146,7 +151,7 @@ namespace VideoBrowsingSystemContentBased
                 int x = 0, y = 0;
                 foreach (string filePath in listFilePath)
                 {
-                    if (System.IO.Directory.Exists(filePath))
+                    if (System.IO.File.Exists(filePath))
                     {
                         PictureBox pic = new PictureBox();
                         pic.Tag = filePath;
@@ -192,6 +197,7 @@ namespace VideoBrowsingSystemContentBased
                 foreach (string filePath in listFilePath)
                 {
                     PictureBox pic = new PictureBox();
+                    pic.MouseClick += pic_MouseClick;
                     pic.Tag = filePath;
                     pic.Image = Image.FromFile(filePath);
                     pic.Location = new Point(x, y);
@@ -200,6 +206,19 @@ namespace VideoBrowsingSystemContentBased
                     x += widthEachImg;
                     pn.Controls.Add(pic);
                 }
+            }
+        }
+
+        void pic_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                string filePath = ((PictureBox)sender).Tag as string;
+                System.Diagnostics.Process.Start(filePath);
+                //System.Diagnostics.Process photoViewer = new System.Diagnostics.Process();
+                //photoViewer.StartInfo.FileName = @"The photo viewer file path";
+                //photoViewer.StartInfo.Arguments = @"Your image file path";
+                //photoViewer.Start();
             }
         }
 
