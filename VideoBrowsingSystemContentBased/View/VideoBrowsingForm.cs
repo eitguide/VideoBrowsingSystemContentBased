@@ -87,6 +87,7 @@ namespace VideoBrowsingSystemContentBased
 
             pnFrameShot.BackColor = ColorHelper.ConvertToARGB("#34495e");
             pnListFrame.BackColor = ColorHelper.ConvertToARGB("#95a5a6");
+            axWMP.settings.autoStart = false;
             //tableLayoutPanel1.GetControlFromPosition(0, 0).BackColor = Color.Red;
             //Panel pn = new Panel();
             //pn.BackColor = Color.Red;
@@ -238,7 +239,9 @@ namespace VideoBrowsingSystemContentBased
             }
 
             ClearAndAddImagesToPanelShot(files.ToList(), pnFrameShot);
-            Console.WriteLine(mappingVideoName[frame.VideoId]);
+            Console.WriteLine(Path.Combine(Config.VIDEO_DATA_PATH, mappingVideoName[frame.VideoId]));
+            axWMP.URL = Path.Combine(Config.VIDEO_DATA_PATH, mappingVideoName[frame.VideoId]);
+            //axWMP.Ctlcontrols.currentPosition = 10; // in seconds
         }
     }
 }

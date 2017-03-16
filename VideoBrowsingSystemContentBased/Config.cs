@@ -13,7 +13,7 @@ namespace VideoBrowsingSystemContentBased
         public static String TEXTSPOTTING_INDEX_STORAGE = @"D:/SoureThesis/Data/textspot_indexing/";
 
         public static String FRAME_DATA_PATH = "";
-        public static String VIDEO_DATA_PATH = "";
+        public static String VIDEO_DATA_PATH = "G:/iacc.3/";
 
         public static String MAPPING_VIDEO_NAME_PATH = @"D:/SoureThesis/Data/video_name.txt";
         public static String XML_FOLDER_PATH = @"D:/SoureThesis/Data/xml";
