@@ -113,8 +113,14 @@ namespace VideoBrowsingSystemContentBased
             String pathFolderParent = @"I:\net\dl380g7a\export\ddn11a2\ledduy\trecvid-avs\keyframe-5\tv2016\test.iacc.3/";
             foreach (TextSpot text in result)
             {
+               
                 String fileName = Path.GetFileName(text.FileName);
-                fileName = Path.Combine(pathFolderParent, fileName);
+                Frame frame = Utils.Decoder.DecodeFrameFromName(text.FileName);
+
+                String root = Path.Combine(pathFolderParent, String.Format("TRECVID2016_{0}", frame.VideoId));
+                fileName = Path.Combine(root, fileName);
+
+                Console.WriteLine(fileName);
                 listPath.Add(fileName);
 
             }
