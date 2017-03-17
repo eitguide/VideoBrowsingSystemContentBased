@@ -110,26 +110,26 @@ namespace VideoBrowsingSystemContentBased
                 return;
             }
 
-            if (result != null && result.Count >= 0)
-            {
-                foreach (TextSpot i in result)
-                {
-                    Console.WriteLine(i.FileName + "\t" + i.Text);
-                }
-            }
+            //if (result != null && result.Count >= 0)
+            //{
+            //    foreach (TextSpot i in result)
+            //    {
+            //        Console.WriteLine(i.FileName + "\t" + i.Text);
+            //    }
+            //}
 
             List<String> listPath = new List<string>();
-            String pathFolderParent = @"I:\net\dl380g7a\export\ddn11a2\ledduy\trecvid-avs\keyframe-5\tv2016\test.iacc.3/";
+            //String pathFolderParent = @"I:\net\dl380g7a\export\ddn11a2\ledduy\trecvid-avs\keyframe-5\tv2016\test.iacc.3/";
             foreach (TextSpot text in result)
             {
                
                 String fileName = Path.GetFileName(text.FileName);
                 Frame frame = Utils.Decoder.DecodeFrameFromName(fileName);
 
-                String root = Path.Combine(pathFolderParent, String.Format("TRECVID2016_{0}", frame.VideoId));
+                String root = Path.Combine(Config.FRAME_DATA_PATH, String.Format("TRECVID2016_{0}", frame.VideoId));
                 fileName = Path.Combine(root, fileName);
 
-                Console.WriteLine(fileName);
+                //Console.WriteLine(fileName);
                 listPath.Add(fileName);
 
             }
@@ -188,7 +188,16 @@ namespace VideoBrowsingSystemContentBased
 
             int heightEachImg = pnFrameShot.Height - SystemInformation.HorizontalScrollBarHeight; ;// width & height for each image
             int widthEachImg = (int)(heightEachImg * ratio);
-            PictureBoxSizeMode displayMode = PictureBoxSizeMode.CenterImage;
+
+            // if sum frame width > panel width
+            if (listFilePath.Count * widthEachImg <= pnFrameShot.Width)
+            {
+                heightEachImg = pnFrameShot.Height;// width & height for each image
+                widthEachImg = (int)(heightEachImg * ratio);
+            }
+
+
+            PictureBoxSizeMode displayMode = PictureBoxSizeMode.Zoom;
 
             // Clear all controls in panel
 
@@ -207,6 +216,7 @@ namespace VideoBrowsingSystemContentBased
                     pic.Location = new Point(x, y);
                     pic.Size = new Size(widthEachImg, heightEachImg);
                     pic.SizeMode = displayMode;
+                    pic.BorderStyle = BorderStyle.FixedSingle;
                     x += widthEachImg;
                     pn.Controls.Add(pic);
                 }

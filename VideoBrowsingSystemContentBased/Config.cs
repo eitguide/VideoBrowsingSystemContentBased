@@ -16,7 +16,7 @@ namespace VideoBrowsingSystemContentBased
 
 
         //Path of folder which store frame data
-        public static String FRAME_DATA_PATH = "";
+        public static String FRAME_DATA_PATH = @"G:\net\dl380g7a\export\ddn11a2\ledduy\trecvid-avs\keyframe-5\tv2016\test.iacc.3/";
         
         //Path of folder which store video data
         public static String VIDEO_DATA_PATH = "G:/iacc.3/";
