@@ -9,6 +9,9 @@ using VideoBrowsingSystemContentBased.Model;
 
 namespace VideoBrowsingSystemContentBased.Controller
 {
+    /// <summary>
+    /// File Manager implement with Singleton Parttern
+    /// </summary>
     public class FileManager
     {
         private static FileManager mInstance;
@@ -18,6 +21,10 @@ namespace VideoBrowsingSystemContentBased.Controller
 
         }
 
+        /// <summary>
+        /// GetInstance
+        /// </summary>
+        /// <returns></returns>
         public static FileManager GetInstance()
         {
             if (mInstance == null)
@@ -28,6 +35,11 @@ namespace VideoBrowsingSystemContentBased.Controller
             return mInstance;
         }
 
+        /// <summary>
+        /// Get All File in a folder path
+        /// </summary>
+        /// <param name="folderPath">Folder Path</param>
+        /// <returns></returns>
         public FileInfo[] GetAllFileInFolder(String folderPath)
         {
             if (!Directory.Exists(folderPath))
@@ -37,6 +49,12 @@ namespace VideoBrowsingSystemContentBased.Controller
             return directory.GetFiles();
         }
 
+
+        /// <summary>
+        /// Get all frame in videoid Path
+        /// </summary>
+        /// <param name="videoIdPath">VideoId folder path</param>
+        /// <returns>List<Frame></returns>
         public List<Frame> GetAllFrameInVideoId(String videoIdPath)
         {
             if (!Directory.Exists(videoIdPath))
@@ -54,6 +72,12 @@ namespace VideoBrowsingSystemContentBased.Controller
             return result;
         }
 
+
+        /// <summary>
+        /// Read content file
+        /// </summary>
+        /// <param name="fileName">fileName</param>
+        /// <returns>String content of the file</returns>
         public String ReadContentFile(String fileName)
         {
             if (!File.Exists(fileName))
@@ -70,6 +94,11 @@ namespace VideoBrowsingSystemContentBased.Controller
             return content;
         }
 
+        /// <summary>
+        /// Load Dictionary VideoId mapping with VideoName
+        /// </summary>
+        /// <param name="fileName">file path</param>
+        /// <returns>Dictionary<String, String></returns>
         public Dictionary<String, String> GetDictionaryVideoName(String fileName)
         {
             Dictionary<String, String> dic = new Dictionary<string, string>();
@@ -95,6 +124,12 @@ namespace VideoBrowsingSystemContentBased.Controller
             return dic;
         }
 
+
+        /// <summary>
+        /// Write content to file with path specific
+        /// </summary>
+        /// <param name="content">Content you want to write</param>
+        /// <param name="filePath">File Path</param>
         public void WriteFile(String content, String filePath)
         {
             using (FileStream fileStrean = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write))
@@ -106,13 +141,24 @@ namespace VideoBrowsingSystemContentBased.Controller
             }
         }
 
+
+        /// <summary>
+        /// Serialize Object in C# Program to Json and write it to file with a specific path
+        /// </summary>
+        /// <param name="obj">Object you want serialize</param>
+        /// <param name="path">Path store json content</param>
         public void SeriablizeObjectToJson(Object obj, String path)
         {
             String json = JsonConvert.SerializeObject(obj);
             WriteFile(json, path);
            
         }
-
+        
+        /// <summary>
+        /// Deserialize json to Object C#
+        /// </summary>
+        /// <param name="path">Path file store json</param>
+        /// <returns></returns>
         public List<TextSpot> DeserializeJson(String path)
         {
             String json = ReadContentFile(path);

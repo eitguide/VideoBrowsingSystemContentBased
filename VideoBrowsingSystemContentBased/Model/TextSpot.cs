@@ -8,7 +8,10 @@ namespace VideoBrowsingSystemContentBased.Model
 {
     public class TextSpot
     {
+        //Name of the frame. Example TRECVID2016_35350.shot35350_1.RKF_0.Frame_14.jpg
         public String FileName { get; set; }
+
+        //Text Extract from frame
         public String Text { get; set; }
 
         public TextSpot()

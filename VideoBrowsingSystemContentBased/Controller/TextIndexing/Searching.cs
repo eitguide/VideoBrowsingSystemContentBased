@@ -12,6 +12,14 @@ namespace VideoBrowsingSystemContentBased.Controller.TextIndexing
 {
     public class Searching
     {
+        /// <summary>
+        /// Searching based on text query
+        /// </summary>
+        /// <param name="indexStorage">Index Storage</param>
+        /// <param name="topRank">Top result you want to search</param>
+        /// <param name="query">text query</param>
+        /// <param name="searchType">Support Two Searc Type [ORC, CAPTION]</param>
+        /// <returns></returns>
         public static List<TextSpot> SearchByQuery(IndexStorage indexStorage, int topRank, String query, SearchType searchType)
         {
             IndexSearcher indexSearch = new IndexSearcher(indexStorage.DirectoryIndexing);
@@ -43,6 +51,12 @@ namespace VideoBrowsingSystemContentBased.Controller.TextIndexing
             return result;
         }
 
+        /// <summary>
+        /// Find All files In a shot in video
+        /// </summary>
+        /// <param name="frame">Frame store Video Id And Video Shot</param>
+        /// <param name="folderPath">Folder path you want to find</param>
+        /// <returns></returns>
         public static String[] GetShotFrame(Frame frame, String folderPath)
         {
             String pattern = String.Format("TRECVID2016_{0}.shot{1}_{2}.*jpg", frame.VideoId, frame.VideoId, frame.Shot);

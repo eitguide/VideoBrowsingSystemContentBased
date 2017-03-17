@@ -3,6 +3,8 @@ using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
 using Lucene.Net.Store;
+using MaterialSkin;
+using MaterialSkin.Controls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -33,7 +35,7 @@ namespace VideoBrowsingSystemContentBased
             this.MaximizeBox = false;
             this.Width = 1080;
             this.Height = 720;
-            StartPosition = FormStartPosition.CenterScreen;
+           // StartPosition = FormStartPosition.CenterScreen;
 
             InitLayout();
         }
@@ -49,6 +51,8 @@ namespace VideoBrowsingSystemContentBased
 
         void VideoBrowsingForm_Load(object sender, EventArgs e)
         {
+
+            //Dictionary<String, float> mappingPFS = XMLParser.GetFPSDictionary(Config.FPS_VIDEO_PATH);
             // FileManager fileManager = FileManager.GetInstance();
             //Dictionary<String, String> data = fileManager.GetDictionaryVideoName(Config.MAPPING_VIDEO_NAME_PATH);
 
@@ -88,10 +92,7 @@ namespace VideoBrowsingSystemContentBased
             pnFrameShot.BackColor = ColorHelper.ConvertToARGB("#34495e");
             pnListFrame.BackColor = ColorHelper.ConvertToARGB("#95a5a6");
             axWMP.settings.autoStart = false;
-            //tableLayoutPanel1.GetControlFromPosition(0, 0).BackColor = Color.Red;
-            //Panel pn = new Panel();
-            //pn.BackColor = Color.Red;
-            //tableLayoutPanel1.Controls.Add(pn);
+
 
         }
 
@@ -243,5 +244,7 @@ namespace VideoBrowsingSystemContentBased
             axWMP.URL = Path.Combine(Config.VIDEO_DATA_PATH, mappingVideoName[frame.VideoId]);
             //axWMP.Ctlcontrols.currentPosition = 10; // in seconds
         }
+
+      
     }
 }

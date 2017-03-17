@@ -14,6 +14,11 @@ namespace VideoBrowsingSystemContentBased.Controller.TextIndexing
         public static String TEXT_SPOT = "text_spot";
         public static String TEXT_CAPTION = "text_caption";
 
+        /// <summary>
+        /// Add Document To Index Storage
+        /// </summary>
+        /// <param name="indexStorage">Index Storage</param>
+        /// <param name="textSpot">TextSpotting Data</param>
         public static void AddDocumentToIndexStorage(IndexStorage indexStorage, TextSpot textSpot)
         {
             Document doc = new Document();
@@ -22,6 +27,12 @@ namespace VideoBrowsingSystemContentBased.Controller.TextIndexing
           
             indexStorage.GetIndexWriter().AddDocument(doc);
         }
+
+        /// <summary>
+        /// Add Document TextCaption to IndexStorage
+        /// </summary>
+        /// <param name="indexStorage">Index Storage</param>
+        /// <param name="textCaption">TextCaption data</param>
 
         public static void AddDocumentToIndexStorage(IndexStorage indexStorage, TextCaption textCaption)
         {
@@ -32,6 +43,11 @@ namespace VideoBrowsingSystemContentBased.Controller.TextIndexing
             indexStorage.GetIndexWriter().AddDocument(doc);
         }
 
+        /// <summary>
+        /// Add List TextSpotting Data to IndexStorage
+        /// </summary>
+        /// <param name="indexStorage">IndexStorage</param>
+        /// <param name="textSpot">List TextSpot data</param>
         public static void IndexFromDatabaseStorage(IndexStorage indexStorage, List<TextSpot> textSpot)
         {
             if (textSpot != null && textSpot.Count > 0)
@@ -43,7 +59,11 @@ namespace VideoBrowsingSystemContentBased.Controller.TextIndexing
             }
         }
 
-
+        /// <summary>
+        /// Add List TextCaption Data to IndexStorage
+        /// </summary>
+        /// <param name="indexStorage">Index Storage</param>
+        /// <param name="textCaption">List TextCaption data</param>
         public static void IndexFromDatabaseStorage(IndexStorage indexStorage, List<TextCaption> textCaption)
         {
             if (textCaption != null && textCaption.Count > 0)

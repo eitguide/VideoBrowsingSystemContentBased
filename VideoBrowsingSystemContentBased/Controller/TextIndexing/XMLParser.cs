@@ -12,9 +12,8 @@ namespace VideoBrowsingSystemContentBased.TextIndexing
 {
     public class XMLParser
     {
-
         /// <summary>
-        /// Processing Data Xml
+        /// Processing Data Xml output from TextSpotting Model
         /// </summary>
         /// <param name="xmlFolderPath"></param>
         /// <returns>Key: File Path, value: Text plotting</returns>
@@ -53,6 +52,34 @@ namespace VideoBrowsingSystemContentBased.TextIndexing
             }
 
             return textPlt;
+        }
+
+        public static Dictionary<String, float> GetFPSDictionary(String path)
+        {
+
+            if (!File.Exists(path))
+                return null;
+         
+            XmlDocument doc = new XmlDocument();
+            doc.Load(path);
+
+
+            Dictionary<String, float> result = new Dictionary<string, float>();
+            XmlNodeList nodeList = doc.GetElementsByTagName("video_id");
+
+            if (nodeList != null && nodeList.Count > 0)
+            {
+                foreach (XmlNode node in nodeList)
+                {
+                    String videoId = node.Attributes["value"].Value;
+                    float fps = float.Parse(node.FirstChild.Attributes["value"].Value.Trim());
+
+                    result.Add(videoId, fps);
+                }
+                return result;
+
+            }
+            return null;
         }
     }
 }

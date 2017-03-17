@@ -8,6 +8,13 @@ namespace VideoBrowsingSystemContentBased.Utils
 {
   public class RandomHelper
     {
+
+      /// <summary>
+      /// Random number [a, b]
+      /// </summary>
+      /// <param name="a">a</param>
+      /// <param name="b">b</param>
+      /// <returns></returns>
       public static int RandomAB(int a, int b)
       {
           Random random = new Random();

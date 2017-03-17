@@ -9,6 +9,11 @@ namespace VideoBrowsingSystemContentBased.Utils
 {
    public class ColorHelper
     {
+       /// <summary>
+       /// Convert hex color string to Color Object
+       /// </summary>
+       /// <param name="hex">Hex Color String start with '#'character</param>
+       /// <returns></returns>
         public static Color ConvertToARGB(string hex)
         {
             ColorConverter colorConverter = new ColorConverter();

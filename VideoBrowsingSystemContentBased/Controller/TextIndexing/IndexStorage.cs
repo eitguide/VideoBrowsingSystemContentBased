@@ -12,28 +12,48 @@ namespace VideoBrowsingSystemContentBased.Controller.TextIndexing
 {
     public class IndexStorage
     {
+        //Path store data of indexing
         public String FolderPathIndexing { get; set; }
+
         public StandardAnalyzer analyzer { get; private set; }
         public IndexWriter IndexWriter { get; private set; }
         public IndexReader IndexReader { get; private set; }
 
         public FSDirectory DirectoryIndexing { get; private set; }
 
+        public bool IsOpen { get; set; }
+
+        public IndexStorage()
+        {
+            this.IsOpen = false;
+        }
         public IndexStorage(String folderPathIndexing)
         {
+            this.IsOpen = false;
             this.FolderPathIndexing = folderPathIndexing;
             analyzer = new StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_30);
 
         }
 
+        /// <summary>
+        /// Open IndexStorage
+        /// </summary>
         public void OpenIndexStore()
         {
-            if (DirectoryIndexing == null)
+            if (!IsOpen)
             {
-                this.DirectoryIndexing = FSDirectory.Open(this.FolderPathIndexing);
+                if (DirectoryIndexing == null)
+                {
+                    this.DirectoryIndexing = FSDirectory.Open(this.FolderPathIndexing);
+                }
+                this.IsOpen = true;
             }
         }
 
+        /// <summary>
+        /// Get IndexWriter for writing document to IndexStorage
+        /// </summary>
+        /// <returns></returns>
         public IndexWriter GetIndexWriter()
         {
             if (IndexWriter == null)
@@ -54,6 +74,9 @@ namespace VideoBrowsingSystemContentBased.Controller.TextIndexing
             return null;
         }
 
+        /// <summary>
+        /// Close IndexWriter
+        /// </summary>
         public void CloseIndexWriter()
         {
             if (IndexWriter != null)
@@ -64,6 +87,10 @@ namespace VideoBrowsingSystemContentBased.Controller.TextIndexing
             }
         }
 
+
+        /// <summary>
+        /// Close IndexReader
+        /// </summary>
         public void CloseIndexReader()
         {
             if (IndexReader != null)
@@ -72,10 +99,12 @@ namespace VideoBrowsingSystemContentBased.Controller.TextIndexing
             }
         }
 
+        //Close Index Storage
         public void CloseIndexStorage()
         {
             CloseIndexWriter();
             CloseIndexReader();
+            this.IsOpen = false; 
         }
     }
 }
