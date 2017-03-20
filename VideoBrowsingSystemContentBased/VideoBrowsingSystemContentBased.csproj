@@ -83,6 +83,9 @@
     <Compile Include="Model\Frame.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Widget\CustomPictureBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Widget\ImageView.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -10,10 +10,11 @@ namespace VideoBrowsingSystemContentBased.Widget
 {
     public class CustomPictureBox: PictureBox
     {
+       
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
-            ControlPaint.DrawBorder(e.Graphics, e.ClipRectangle, Color.Red, ButtonBorderStyle.Solid);
+            ControlPaint.DrawBorder(e.Graphics, this.ClientRectangle, Color.Red, ButtonBorderStyle.Solid);
         }
     }
   

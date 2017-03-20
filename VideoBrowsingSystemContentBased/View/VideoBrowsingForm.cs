@@ -52,6 +52,21 @@ namespace VideoBrowsingSystemContentBased
         void VideoBrowsingForm_Load(object sender, EventArgs e)
         {
 
+
+            //List<DenseCap> dens = FileManager.GetInstance().GetDenseCaps(Config.JSON_DENSECAP_FOLDER_PATH);
+            //List<TextCaption> captions = FileManager.GetInstance().GetTextCaptionFromDencap(dens);
+
+
+            IndexStorage captionIndexStorage = new IndexStorage(Config.CAPTION_INDEX_STORAGE);
+            captionIndexStorage.OpenIndexStore();
+
+            //Indexing.IndexFromDatabaseStorage(captionIndexStorage, captions);
+
+            List<Object> caption = Searching.SearchByQuery(captionIndexStorage, Config.TOP_RANK, "trees behind the fence", SearchType.CAPTION);
+
+
+            captionIndexStorage.CloseIndexStorage();
+ 
             //Dictionary<String, float> mappingPFS = XMLParser.GetFPSDictionary(Config.FPS_VIDEO_PATH);
             // FileManager fileManager = FileManager.GetInstance();
             //Dictionary<String, String> data = fileManager.GetDictionaryVideoName(Config.MAPPING_VIDEO_NAME_PATH);
@@ -81,9 +96,26 @@ namespace VideoBrowsingSystemContentBased
 
             textSpotingIndexStorage = new IndexStorage(Config.TEXTSPOTTING_INDEX_STORAGE);
             textSpotingIndexStorage.OpenIndexStore();
-
             mappingVideoName = FileManager.GetInstance().GetDictionaryVideoName(Config.MAPPING_VIDEO_NAME_PATH);
 
+        }
+
+        private void ProcessDenseCap(DenseCap densecap)
+        {
+            if (densecap.results.Count <= 0)
+                return;
+
+
+            Console.WriteLine(densecap.opt.ToString());
+            for (int i = 0; i < densecap.results.Count; i++)
+            {
+                Result frameResult = densecap.results[i];
+                Console.Write(frameResult.img_name);
+                foreach(String cap in frameResult.captions)
+                {
+                    Console.WriteLine(cap);
+                }
+            }
         }
 
         public void InitLayout()
@@ -103,7 +135,7 @@ namespace VideoBrowsingSystemContentBased
             if (String.IsNullOrWhiteSpace(textQuery))
                 return;
 
-            List<TextSpot> result = Searching.SearchByQuery(textSpotingIndexStorage, Config.TOP_RANK, textQuery, SearchType.ORC);
+            List<Object> result = Searching.SearchByQuery(textSpotingIndexStorage, Config.TOP_RANK, textQuery, SearchType.ORC);
             if (result == null)
             {
                 MessageBox.Show(string.Format("'{0}' not found", textQuery));

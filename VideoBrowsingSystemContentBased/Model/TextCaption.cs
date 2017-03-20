@@ -26,4 +26,43 @@ namespace VideoBrowsingSystemContentBased.Model
             this.Caption = caption;
         }
     }
+
+
+    public class Opt
+    {
+        public string output_dir { get; set; }
+        public int num_to_draw { get; set; }
+        public double final_nms_thresh { get; set; }
+        public int use_cudnn { get; set; }
+        public int text_size { get; set; }
+        public int max_images { get; set; }
+        public int gpu { get; set; }
+        public string splits_json { get; set; }
+        public string outputname { get; set; }
+        public string checkpoint { get; set; }
+        public int num_proposals { get; set; }
+        public double rpn_nms_thresh { get; set; }
+        public int image_size { get; set; }
+        public int box_width { get; set; }
+        public string input_image { get; set; }
+        public string input_split { get; set; }
+        public int output_vis { get; set; }
+        public string input_dir { get; set; }
+        public string output_vis_dir { get; set; }
+        public string vg_img_root_dir { get; set; }
+    }
+
+    public class Result
+    {
+        public string img_name { get; set; }
+        public List<double> scores { get; set; }
+        public List<string> captions { get; set; }
+        public List<List<double>> boxes { get; set; }
+    }
+
+    public class DenseCap
+    {
+        public Opt opt { get; set; }
+        public List<Result> results { get; set; }
+    }
 }

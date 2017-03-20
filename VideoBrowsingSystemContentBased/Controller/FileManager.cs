@@ -151,9 +151,9 @@ namespace VideoBrowsingSystemContentBased.Controller
         {
             String json = JsonConvert.SerializeObject(obj);
             WriteFile(json, path);
-           
+
         }
-        
+
         /// <summary>
         /// Deserialize json to Object C#
         /// </summary>
@@ -165,7 +165,65 @@ namespace VideoBrowsingSystemContentBased.Controller
             return JsonConvert.DeserializeObject<List<TextSpot>>(json);
         }
 
+        public DenseCap DecodeDenseCap(String filePath)
+        {
+            String json = ReadContentFile(filePath);
+            return JsonConvert.DeserializeObject<DenseCap>(json);
+        }
+
+
+        public List<DenseCap> GetDenseCaps(String folderPath)
+        {
+            if (!Directory.Exists(folderPath))
+                return null;
+
+            String[] files = Directory.GetFiles(folderPath);
+
+            List<DenseCap> result = new List<DenseCap>();
+
+
+            foreach (String item in files)
+            {
+                var den = DecodeDenseCap(item);
+                if (den != null)
+                {
+                    result.Add(den);
+                }
+            }
+
+            return result;
+        }
+
+        public List<TextCaption> GetTextCaptionFromDencap(List<DenseCap> denseCap)
+        {
+            int take = 10;
+            if (denseCap == null || denseCap.Count <= 0)
+                return null;
+            List<TextCaption> textCaptions = new List<TextCaption>();
+
+            //4593 file
+            foreach (DenseCap itemDenseCap in denseCap)
+            {
+                String inputDir = itemDenseCap.opt.input_dir;
+
+
+                for (int i = 0; i < itemDenseCap.results.Count; i++)
+                {
+                    TextCaption textCaption = new TextCaption();
+                    textCaption.FrameName = Path.Combine(inputDir, itemDenseCap.results[i].img_name);
+                    StringBuilder builder = new StringBuilder();
+
+                    int takeCaption = Math.Min(take, itemDenseCap.results[i].captions.Count);
+
+                    for (int j = 0; j < takeCaption; j++)
+                    {
+                        builder.Append(itemDenseCap.results[i].captions[j] + ",");
+                    }
+                    textCaption.Caption = builder.ToString();
+                    textCaptions.Add(textCaption);
+                }
+            }
+            return textCaptions;
+        }
     }
-
-
 }

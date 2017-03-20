@@ -11,10 +11,10 @@ namespace VideoBrowsingSystemContentBased
 
         //Path of folder store cattion indexing
         public static String CAPTION_INDEX_STORAGE = @"D:/SoureThesis/Data/caption_indexing/";
+
+        public static String JSON_DENSECAP_FOLDER_PATH = @"D:/SoureThesis/Data/densecap_json";
         //path of folder store textspoting indexing
         public static String TEXTSPOTTING_INDEX_STORAGE = @"D:/SoureThesis/Data/textspot_indexing/";
-
-
         //Path of folder which store frame data
         public static String FRAME_DATA_PATH = @"G:\net\dl380g7a\export\ddn11a2\ledduy\trecvid-avs\keyframe-5\tv2016\test.iacc.3/";
         

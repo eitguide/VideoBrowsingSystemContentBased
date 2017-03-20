@@ -38,7 +38,7 @@ namespace VideoBrowsingSystemContentBased.Controller.TextIndexing
         {
             Document doc = new Document();
             doc.Add(new Field(FRAME_NAME, textCaption.FrameName, Field.Store.YES, Field.Index.NOT_ANALYZED));
-            doc.Add(new Field(TEXT_SPOT, textCaption.Caption, Field.Store.YES, Field.Index.ANALYZED));
+            doc.Add(new Field(TEXT_CAPTION, textCaption.Caption, Field.Store.YES, Field.Index.ANALYZED));
 
             indexStorage.GetIndexWriter().AddDocument(doc);
         }
