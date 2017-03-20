@@ -27,8 +27,10 @@ namespace VideoBrowsingSystemContentBased
     {
         private String textQuery;
         private IndexStorage textSpotingIndexStorage;
+        private IndexStorage textCaptionIndexStorage;
         private Dictionary<String, String> mappingVideoName;
         private Dictionary<String, float> mappingFPS;
+        private SearchType searchType = SearchType.CAPTION;
 
         public VideoBrowsingForm()
         {
@@ -37,7 +39,7 @@ namespace VideoBrowsingSystemContentBased
             this.MaximizeBox = false;
             this.Width = 1080;
             this.Height = 720;
-           // StartPosition = FormStartPosition.CenterScreen;
+            // StartPosition = FormStartPosition.CenterScreen;
 
             InitLayout();
             InitEvent();
@@ -62,80 +64,21 @@ namespace VideoBrowsingSystemContentBased
 
         private void PreprocessXML()
         {
-          List<TextSpot> textSpot =  XMLParser.ProcessingXmlData(Config.XML_FOLDER_PATH);
-          FileManager.GetInstance().SeriablizeObjectToJson(textSpot, Config.TEXT_PLOTTING_PATH);
+            List<TextSpot> textSpot = XMLParser.ProcessingXmlData(Config.XML_FOLDER_PATH);
+            FileManager.GetInstance().SeriablizeObjectToJson(textSpot, Config.TEXT_PLOTTING_PATH);
 
         }
 
         void VideoBrowsingForm_Load(object sender, EventArgs e)
         {
-
-
-            //List<DenseCap> dens = FileManager.GetInstance().GetDenseCaps(Config.JSON_DENSECAP_FOLDER_PATH);
-            //List<TextCaption> captions = FileManager.GetInstance().GetTextCaptionFromDencap(dens);
-
-
-            IndexStorage captionIndexStorage = new IndexStorage(Config.CAPTION_INDEX_STORAGE);
-            captionIndexStorage.OpenIndexStore();
-
-            //Indexing.IndexFromDatabaseStorage(captionIndexStorage, captions);
-
-            List<Object> caption = Searching.SearchByQuery(captionIndexStorage, Config.TOP_RANK, "trees behind the fence", SearchType.CAPTION);
-
-
-            captionIndexStorage.CloseIndexStorage();
- 
-            //Dictionary<String, float> mappingPFS = XMLParser.GetFPSDictionary(Config.FPS_VIDEO_PATH);
-            mappingFPS = XMLParser.GetFPSDictionary(Config.FPS_VIDEO_PATH);
-
-            // FileManager fileManager = FileManager.GetInstance();
-            //Dictionary<String, String> data = fileManager.GetDictionaryVideoName(Config.MAPPING_VIDEO_NAME_PATH);
-
-            //List<TextSpot> text =  XMLParser.ProcessingXmlData(Config.XML_FOLDER_PATH);
-
-            //FileManager.GetInstance().SeriablizeObjectToJson(text, Config.TEXT_PLOTTING_PATH);
-
-            //List<TextSpot> text = FileManager.GetInstance().DeserializeJson(Config.TEXT_PLOTTING_PATH);
-
-            //Construct Indexing database
-            //textSpotingIndexStorage = new IndexStorage(Config.INDEX_STORAGE);
-            //textSpotingIndexStorage.OpenIndexStore();
-
-            //Indexing.IndexFromDatabaseStoreage(indexStorage, text);
-
-            //indexStorage.CloseIndexWriter();
-            //indexStorage.CloseIndexReader();
-
-            //Loadding Mapping VideoName
-            //mappingVideoName = FileManager.GetInstance().GetDictionaryVideoName(Config.MAPPING_VIDEO_NAME_PATH);
-
-            //PreprocessXML();
-
-            //List<TextSpot> listTextSpot = FileManager.GetInstance().DeserializeJson(Config.TEXT_PLOTTING_PATH);
-            //Console.WriteLine(listTextSpot.Count);
-
             textSpotingIndexStorage = new IndexStorage(Config.TEXTSPOTTING_INDEX_STORAGE);
             textSpotingIndexStorage.OpenIndexStore();
+
+            textCaptionIndexStorage = new IndexStorage(Config.CAPTION_INDEX_STORAGE);
+            textCaptionIndexStorage.OpenIndexStore();
+
             mappingVideoName = FileManager.GetInstance().GetDictionaryVideoName(Config.MAPPING_VIDEO_NAME_PATH);
-
-        }
-
-        private void ProcessDenseCap(DenseCap densecap)
-        {
-            if (densecap.results.Count <= 0)
-                return;
-
-
-            Console.WriteLine(densecap.opt.ToString());
-            for (int i = 0; i < densecap.results.Count; i++)
-            {
-                Result frameResult = densecap.results[i];
-                Console.Write(frameResult.img_name);
-                foreach(String cap in frameResult.captions)
-                {
-                    Console.WriteLine(cap);
-                }
-            }
+            mappingFPS = XMLParser.GetFPSDictionary(Config.FPS_VIDEO_PATH);
         }
 
         public void InitLayout()
@@ -156,12 +99,39 @@ namespace VideoBrowsingSystemContentBased
             if (String.IsNullOrWhiteSpace(textQuery))
                 return;
 
-            List<Object> result = Searching.SearchByQuery(textSpotingIndexStorage, Config.TOP_RANK, textQuery, SearchType.ORC);
-            if (result == null)
+            List<String> listPath = new List<string>();
+            if (searchType == SearchType.CAPTION)
             {
-                MessageBox.Show(string.Format("'{0}' not found", textQuery));
-                return;
+                List<Object> textCaption = Searching.SearchByQuery(textCaptionIndexStorage, 
+                    Config.TOP_RANK, textQuery, searchType);
+                if (textCaption != null && textCaption.Count > 0)
+                {
+                    
+                    //String pathFolderParent = @"I:\net\dl380g7a\export\ddn11a2\ledduy\trecvid-avs\keyframe-5\tv2016\test.iacc.3/";
+                    foreach (TextCaption text in textCaption)
+                    {
+
+                        String fileName = Path.GetFileName(text.FrameName);
+                        Frame frame = Utils.Decoder.DecodeFrameFromName(fileName);
+
+                        String root = Path.Combine(Config.FRAME_DATA_PATH, String.Format("TRECVID2016_{0}", frame.VideoId));
+                        fileName = Path.Combine(root, fileName);
+
+                        //Console.WriteLine(fileName);
+                        listPath.Add(fileName);
+
+                    }
+                }
             }
+
+            Console.WriteLine("Search xong ne");
+
+            //List<Object> result = Searching.SearchByQuery(textSpotingIndexStorage, Config.TOP_RANK, textQuery, SearchType.ORC);
+            //if (result == null)
+            //{
+            //    MessageBox.Show(string.Format("'{0}' not found", textQuery));
+            //    return;
+            //}
 
             //if (result != null && result.Count >= 0)
             //{
@@ -171,24 +141,23 @@ namespace VideoBrowsingSystemContentBased
             //    }
             //}
 
-            List<String> listPath = new List<string>();
-            //String pathFolderParent = @"I:\net\dl380g7a\export\ddn11a2\ledduy\trecvid-avs\keyframe-5\tv2016\test.iacc.3/";
-            foreach (TextSpot text in result)
-            {
-               
-                String fileName = Path.GetFileName(text.FileName);
-                Frame frame = Utils.Decoder.DecodeFrameFromName(fileName);
+            //List<String> listPath = new List<string>();
+            ////String pathFolderParent = @"I:\net\dl380g7a\export\ddn11a2\ledduy\trecvid-avs\keyframe-5\tv2016\test.iacc.3/";
+            //foreach (TextSpot text in result)
+            //{
 
-                String root = Path.Combine(Config.FRAME_DATA_PATH, String.Format("TRECVID2016_{0}", frame.VideoId));
-                fileName = Path.Combine(root, fileName);
+            //    String fileName = Path.GetFileName(text.FileName);
+            //    Frame frame = Utils.Decoder.DecodeFrameFromName(fileName);
 
-                //Console.WriteLine(fileName);
-                listPath.Add(fileName);
+            //    String root = Path.Combine(Config.FRAME_DATA_PATH, String.Format("TRECVID2016_{0}", frame.VideoId));
+            //    fileName = Path.Combine(root, fileName);
 
-            }
+            //    //Console.WriteLine(fileName);
+            //    listPath.Add(fileName);
+
+            //}
 
             ClearAndAddImagesToPanelFrame(listPath, pnListFrame);
-            
         }
 
 
@@ -228,7 +197,7 @@ namespace VideoBrowsingSystemContentBased
                             y += heightEachImg;
                         }
                     }
-                    
+
                 }
             }
         }
@@ -295,7 +264,7 @@ namespace VideoBrowsingSystemContentBased
 
             Frame frame = Utils.Decoder.DecodeFrameFromName(frameName);
 
-            String[] files  =   Searching.GetShotFrame(frame, Path.GetDirectoryName(filePath));
+            String[] files = Searching.GetShotFrame(frame, Path.GetDirectoryName(filePath));
             foreach (String item in files)
             {
                 Logger.d(item);
@@ -319,9 +288,9 @@ namespace VideoBrowsingSystemContentBased
             //}
             //else
             //{
-                //backgroundWorker_GetRsMATLAB.RunWorkerAsync();
-                txtTextQuery.Enabled = false;
-                btnSearch.Enabled = false;
+            //backgroundWorker_GetRsMATLAB.RunWorkerAsync();
+            txtTextQuery.Enabled = false;
+            btnSearch.Enabled = false;
             //}
         }
     }

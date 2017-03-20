@@ -52,7 +52,7 @@ namespace VideoBrowsingSystemContentBased.Controller.TextIndexing
                 if (searchType == SearchType.ORC)
                     result.Add(new TextSpot(doc.Get(Indexing.FRAME_NAME), doc.Get(Indexing.TEXT_SPOT)));
                 else if (searchType == SearchType.CAPTION)
-                    result.Add(new TextSpot(doc.Get(Indexing.FRAME_NAME), doc.Get(Indexing.TEXT_CAPTION)));
+                    result.Add(new TextCaption(doc.Get(Indexing.FRAME_NAME), doc.Get(Indexing.TEXT_CAPTION)));
             }
             return result;
         }

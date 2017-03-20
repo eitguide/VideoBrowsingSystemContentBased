@@ -193,9 +193,10 @@
             // 
             // colorDottingUC1
             // 
-            this.colorDottingUC1.Location = new System.Drawing.Point(3, 22);
+            this.colorDottingUC1.Location = new System.Drawing.Point(7, 26);
+            this.colorDottingUC1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.colorDottingUC1.Name = "colorDottingUC1";
-            this.colorDottingUC1.Size = new System.Drawing.Size(293, 293);
+            this.colorDottingUC1.Size = new System.Drawing.Size(638, 602);
             this.colorDottingUC1.TabIndex = 0;
             // 
             // VideoBrowsingForm
@@ -233,8 +234,8 @@
         private System.Windows.Forms.GroupBox grbxListFrame;
         private System.Windows.Forms.GroupBox grbxFrameShot;
         private System.Windows.Forms.GroupBox groupBox1;
-        private Widget.ColorDottingUC colorDottingUC1;
         private System.Windows.Forms.GroupBox grbxSearchByText;
+        private Widget.ColorDottingUC colorDottingUC1;
 
     }
 }
