@@ -16,7 +16,7 @@ namespace VideoBrowsingSystemContentBased.Utils
                return null;
            Frame frame = new Frame();
            //using regex to extract data of frame
-           String parttern = @"^TRECVID2016_(\d+).shot\d+_(\d+)";
+           String parttern = @"^TRECVID2016_(\d+).shot\d+_(\d+).*.Frame_(\d+).jpg";
 
            Regex regex = new Regex(parttern);
 
@@ -28,6 +28,7 @@ namespace VideoBrowsingSystemContentBased.Utils
 
                frame.Shot = shot;
                frame.VideoId = videoId;
+               frame.FrameNumber = int.Parse(match.Groups[3].Value);
            }
 
            return frame;

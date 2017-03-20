@@ -16,13 +16,14 @@ namespace VideoBrowsingSystemContentBased.Model
         public String VideoName { get; set; }
         public String Thumb { get; set; }
         public Bitmap FrameImage { get; set; }
+        public int FrameNumber { get; set; }
 
         public Frame()
         {
            
         }
 
-        public Frame(String frameName, String semanticContent, String videoId, int shot, String videoName, String thumb)
+        public Frame(String frameName, String semanticContent, String videoId, int shot, String videoName, String thumb, int frameNumber )
         {
             this.FrameName = frameName;
             this.SemanticContent = semanticContent;
@@ -30,6 +31,7 @@ namespace VideoBrowsingSystemContentBased.Model
             this.Shot = shot;
             this.VideoName = this.VideoName;
             this.Thumb = thumb;
+            this.FrameNumber = frameNumber;
         }
     }
 }

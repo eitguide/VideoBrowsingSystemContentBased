@@ -28,6 +28,8 @@ namespace VideoBrowsingSystemContentBased
         private String textQuery;
         private IndexStorage textSpotingIndexStorage;
         private Dictionary<String, String> mappingVideoName;
+        private Dictionary<String, float> mappingFPS;
+
         public VideoBrowsingForm()
         {
             InitializeComponent();
@@ -38,6 +40,22 @@ namespace VideoBrowsingSystemContentBased
            // StartPosition = FormStartPosition.CenterScreen;
 
             InitLayout();
+            InitEvent();
+        }
+
+        private void InitEvent()
+        {
+            txtTextQuery.KeyDown += txtTextQuery_KeyDown;
+            btnSearch.Click += btnSearch_Click;
+        }
+
+        void txtTextQuery_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                //enter key is down
+                btnSearch_Click(sender, e);
+            }
         }
 
 
@@ -68,6 +86,8 @@ namespace VideoBrowsingSystemContentBased
             captionIndexStorage.CloseIndexStorage();
  
             //Dictionary<String, float> mappingPFS = XMLParser.GetFPSDictionary(Config.FPS_VIDEO_PATH);
+            mappingFPS = XMLParser.GetFPSDictionary(Config.FPS_VIDEO_PATH);
+
             // FileManager fileManager = FileManager.GetInstance();
             //Dictionary<String, String> data = fileManager.GetDictionaryVideoName(Config.MAPPING_VIDEO_NAME_PATH);
 
@@ -121,10 +141,11 @@ namespace VideoBrowsingSystemContentBased
         public void InitLayout()
         {
 
-            pnFrameShot.BackColor = ColorHelper.ConvertToARGB("#34495e");
-            pnListFrame.BackColor = ColorHelper.ConvertToARGB("#95a5a6");
+            //pnFrameShot.BackColor = ColorHelper.ConvertToARGB("#34495e");
+            //pnListFrame.BackColor = ColorHelper.ConvertToARGB("#95a5a6");
+            //grbxListFrame.BackColor = ColorHelper.ConvertToARGB("#95a5a6");
             axWMP.settings.autoStart = false;
-
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle; // disable resize form
 
         }
 
@@ -241,14 +262,13 @@ namespace VideoBrowsingSystemContentBased
                 int x = 0, y = 0;
                 foreach (string filePath in listFilePath)
                 {
-                    PictureBox pic = new PictureBox();
+                    PictureBox pic = new VideoBrowsingSystemContentBased.Widget.CustomPictureBox();
                     pic.MouseClick += pic_MouseClick;
                     pic.Tag = filePath;
                     pic.Image = Image.FromFile(filePath);
                     pic.Location = new Point(x, y);
                     pic.Size = new Size(widthEachImg, heightEachImg);
                     pic.SizeMode = displayMode;
-                    pic.BorderStyle = BorderStyle.FixedSingle;
                     x += widthEachImg;
                     pn.Controls.Add(pic);
                 }
@@ -284,9 +304,25 @@ namespace VideoBrowsingSystemContentBased
             ClearAndAddImagesToPanelShot(files.ToList(), pnFrameShot);
             Console.WriteLine(Path.Combine(Config.VIDEO_DATA_PATH, mappingVideoName[frame.VideoId]));
             axWMP.URL = Path.Combine(Config.VIDEO_DATA_PATH, mappingVideoName[frame.VideoId]);
-            //axWMP.Ctlcontrols.currentPosition = 10; // in seconds
+            axWMP.Ctlcontrols.currentPosition = (double)(frame.FrameNumber / mappingFPS[frame.VideoId]); // in seconds
+            Console.WriteLine((double)(frame.FrameNumber));
+            Console.WriteLine((double)(mappingFPS[frame.VideoId]));
+            Console.WriteLine((double)(frame.FrameNumber / mappingFPS[frame.VideoId]));
         }
 
-      
+        public void ShowResultFromSketchColor()
+        {
+            //if (backgroundWorker_GetRsMATLAB.IsBusy)
+            //{
+            //    backgroundWorker_GetRsMATLAB.CancelAsync();
+
+            //}
+            //else
+            //{
+                //backgroundWorker_GetRsMATLAB.RunWorkerAsync();
+                txtTextQuery.Enabled = false;
+                btnSearch.Enabled = false;
+            //}
+        }
     }
 }

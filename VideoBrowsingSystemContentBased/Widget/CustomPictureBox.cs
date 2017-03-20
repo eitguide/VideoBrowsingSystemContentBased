@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using VideoBrowsingSystemContentBased.Utils;
 
 namespace VideoBrowsingSystemContentBased.Widget
 {
@@ -14,8 +15,8 @@ namespace VideoBrowsingSystemContentBased.Widget
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
-            ControlPaint.DrawBorder(e.Graphics, this.ClientRectangle, Color.Red, ButtonBorderStyle.Solid);
-        }
+            ControlPaint.DrawBorder(e.Graphics, this.ClientRectangle, ColorHelper.ConvertToARGB("#16a085"), ButtonBorderStyle.Solid);
+		}
     }
   
 }
