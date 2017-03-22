@@ -18,6 +18,8 @@ namespace VideoBrowsingSystemContentBased.Model
         public Bitmap FrameImage { get; set; }
         public int FrameNumber { get; set; }
 
+
+
         public Frame()
         {
            
