@@ -15,6 +15,7 @@ namespace VideoBrowsingSystemContentBased.Controller
     public class FileManager
     {
         private static FileManager mInstance;
+        static int count = 0;
 
         private FileManager()
         {
@@ -89,7 +90,12 @@ namespace VideoBrowsingSystemContentBased.Controller
                 using (StreamReader reader = new StreamReader(fileStream))
                 {
                     content = reader.ReadToEnd();
+                    reader.Close();
+                    reader.Dispose();
                 }
+
+                fileStream.Close();
+                fileStream.Dispose();
             }
             return content;
         }
@@ -137,7 +143,12 @@ namespace VideoBrowsingSystemContentBased.Controller
                 using (StreamWriter writer = new StreamWriter(fileStrean))
                 {
                     writer.Write(content);
+                    writer.Close();
+                    writer.Dispose();
                 }
+
+                fileStrean.Close();
+                fileStrean.Dispose();
             }
         }
 
@@ -151,7 +162,7 @@ namespace VideoBrowsingSystemContentBased.Controller
         {
             String json = JsonConvert.SerializeObject(obj);
             WriteFile(json, path);
-
+            json = null;
         }
 
         /// <summary>
@@ -161,16 +172,19 @@ namespace VideoBrowsingSystemContentBased.Controller
         /// <returns></returns>
         public List<TextSpot> DeserializeJson(String path)
         {
-            String json = ReadContentFile(path);
-            return JsonConvert.DeserializeObject<List<TextSpot>>(json);
+            String json = File.ReadAllText(path);
+            List<TextSpot> texts = JsonConvert.DeserializeObject<List<TextSpot>>(json);
+            json = null;
+            return texts;
         }
 
         public DenseCap DecodeDenseCap(String filePath)
         {
             String json = ReadContentFile(filePath);
+            Console.WriteLine("READ" + count);
+            count++;
             return JsonConvert.DeserializeObject<DenseCap>(json);
         }
-
 
         public List<DenseCap> GetDenseCaps(String folderPath)
         {
@@ -191,8 +205,10 @@ namespace VideoBrowsingSystemContentBased.Controller
                 }
             }
 
+            files = null;
             return result;
         }
+
 
         public List<TextCaption> GetTextCaptionFromDencap(List<DenseCap> denseCap)
         {
@@ -205,7 +221,6 @@ namespace VideoBrowsingSystemContentBased.Controller
             foreach (DenseCap itemDenseCap in denseCap)
             {
                 String inputDir = itemDenseCap.opt.input_dir;
-
 
                 for (int i = 0; i < itemDenseCap.results.Count; i++)
                 {
@@ -224,6 +239,46 @@ namespace VideoBrowsingSystemContentBased.Controller
                 }
             }
             return textCaptions;
+        }
+
+        public void DecodeTextCaptionFromDencap(String jsonCaptionPath, String ouputFile)
+        {
+            int take = 10;
+
+            if (!Directory.Exists(jsonCaptionPath))
+                return;
+
+            String[] files = Directory.GetFiles(jsonCaptionPath);
+            List<TextCaption> textCaptions = new List<TextCaption>();
+
+            foreach (String f in files)
+            {
+                DenseCap itemDenseCap = DecodeDenseCap(f);
+                String inputDir = itemDenseCap.opt.input_dir;
+
+                for (int i = 0; i < itemDenseCap.results.Count; i++)
+                {
+                    TextCaption textCaption = new TextCaption();
+                    textCaption.FrameName = Path.Combine(inputDir, itemDenseCap.results[i].img_name);
+                    StringBuilder builder = new StringBuilder();
+
+                    int takeCaption = Math.Min(take, itemDenseCap.results[i].captions.Count);
+
+                    for (int j = 0; j < takeCaption; j++)
+                    {
+                        builder.Append(itemDenseCap.results[i].captions[j] + ",");
+                    }
+                    textCaption.Caption = builder.ToString();
+                    builder = null;
+                    textCaptions.Add(textCaption);
+                }
+                itemDenseCap = null;
+            }
+
+            String str = JsonConvert.SerializeObject(textCaptions);
+            WriteFile(str, ouputFile);
+            textCaptions.Clear();
+            textCaptions = null;
         }
     }
 }
