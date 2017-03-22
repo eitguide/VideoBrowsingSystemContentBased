@@ -12,6 +12,8 @@ namespace VideoBrowsingSystemContentBased
         //Path of folder store cattion indexing
         public static String CAPTION_INDEX_STORAGE = @"D:/SoureThesis/Data/caption_indexing/";
 
+        public static String TEXT_CAPTION_PATH = @"D:\SoureThesis\Data\textcaption.txt";
+
         public static String JSON_DENSECAP_FOLDER_PATH = @"D:/SoureThesis/Data/densecap_json";
         //path of folder store textspoting indexing
         public static String TEXTSPOTTING_INDEX_STORAGE = @"D:/SoureThesis/Data/textspot_indexing/";
@@ -29,7 +31,6 @@ namespace VideoBrowsingSystemContentBased
 
         //Path of foder which store final result of textspotting
         public static String TEXT_PLOTTING_PATH = @"D:/SoureThesis/Data/textplotting.txt";
-
 
         public static String FPS_VIDEO_PATH = @"D:\SoureThesis\Data\video_fps.xml";
         //Rank for searching
