@@ -75,6 +75,12 @@
     <Compile Include="Utils\ImageHelper.cs" />
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="Utils\RandomHelper.cs" />
+    <Compile Include="View\IndexProcessing.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\IndexProcessing.Designer.cs">
+      <DependentUpon>IndexProcessing.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\VideoBrowsingForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -124,6 +130,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="View\IndexProcessing.resx">
+      <DependentUpon>IndexProcessing.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\VideoBrowsingForm.resx">
       <DependentUpon>VideoBrowsingForm.cs</DependentUpon>
     </EmbeddedResource>
