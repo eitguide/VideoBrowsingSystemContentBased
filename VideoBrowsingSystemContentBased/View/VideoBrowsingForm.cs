@@ -108,10 +108,17 @@ namespace VideoBrowsingSystemContentBased
                 return;
 
             List<String> listPath = new List<string>();
+
+            if (rbtnContent.Checked)
+                searchType = SearchType.CAPTION;
+            else if (rbtnORC.Checked)
+                searchType = SearchType.ORC;
+
             if (searchType == SearchType.CAPTION)
             {
                 List<Object> textCaption = Searching.SearchByQuery(textCaptionIndexStorage, 
                     Config.TOP_RANK, textQuery, searchType);
+
                 if (textCaption != null && textCaption.Count > 0)
                 {
                     
@@ -127,7 +134,7 @@ namespace VideoBrowsingSystemContentBased
 
                         //Console.WriteLine(fileName);
                         listPath.Add(fileName);
-
+                      
                     }
                 }
                 
@@ -136,38 +143,34 @@ namespace VideoBrowsingSystemContentBased
                 else
                     Console.WriteLine("Search xong ne");
             }
+            else if (searchType == SearchType.ORC)
+            {
+                List<Object> textSpots = Searching.SearchByQuery(textSpotingIndexStorage,
+                    Config.TOP_RANK, textQuery, searchType);
 
+                if (textSpots != null && textSpots.Count > 0)
+                {
 
-            //List<Object> result = Searching.SearchByQuery(textSpotingIndexStorage, Config.TOP_RANK, textQuery, SearchType.ORC);
-            //if (result == null)
-            //{
-            //    MessageBox.Show(string.Format("'{0}' not found", textQuery));
-            //    return;
-            //}
+                    //String pathFolderParent = @"I:\net\dl380g7a\export\ddn11a2\ledduy\trecvid-avs\keyframe-5\tv2016\test.iacc.3/";
+                    foreach (TextSpot text in textSpots)
+                    {
+                        String fileName = Path.GetFileName(text.FileName);
+                        Frame frame = Utils.Decoder.DecodeFrameFromName(fileName);
 
-            //if (result != null && result.Count >= 0)
-            //{
-            //    foreach (TextSpot i in result)
-            //    {
-            //        Console.WriteLine(i.FileName + "\t" + i.Text);
-            //    }
-            //}
+                        String root = Path.Combine(Config.FRAME_DATA_PATH, String.Format("TRECVID2016_{0}", frame.VideoId));
+                        fileName = Path.Combine(root, fileName);
 
-            //List<String> listPath = new List<string>();
-            ////String pathFolderParent = @"I:\net\dl380g7a\export\ddn11a2\ledduy\trecvid-avs\keyframe-5\tv2016\test.iacc.3/";
-            //foreach (TextSpot text in result)
-            //{
+                        //Console.WriteLine(fileName);
+                        listPath.Add(fileName);
 
-            //    String fileName = Path.GetFileName(text.FileName);
-            //    Frame frame = Utils.Decoder.DecodeFrameFromName(fileName);
+                    }
+                }
 
-            //    String root = Path.Combine(Config.FRAME_DATA_PATH, String.Format("TRECVID2016_{0}", frame.VideoId));
-            //    fileName = Path.Combine(root, fileName);
-
-            //    //Console.WriteLine(fileName);
-            //    listPath.Add(fileName);
-
-            //}
+                if (textSpots == null)
+                    Console.WriteLine("Ko co ket qua");
+                else
+                    Console.WriteLine("Search xong ne");
+            }
 
             ClearAndAddImagesToPanelFrame(listPath, pnListFrame);
         }
