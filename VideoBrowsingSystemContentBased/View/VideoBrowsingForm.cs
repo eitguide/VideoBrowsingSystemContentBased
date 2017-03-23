@@ -37,8 +37,8 @@ namespace VideoBrowsingSystemContentBased
             InitializeComponent();
             Load += VideoBrowsingForm_Load;
             this.MaximizeBox = false;
-            this.Width = 1080;
-            this.Height = 720;
+            //this.Width = 1080;
+            //this.Height = 720;
             // StartPosition = FormStartPosition.CenterScreen;
 
             InitLayout();
@@ -89,7 +89,15 @@ namespace VideoBrowsingSystemContentBased
             //grbxListFrame.BackColor = ColorHelper.ConvertToARGB("#95a5a6");
             axWMP.settings.autoStart = false;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle; // disable resize form
+            grbxSearchBySketch.Width = grbxSearchByText.Width;
+            putColorAndSketch1.FixLayout(grbxSearchBySketch.Width);
+            grbxSearchBySketch.Height = putColorAndSketch1.Height + 20;
 
+            this.Font = new Font("Arial", 9);
+            grbxVideoPlayer.Location = new Point(0, grbxSearchBySketch.Location.Y + grbxSearchBySketch.Height);
+            grbxVideoPlayer.Width = grbxSearchBySketch.Width;
+            grbxVideoPlayer.Height = tblpRoot.Height - grbxVideoPlayer.Location.Y - 8;
+            axWMP.Dock = DockStyle.Fill;
         }
 
         private void btnSearch_Click(object sender, EventArgs e)
@@ -122,9 +130,13 @@ namespace VideoBrowsingSystemContentBased
 
                     }
                 }
+                
+                if (textCaption == null)
+                    Console.WriteLine("Ko co ket qua");
+                else
+                    Console.WriteLine("Search xong ne");
             }
 
-            Console.WriteLine("Search xong ne");
 
             //List<Object> result = Searching.SearchByQuery(textSpotingIndexStorage, Config.TOP_RANK, textQuery, SearchType.ORC);
             //if (result == null)
@@ -271,12 +283,12 @@ namespace VideoBrowsingSystemContentBased
             }
 
             ClearAndAddImagesToPanelShot(files.ToList(), pnFrameShot);
-            Console.WriteLine(Path.Combine(Config.VIDEO_DATA_PATH, mappingVideoName[frame.VideoId]));
+            //Console.WriteLine(Path.Combine(Config.VIDEO_DATA_PATH, mappingVideoName[frame.VideoId]));
             axWMP.URL = Path.Combine(Config.VIDEO_DATA_PATH, mappingVideoName[frame.VideoId]);
             axWMP.Ctlcontrols.currentPosition = (double)(frame.FrameNumber / mappingFPS[frame.VideoId]); // in seconds
-            Console.WriteLine((double)(frame.FrameNumber));
-            Console.WriteLine((double)(mappingFPS[frame.VideoId]));
-            Console.WriteLine((double)(frame.FrameNumber / mappingFPS[frame.VideoId]));
+            //Console.WriteLine((double)(frame.FrameNumber));
+            //Console.WriteLine((double)(mappingFPS[frame.VideoId]));
+            //Console.WriteLine((double)(frame.FrameNumber / mappingFPS[frame.VideoId]));
         }
 
         public void ShowResultFromSketchColor()
