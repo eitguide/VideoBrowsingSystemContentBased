@@ -45,7 +45,7 @@ namespace VideoBrowsingSystemContentBased.Controller.TextIndexing
             {
                 ScoreDoc scoreDoc = topDocs.ScoreDocs[i];
                 float score = scoreDoc.Score;
-                Console.WriteLine(score);
+                //Console.WriteLine(score);
                 int docId = scoreDoc.Doc;
 
                 Document doc = indexSearch.Doc(docId);

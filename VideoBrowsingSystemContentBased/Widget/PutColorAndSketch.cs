@@ -28,6 +28,7 @@ namespace VideoBrowsingSystemContentBased.Widget
         private List<LineDrawing> listLineDrawing = null;
         private bool isDrawing = false;
         private int [] brushSizes = {5,10,15,20,25};
+        private Point selectedPixel = Point.Empty;
 
         public PutColorAndSketch()
         {
@@ -47,9 +48,11 @@ namespace VideoBrowsingSystemContentBased.Widget
             float ratioImgColorPicker = (float)picbxColorPicker.Image.Width / (float)picbxColorPicker.Image.Height;
             picbxColorPicker.Height = (int)((float)width / ratioImgColorPicker);
             picbxColorPicker.Location = new Point(0, 0);
-            picbxColorPicker.SizeMode = PictureBoxSizeMode.Zoom;
+            picbxColorPicker.SizeMode = PictureBoxSizeMode.StretchImage;
+            
             bitmapSampleColor = new Bitmap(picbxColorPicker.Image, picbxColorPicker.Width, picbxColorPicker.Height);
-
+            //logSizePicker();
+            
             picbxPaperDrawing.Location = new Point(pnlToolBox.Width, picbxColorPicker.Height);
             picbxPaperDrawing.Width = width - pnlToolBox.Width;
             picbxPaperDrawing.Height = (int)((float)picbxPaperDrawing.Width * 9f / 16f);
@@ -98,8 +101,9 @@ namespace VideoBrowsingSystemContentBased.Widget
         // PictureBox
         private void picbxColorPicker_MouseClick(object sender, MouseEventArgs e)
         {
-            Color color = bitmapSampleColor.GetPixel(e.X, e.Y);
-            colorSelected = color;
+            colorSelected = bitmapSampleColor.GetPixel(e.X, e.Y);
+            selectedPixel = e.Location;
+            picbxColorPicker.Refresh();
             pnlBrushSize.Refresh();
         }
         private void picbxPaperDrawing_MouseClick(object sender, MouseEventArgs e)
@@ -182,6 +186,16 @@ namespace VideoBrowsingSystemContentBased.Widget
                 }
             }
         }
+        private void picbxColorPicker_Paint(object sender, PaintEventArgs e)
+        {
+            if (selectedPixel != Point.Empty)
+            {
+                Pen pen = new Pen(Color.Black);
+                pen.DashPattern = new float[]{1,1};
+                int width = 10;
+                e.Graphics.DrawRectangle(pen, selectedPixel.X - width / 2, selectedPixel.Y - width / 2, width, width);
+            }
+        }
         // Panel
         private void pnlBrushSize_Paint(object sender, PaintEventArgs e)
         {
@@ -241,9 +255,5 @@ namespace VideoBrowsingSystemContentBased.Widget
                 throw new Exception("BRUSH_SIZE NOT FOUND!");
         }
         #endregion
-
-
-
-
     }
 }

@@ -31,6 +31,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(VideoBrowsingForm));
             this.tblpRoot = new System.Windows.Forms.TableLayoutPanel();
             this.tblpLeft = new System.Windows.Forms.TableLayoutPanel();
+            this.statusBar1 = new System.Windows.Forms.StatusBar();
+            this.statusBarPanel1 = new System.Windows.Forms.StatusBarPanel();
             this.grbxListFrame = new System.Windows.Forms.GroupBox();
             this.pnListFrame = new System.Windows.Forms.Panel();
             this.grbxFrameShot = new System.Windows.Forms.GroupBox();
@@ -39,14 +41,16 @@
             this.grbxVideoPlayer = new System.Windows.Forms.GroupBox();
             this.axWMP = new AxWMPLib.AxWindowsMediaPlayer();
             this.grbxSearchBySketch = new System.Windows.Forms.GroupBox();
-            this.putColorAndSketch1 = new VideoBrowsingSystemContentBased.Widget.PutColorAndSketch();
             this.grbxSearchByText = new System.Windows.Forms.GroupBox();
             this.rbtnContent = new System.Windows.Forms.RadioButton();
             this.rbtnORC = new System.Windows.Forms.RadioButton();
             this.btnSearch = new System.Windows.Forms.Button();
             this.txtTextQuery = new System.Windows.Forms.TextBox();
+            this.bgWorker_LoadFrames = new System.ComponentModel.BackgroundWorker();
+            this.putColorAndSketch1 = new VideoBrowsingSystemContentBased.Widget.PutColorAndSketch();
             this.tblpRoot.SuspendLayout();
             this.tblpLeft.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.statusBarPanel1)).BeginInit();
             this.grbxListFrame.SuspendLayout();
             this.grbxFrameShot.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -76,17 +80,37 @@
             // 
             this.tblpLeft.ColumnCount = 1;
             this.tblpLeft.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tblpLeft.Controls.Add(this.statusBar1, 0, 2);
             this.tblpLeft.Controls.Add(this.grbxListFrame, 0, 0);
             this.tblpLeft.Controls.Add(this.grbxFrameShot, 0, 1);
             this.tblpLeft.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tblpLeft.Location = new System.Drawing.Point(4, 4);
             this.tblpLeft.Margin = new System.Windows.Forms.Padding(4);
             this.tblpLeft.Name = "tblpLeft";
-            this.tblpLeft.RowCount = 2;
+            this.tblpLeft.RowCount = 3;
             this.tblpLeft.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 80F));
             this.tblpLeft.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tblpLeft.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tblpLeft.Size = new System.Drawing.Size(935, 713);
             this.tblpLeft.TabIndex = 0;
+            // 
+            // statusBar1
+            // 
+            this.statusBar1.Location = new System.Drawing.Point(0, 693);
+            this.statusBar1.Margin = new System.Windows.Forms.Padding(0);
+            this.statusBar1.Name = "statusBar1";
+            this.statusBar1.Panels.AddRange(new System.Windows.Forms.StatusBarPanel[] {
+            this.statusBarPanel1});
+            this.statusBar1.ShowPanels = true;
+            this.statusBar1.Size = new System.Drawing.Size(935, 20);
+            this.statusBar1.TabIndex = 0;
+            this.statusBar1.Text = "statusBar1";
+            // 
+            // statusBarPanel1
+            // 
+            this.statusBarPanel1.AutoSize = System.Windows.Forms.StatusBarPanelAutoSize.Contents;
+            this.statusBarPanel1.Name = "statusBarPanel1";
+            this.statusBarPanel1.Width = 10;
             // 
             // grbxListFrame
             // 
@@ -96,7 +120,7 @@
             this.grbxListFrame.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.grbxListFrame.Name = "grbxListFrame";
             this.grbxListFrame.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.grbxListFrame.Size = new System.Drawing.Size(929, 566);
+            this.grbxListFrame.Size = new System.Drawing.Size(929, 546);
             this.grbxListFrame.TabIndex = 2;
             this.grbxListFrame.TabStop = false;
             this.grbxListFrame.Text = "Frames";
@@ -107,18 +131,18 @@
             this.pnListFrame.Location = new System.Drawing.Point(3, 17);
             this.pnListFrame.Margin = new System.Windows.Forms.Padding(4);
             this.pnListFrame.Name = "pnListFrame";
-            this.pnListFrame.Size = new System.Drawing.Size(923, 547);
+            this.pnListFrame.Size = new System.Drawing.Size(923, 527);
             this.pnListFrame.TabIndex = 0;
             // 
             // grbxFrameShot
             // 
             this.grbxFrameShot.Controls.Add(this.pnFrameShot);
             this.grbxFrameShot.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grbxFrameShot.Location = new System.Drawing.Point(3, 572);
+            this.grbxFrameShot.Location = new System.Drawing.Point(3, 552);
             this.grbxFrameShot.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.grbxFrameShot.Name = "grbxFrameShot";
             this.grbxFrameShot.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.grbxFrameShot.Size = new System.Drawing.Size(929, 139);
+            this.grbxFrameShot.Size = new System.Drawing.Size(929, 133);
             this.grbxFrameShot.TabIndex = 3;
             this.grbxFrameShot.TabStop = false;
             this.grbxFrameShot.Text = "Shot\'s frames";
@@ -129,7 +153,7 @@
             this.pnFrameShot.Location = new System.Drawing.Point(3, 17);
             this.pnFrameShot.Margin = new System.Windows.Forms.Padding(4);
             this.pnFrameShot.Name = "pnFrameShot";
-            this.pnFrameShot.Size = new System.Drawing.Size(923, 120);
+            this.pnFrameShot.Size = new System.Drawing.Size(923, 114);
             this.pnFrameShot.TabIndex = 1;
             // 
             // panel1
@@ -163,6 +187,7 @@
             this.axWMP.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axWMP.OcxState")));
             this.axWMP.Size = new System.Drawing.Size(300, 217);
             this.axWMP.TabIndex = 2;
+            this.axWMP.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.axWMP_PreviewKeyDown);
             // 
             // grbxSearchBySketch
             // 
@@ -175,14 +200,6 @@
             this.grbxSearchBySketch.TabIndex = 4;
             this.grbxSearchBySketch.TabStop = false;
             this.grbxSearchBySketch.Text = "Search By Sketch";
-            // 
-            // putColorAndSketch1
-            // 
-            this.putColorAndSketch1.Location = new System.Drawing.Point(4, 19);
-            this.putColorAndSketch1.Margin = new System.Windows.Forms.Padding(0);
-            this.putColorAndSketch1.Name = "putColorAndSketch1";
-            this.putColorAndSketch1.Size = new System.Drawing.Size(1108, 914);
-            this.putColorAndSketch1.TabIndex = 0;
             // 
             // grbxSearchByText
             // 
@@ -209,6 +226,7 @@
             this.rbtnContent.TabStop = true;
             this.rbtnContent.Text = "Content";
             this.rbtnContent.UseVisualStyleBackColor = true;
+            this.rbtnContent.Click += new System.EventHandler(this.rbtnContent_Click);
             // 
             // rbtnORC
             // 
@@ -220,6 +238,7 @@
             this.rbtnORC.TabStop = true;
             this.rbtnORC.Text = "ORC";
             this.rbtnORC.UseVisualStyleBackColor = true;
+            this.rbtnORC.Click += new System.EventHandler(this.rbtnORC_Click);
             // 
             // btnSearch
             // 
@@ -242,17 +261,34 @@
             this.txtTextQuery.TabIndex = 0;
             this.txtTextQuery.Text = "practice";
             // 
+            // bgWorker_LoadFrames
+            // 
+            this.bgWorker_LoadFrames.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgWorker_LoadFrames_DoWork);
+            this.bgWorker_LoadFrames.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bgWorker_LoadFrames_ProgressChanged);
+            this.bgWorker_LoadFrames.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgWorker_LoadFrames_RunWorkerCompleted);
+            // 
+            // putColorAndSketch1
+            // 
+            this.putColorAndSketch1.Location = new System.Drawing.Point(4, 19);
+            this.putColorAndSketch1.Margin = new System.Windows.Forms.Padding(0);
+            this.putColorAndSketch1.Name = "putColorAndSketch1";
+            this.putColorAndSketch1.Size = new System.Drawing.Size(1108, 914);
+            this.putColorAndSketch1.TabIndex = 0;
+            // 
             // VideoBrowsingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1348, 721);
             this.Controls.Add(this.tblpRoot);
+            this.KeyPreview = true;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "VideoBrowsingForm";
             this.Text = "Video Browsing System Content Based";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.VideoBrowsingForm_KeyDown);
             this.tblpRoot.ResumeLayout(false);
             this.tblpLeft.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.statusBarPanel1)).EndInit();
             this.grbxListFrame.ResumeLayout(false);
             this.grbxFrameShot.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
@@ -283,6 +319,9 @@
         private System.Windows.Forms.RadioButton rbtnContent;
         private System.Windows.Forms.RadioButton rbtnORC;
         private System.Windows.Forms.GroupBox grbxVideoPlayer;
+        private System.ComponentModel.BackgroundWorker bgWorker_LoadFrames;
+        private System.Windows.Forms.StatusBar statusBar1;
+        private System.Windows.Forms.StatusBarPanel statusBarPanel1;
 
     }
 }

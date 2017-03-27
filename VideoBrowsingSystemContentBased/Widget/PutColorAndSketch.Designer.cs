@@ -113,6 +113,7 @@
             this.picbxColorPicker.Size = new System.Drawing.Size(713, 340);
             this.picbxColorPicker.TabIndex = 0;
             this.picbxColorPicker.TabStop = false;
+            this.picbxColorPicker.Paint += new System.Windows.Forms.PaintEventHandler(this.picbxColorPicker_Paint);
             this.picbxColorPicker.MouseClick += new System.Windows.Forms.MouseEventHandler(this.picbxColorPicker_MouseClick);
             // 
             // PutColorAndSketch

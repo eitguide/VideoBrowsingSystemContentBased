@@ -103,6 +103,16 @@ namespace VideoBrowsingSystemContentBased.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap default_picture {
+            get {
+                object obj = ResourceManager.GetObject("default_picture", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap dots_color {
             get {
                 object obj = ResourceManager.GetObject("dots_color", resourceCulture);
