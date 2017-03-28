@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -279,6 +280,11 @@ namespace VideoBrowsingSystemContentBased.Controller
             WriteFile(str, ouputFile);
             textCaptions.Clear();
             textCaptions = null;
+        }
+
+        public void SaveBitmapToPNG(Bitmap _bitmap, string _fileNamePath)
+        {
+            _bitmap.Save(_fileNamePath, System.Drawing.Imaging.ImageFormat.Png);
         }
     }
 }

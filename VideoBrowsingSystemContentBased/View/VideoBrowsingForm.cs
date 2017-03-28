@@ -51,7 +51,7 @@ namespace VideoBrowsingSystemContentBased
         private void InitEvent()
         {
             txtTextQuery.KeyDown += txtTextQuery_KeyDown;
-            btnSearch.Click += btnSearch_Click;
+            btnSearchByText.Click += btnSearch_Click;
         }
 
         void txtTextQuery_KeyDown(object sender, KeyEventArgs e)
@@ -96,7 +96,8 @@ namespace VideoBrowsingSystemContentBased
 
             grbxSearchBySketch.Width = grbxSearchByText.Width;
             putColorAndSketch1.FixLayout(grbxSearchBySketch.Width);
-            grbxSearchBySketch.Height = putColorAndSketch1.Height + 20;
+            btnSearchByImage.Location = new Point((grbxSearchBySketch.Width - btnSearchByImage.Width) / 2, putColorAndSketch1.Height + 18);
+            grbxSearchBySketch.Height = putColorAndSketch1.Height + btnSearchByImage.Height + 20;
 
             grbxVideoPlayer.Location = new Point(0, grbxSearchBySketch.Location.Y + grbxSearchBySketch.Height);
             grbxVideoPlayer.Width = grbxSearchBySketch.Width;
@@ -178,7 +179,7 @@ namespace VideoBrowsingSystemContentBased
             //{
             //backgroundWorker_GetRsMATLAB.RunWorkerAsync();
             txtTextQuery.Enabled = false;
-            btnSearch.Enabled = false;
+            btnSearchByText.Enabled = false;
             //}
         }
 
@@ -275,6 +276,13 @@ namespace VideoBrowsingSystemContentBased
             }
 
             ClearAndAddImagesToPanelFrame(listPath);
+        }
+        private void btnSearchByImage_Click(object sender, EventArgs e)
+        {
+            // Save list line-drawing to file
+            Bitmap bitmapListLineDrawingDrawed = putColorAndSketch1.getBitmapListLineDrawingDrawed();
+            FileManager.GetInstance().SaveBitmapToPNG(bitmapListLineDrawingDrawed, "D:/phuc.png");
+            MessageBox.Show("PNG Image was saved!");
         }
         // PictureBox
         void pic_MouseDoubleClick(object sender, MouseEventArgs e)

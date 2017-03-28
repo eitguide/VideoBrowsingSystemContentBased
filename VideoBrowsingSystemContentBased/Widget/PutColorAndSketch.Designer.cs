@@ -30,6 +30,8 @@
         {
             this.pnlToolBox = new System.Windows.Forms.Panel();
             this.pnlBrushSize = new System.Windows.Forms.Panel();
+            this.btnUndo = new System.Windows.Forms.Button();
+            this.btnClear = new System.Windows.Forms.Button();
             this.btnDotColors = new System.Windows.Forms.Button();
             this.btnSketch = new System.Windows.Forms.Button();
             this.picbxPaperDrawing = new System.Windows.Forms.PictureBox();
@@ -41,6 +43,8 @@
             // 
             // pnlToolBox
             // 
+            this.pnlToolBox.Controls.Add(this.btnUndo);
+            this.pnlToolBox.Controls.Add(this.btnClear);
             this.pnlToolBox.Controls.Add(this.pnlBrushSize);
             this.pnlToolBox.Controls.Add(this.btnDotColors);
             this.pnlToolBox.Controls.Add(this.btnSketch);
@@ -59,6 +63,36 @@
             this.pnlBrushSize.TabIndex = 2;
             this.pnlBrushSize.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlBrushSize_Paint);
             // 
+            // btnUndo
+            // 
+            this.btnUndo.BackgroundImage = global::VideoBrowsingSystemContentBased.Properties.Resources.undo;
+            this.btnUndo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnUndo.FlatAppearance.BorderColor = System.Drawing.Color.Teal;
+            this.btnUndo.FlatAppearance.BorderSize = 0;
+            this.btnUndo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnUndo.Location = new System.Drawing.Point(0, 152);
+            this.btnUndo.Margin = new System.Windows.Forms.Padding(4);
+            this.btnUndo.Name = "btnUndo";
+            this.btnUndo.Size = new System.Drawing.Size(33, 31);
+            this.btnUndo.TabIndex = 4;
+            this.btnUndo.UseVisualStyleBackColor = true;
+            this.btnUndo.Click += new System.EventHandler(this.btnUndo_Click);
+            // 
+            // btnClear
+            // 
+            this.btnClear.BackgroundImage = global::VideoBrowsingSystemContentBased.Properties.Resources.clear;
+            this.btnClear.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnClear.FlatAppearance.BorderColor = System.Drawing.Color.Teal;
+            this.btnClear.FlatAppearance.BorderSize = 0;
+            this.btnClear.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnClear.Location = new System.Drawing.Point(0, 113);
+            this.btnClear.Margin = new System.Windows.Forms.Padding(4);
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(33, 31);
+            this.btnClear.TabIndex = 3;
+            this.btnClear.UseVisualStyleBackColor = true;
+            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+            // 
             // btnDotColors
             // 
             this.btnDotColors.BackgroundImage = global::VideoBrowsingSystemContentBased.Properties.Resources.dots_color;
@@ -66,7 +100,7 @@
             this.btnDotColors.FlatAppearance.BorderColor = System.Drawing.Color.Teal;
             this.btnDotColors.FlatAppearance.BorderSize = 0;
             this.btnDotColors.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDotColors.Location = new System.Drawing.Point(0, 0);
+            this.btnDotColors.Location = new System.Drawing.Point(0, 221);
             this.btnDotColors.Margin = new System.Windows.Forms.Padding(4);
             this.btnDotColors.Name = "btnDotColors";
             this.btnDotColors.Size = new System.Drawing.Size(33, 31);
@@ -81,7 +115,7 @@
             this.btnSketch.FlatAppearance.BorderColor = System.Drawing.Color.Teal;
             this.btnSketch.FlatAppearance.BorderSize = 0;
             this.btnSketch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSketch.Location = new System.Drawing.Point(0, 31);
+            this.btnSketch.Location = new System.Drawing.Point(0, 252);
             this.btnSketch.Margin = new System.Windows.Forms.Padding(4);
             this.btnSketch.Name = "btnSketch";
             this.btnSketch.Size = new System.Drawing.Size(33, 31);
@@ -92,7 +126,7 @@
             // picbxPaperDrawing
             // 
             this.picbxPaperDrawing.Image = global::VideoBrowsingSystemContentBased.Properties.Resources.transparent_background;
-            this.picbxPaperDrawing.Location = new System.Drawing.Point(141, 466);
+            this.picbxPaperDrawing.Location = new System.Drawing.Point(82, 376);
             this.picbxPaperDrawing.Margin = new System.Windows.Forms.Padding(4);
             this.picbxPaperDrawing.Name = "picbxPaperDrawing";
             this.picbxPaperDrawing.Size = new System.Drawing.Size(917, 465);
@@ -141,6 +175,8 @@
         private System.Windows.Forms.Button btnSketch;
         private System.Windows.Forms.Button btnDotColors;
         private System.Windows.Forms.Panel pnlBrushSize;
+        private System.Windows.Forms.Button btnUndo;
+        private System.Windows.Forms.Button btnClear;
 
     }
 }

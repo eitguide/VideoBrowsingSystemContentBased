@@ -44,9 +44,10 @@
             this.grbxSearchByText = new System.Windows.Forms.GroupBox();
             this.rbtnContent = new System.Windows.Forms.RadioButton();
             this.rbtnORC = new System.Windows.Forms.RadioButton();
-            this.btnSearch = new System.Windows.Forms.Button();
+            this.btnSearchByText = new System.Windows.Forms.Button();
             this.txtTextQuery = new System.Windows.Forms.TextBox();
             this.bgWorker_LoadFrames = new System.ComponentModel.BackgroundWorker();
+            this.btnSearchByImage = new System.Windows.Forms.Button();
             this.putColorAndSketch1 = new VideoBrowsingSystemContentBased.Widget.PutColorAndSketch();
             this.tblpRoot.SuspendLayout();
             this.tblpLeft.SuspendLayout();
@@ -191,6 +192,7 @@
             // 
             // grbxSearchBySketch
             // 
+            this.grbxSearchBySketch.Controls.Add(this.btnSearchByImage);
             this.grbxSearchBySketch.Controls.Add(this.putColorAndSketch1);
             this.grbxSearchBySketch.Location = new System.Drawing.Point(0, 98);
             this.grbxSearchBySketch.Margin = new System.Windows.Forms.Padding(4);
@@ -205,7 +207,7 @@
             // 
             this.grbxSearchByText.Controls.Add(this.rbtnContent);
             this.grbxSearchByText.Controls.Add(this.rbtnORC);
-            this.grbxSearchByText.Controls.Add(this.btnSearch);
+            this.grbxSearchByText.Controls.Add(this.btnSearchByText);
             this.grbxSearchByText.Controls.Add(this.txtTextQuery);
             this.grbxSearchByText.Location = new System.Drawing.Point(0, 0);
             this.grbxSearchByText.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -240,17 +242,17 @@
             this.rbtnORC.UseVisualStyleBackColor = true;
             this.rbtnORC.Click += new System.EventHandler(this.rbtnORC_Click);
             // 
-            // btnSearch
+            // btnSearchByText
             // 
-            this.btnSearch.Image = global::VideoBrowsingSystemContentBased.Properties.Resources.search_20x20;
-            this.btnSearch.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSearch.Location = new System.Drawing.Point(7, 56);
-            this.btnSearch.Margin = new System.Windows.Forms.Padding(4);
-            this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(108, 34);
-            this.btnSearch.TabIndex = 1;
-            this.btnSearch.Text = "    Search";
-            this.btnSearch.UseVisualStyleBackColor = true;
+            this.btnSearchByText.Image = global::VideoBrowsingSystemContentBased.Properties.Resources.search_20x20;
+            this.btnSearchByText.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnSearchByText.Location = new System.Drawing.Point(7, 56);
+            this.btnSearchByText.Margin = new System.Windows.Forms.Padding(4);
+            this.btnSearchByText.Name = "btnSearchByText";
+            this.btnSearchByText.Size = new System.Drawing.Size(108, 34);
+            this.btnSearchByText.TabIndex = 1;
+            this.btnSearchByText.Text = "    Search";
+            this.btnSearchByText.UseVisualStyleBackColor = true;
             // 
             // txtTextQuery
             // 
@@ -266,6 +268,19 @@
             this.bgWorker_LoadFrames.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgWorker_LoadFrames_DoWork);
             this.bgWorker_LoadFrames.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bgWorker_LoadFrames_ProgressChanged);
             this.bgWorker_LoadFrames.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgWorker_LoadFrames_RunWorkerCompleted);
+            // 
+            // btnSearchByImage
+            // 
+            this.btnSearchByImage.Image = global::VideoBrowsingSystemContentBased.Properties.Resources.search_20x20;
+            this.btnSearchByImage.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnSearchByImage.Location = new System.Drawing.Point(10, 359);
+            this.btnSearchByImage.Margin = new System.Windows.Forms.Padding(4);
+            this.btnSearchByImage.Name = "btnSearchByImage";
+            this.btnSearchByImage.Size = new System.Drawing.Size(108, 34);
+            this.btnSearchByImage.TabIndex = 2;
+            this.btnSearchByImage.Text = "    Search";
+            this.btnSearchByImage.UseVisualStyleBackColor = true;
+            this.btnSearchByImage.Click += new System.EventHandler(this.btnSearchByImage_Click);
             // 
             // putColorAndSketch1
             // 
@@ -309,7 +324,7 @@
         private System.Windows.Forms.Panel pnFrameShot;
         private System.Windows.Forms.Panel panel1;
         private AxWMPLib.AxWindowsMediaPlayer axWMP;
-        private System.Windows.Forms.Button btnSearch;
+        private System.Windows.Forms.Button btnSearchByText;
         private System.Windows.Forms.TextBox txtTextQuery;
         private System.Windows.Forms.GroupBox grbxListFrame;
         private System.Windows.Forms.GroupBox grbxFrameShot;
@@ -322,6 +337,7 @@
         private System.ComponentModel.BackgroundWorker bgWorker_LoadFrames;
         private System.Windows.Forms.StatusBar statusBar1;
         private System.Windows.Forms.StatusBarPanel statusBarPanel1;
+        private System.Windows.Forms.Button btnSearchByImage;
 
     }
 }

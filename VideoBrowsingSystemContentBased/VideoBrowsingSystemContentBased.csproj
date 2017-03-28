@@ -64,6 +64,7 @@
     <Compile Include="Controller\FileManager.cs" />
     <Compile Include="Controller\TextIndexing\Indexing.cs" />
     <Compile Include="Controller\TextIndexing\IndexStorage.cs" />
+    <Compile Include="Model\IShape.cs" />
     <Compile Include="Controller\TextIndexing\Searching.cs" />
     <Compile Include="Controller\TextIndexing\SearchType.cs" />
     <Compile Include="Controller\TextIndexing\XMLParser.cs" />
@@ -193,6 +194,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\picture.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\clear.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\undo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\undo-arrow.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace VideoBrowsingSystemContentBased.Model
 {
-    class LineDrawing
+    class LineDrawing : IShape
     {
         public List<Point> listPoint { get; set; }
         public Color color { get; set; }

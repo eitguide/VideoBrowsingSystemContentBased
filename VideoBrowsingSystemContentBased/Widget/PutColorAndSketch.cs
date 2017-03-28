@@ -24,8 +24,7 @@ namespace VideoBrowsingSystemContentBased.Widget
         private int BRUSH_SIZE_SKETCH = 5;
         private Color colorSelected = Color.Black;
         private Bitmap bitmapSampleColor = null;
-        private List<Dot> listDot = null;
-        private List<LineDrawing> listLineDrawing = null;
+        private List<IShape> listShapes = null;
         private bool isDrawing = false;
         private int [] brushSizes = {5,10,15,20,25};
         private Point selectedPixel = Point.Empty;
@@ -35,11 +34,28 @@ namespace VideoBrowsingSystemContentBased.Widget
             InitializeComponent();
 
             CheckOptionDotColors();
-            listDot = new List<Dot>();
-            listLineDrawing = new List<LineDrawing>();
+            listShapes = new List<IShape>();
 
             // init events not available in [Design]
             pnlBrushSize.MouseWheel += pnlBrushSize_MouseWheel;
+        }
+
+        public Bitmap getBitmapListLineDrawingDrawed()
+        {
+            Bitmap bitmapListLineDrawingDrawed = new Bitmap(picbxPaperDrawing.Width, picbxPaperDrawing.Height);
+            Graphics g = Graphics.FromImage(bitmapListLineDrawingDrawed);
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            LineDrawing lineDrawing;
+            foreach(IShape shape in listShapes)
+            {
+                if (shape is LineDrawing)
+                {
+                    lineDrawing = shape as LineDrawing;
+                    DrawLineDrawing(g, lineDrawing);
+                }
+            }
+
+            return bitmapListLineDrawingDrawed;
         }
 
         public void FixLayout(int width)
@@ -63,9 +79,11 @@ namespace VideoBrowsingSystemContentBased.Widget
             pnlToolBox.Height = picbxPaperDrawing.Height;
 
             pnlBrushSize.Location = new Point(0, 0);
-            btnDotColors.Location = new Point(0, pnlToolBox.Height - pnlBrushSize.Height - pnlBrushSize.Height);
-            btnSketch.Location = new Point(0, pnlToolBox.Height - pnlBrushSize.Height);
-
+            btnDotColors.Location = new Point(0, pnlBrushSize.Height);
+            btnSketch.Location = new Point(0, pnlBrushSize.Height + btnDotColors.Height);
+            btnUndo.Location = new Point(0, pnlToolBox.Height - btnClear.Height - btnUndo.Height);
+            btnClear.Location = new Point(0, pnlToolBox.Height - btnClear.Height);
+                
             this.Height = picbxColorPicker.Height + picbxPaperDrawing.Height;
         }
 
@@ -88,6 +106,29 @@ namespace VideoBrowsingSystemContentBased.Widget
             pnlBrushSize.Refresh();
         }
 
+        private void DrawDot(Graphics g, Dot dot)
+        {
+            SolidBrush brush = new SolidBrush(dot.color);
+            g.FillEllipse(brush, dot.location.X, dot.location.Y, dot.radius * 2, dot.radius * 2);
+        }
+        private void DrawLineDrawing(Graphics g, LineDrawing lineDrawing)
+        {
+            Pen pen = new Pen(lineDrawing.color, lineDrawing.size);
+            pen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
+            pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
+            if (lineDrawing.listPoint.Count == 1)
+            {
+                SolidBrush brush = new SolidBrush(lineDrawing.color);
+                Point location = lineDrawing.listPoint[0];
+                g.FillEllipse(brush, location.X - (float)lineDrawing.size / 2f, location.Y - (float)lineDrawing.size / 2f, lineDrawing.size, lineDrawing.size);
+                return;
+            }
+            for (int i = 0; i < lineDrawing.listPoint.Count - 1; i++)
+            {
+                g.DrawLine(pen, lineDrawing.listPoint[i], lineDrawing.listPoint[i + 1]);
+            }
+        }
+
         #region Events
         // Buttons
         private void btnDotColors_Click(object sender, EventArgs e)
@@ -97,6 +138,22 @@ namespace VideoBrowsingSystemContentBased.Widget
         private void btnSketch_Click(object sender, EventArgs e)
         {
             CheckOptionSketch();
+        }
+        private void btnUndo_Click(object sender, EventArgs e)
+        {
+            if (listShapes != null && listShapes.Count > 0)
+            {
+                listShapes.RemoveAt(listShapes.Count - 1);
+                picbxPaperDrawing.Refresh();
+            }
+        }
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            if (listShapes != null && listShapes.Count > 0)
+            {
+                listShapes.Clear();
+                picbxPaperDrawing.Refresh();
+            }
         }
         // PictureBox
         private void picbxColorPicker_MouseClick(object sender, MouseEventArgs e)
@@ -112,7 +169,7 @@ namespace VideoBrowsingSystemContentBased.Widget
             {
                 if (colorSelected != Color.Empty)
                 {
-                    listDot.Add(new Dot(new Point(e.X - BRUSH_SIZE_DOT_COLOR / 2, e.Y - BRUSH_SIZE_DOT_COLOR / 2), (float)BRUSH_SIZE_DOT_COLOR / 2f, colorSelected));
+                    listShapes.Add(new Dot(new Point(e.X - BRUSH_SIZE_DOT_COLOR / 2, e.Y - BRUSH_SIZE_DOT_COLOR / 2), (float)BRUSH_SIZE_DOT_COLOR / 2f, colorSelected));
                     picbxPaperDrawing.Refresh();
                 }
             }
@@ -124,8 +181,8 @@ namespace VideoBrowsingSystemContentBased.Widget
                 isDrawing = true;
                 if (colorSelected != Color.Empty)
                 {
-                    listLineDrawing.Add(new LineDrawing(colorSelected, (float)BRUSH_SIZE_SKETCH));
-                    listLineDrawing[listLineDrawing.Count - 1].listPoint.Add(e.Location);
+                    listShapes.Add(new LineDrawing(colorSelected, (float)BRUSH_SIZE_SKETCH));
+                    (listShapes[listShapes.Count - 1] as LineDrawing).listPoint.Add(e.Location);
                     picbxPaperDrawing.Refresh();
                 }
             }
@@ -138,7 +195,7 @@ namespace VideoBrowsingSystemContentBased.Widget
                 {
                     if (colorSelected != Color.Empty)
                     {
-                        listLineDrawing[listLineDrawing.Count - 1].listPoint.Add(e.Location);
+                        (listShapes[listShapes.Count - 1] as LineDrawing).listPoint.Add(e.Location);
                         picbxPaperDrawing.Refresh();
                     }
                 }
@@ -157,32 +214,20 @@ namespace VideoBrowsingSystemContentBased.Widget
         private void picbxPaperDrawing_Paint(object sender, PaintEventArgs e)
         {
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            //if (radbtnDot.Checked)
+            Dot dot;
+            LineDrawing lineDrawing;
+
+            foreach (IShape shape in listShapes)
             {
-                foreach (Dot dot in listDot)
+                if (shape is Dot)
                 {
-                    SolidBrush brush = new SolidBrush(dot.color);
-                    e.Graphics.FillEllipse(brush, dot.location.X, dot.location.Y, dot.radius * 2, dot.radius * 2);
+                    dot = shape as Dot;
+                    DrawDot(e.Graphics, dot);
                 }
-            }
-            //else if (radbtnDraw.Checked)
-            {
-                foreach (LineDrawing lineDrawing in listLineDrawing)
+                else if (shape is LineDrawing)
                 {
-                    Pen pen = new Pen(lineDrawing.color, lineDrawing.size);
-                    pen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
-                    pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
-                    if (lineDrawing.listPoint.Count == 1)
-                    {
-                        SolidBrush brush = new SolidBrush(lineDrawing.color);
-                        Point location = lineDrawing.listPoint[0];
-                        e.Graphics.FillEllipse(brush, location.X - (float)lineDrawing.size / 2f, location.Y - (float)lineDrawing.size / 2f, lineDrawing.size, lineDrawing.size);
-                        continue;
-                    }
-                    for (int i = 0; i < lineDrawing.listPoint.Count - 1; i++)
-                    {
-                        e.Graphics.DrawLine(pen, lineDrawing.listPoint[i], lineDrawing.listPoint[i + 1]);
-                    }
+                    lineDrawing = shape as LineDrawing;
+                    DrawLineDrawing(e.Graphics, lineDrawing);
                 }
             }
         }
