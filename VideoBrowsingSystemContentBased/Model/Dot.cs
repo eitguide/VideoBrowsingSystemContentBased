@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace VideoBrowsingSystemContentBased.Model
 {
-    class Dot : IShape
+    public class Dot : IShape
     {
         public Point location { get; set; }
         public float radius { get; set; }

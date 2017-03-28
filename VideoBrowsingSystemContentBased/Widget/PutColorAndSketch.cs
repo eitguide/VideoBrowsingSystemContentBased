@@ -40,7 +40,7 @@ namespace VideoBrowsingSystemContentBased.Widget
             pnlBrushSize.MouseWheel += pnlBrushSize_MouseWheel;
         }
 
-        public Bitmap getBitmapListLineDrawingDrawed()
+        public Bitmap GetBitmapListLineDrawingDrawed()
         {
             Bitmap bitmapListLineDrawingDrawed = new Bitmap(picbxPaperDrawing.Width, picbxPaperDrawing.Height);
             Graphics g = Graphics.FromImage(bitmapListLineDrawingDrawed);
@@ -56,6 +56,19 @@ namespace VideoBrowsingSystemContentBased.Widget
             }
 
             return bitmapListLineDrawingDrawed;
+        }
+
+        public List<Dot> GetListDotsDrawed()
+        {
+            List<Dot> listDotsDrawed = new List<Dot>();
+            foreach(IShape shape in listShapes)
+            {
+                if (shape is Dot)
+                {
+                    listDotsDrawed.Add(shape as Dot);
+                }
+            }
+            return listDotsDrawed;
         }
 
         public void FixLayout(int width)

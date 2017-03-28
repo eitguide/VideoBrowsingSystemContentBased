@@ -279,8 +279,10 @@ namespace VideoBrowsingSystemContentBased
         }
         private void btnSearchByImage_Click(object sender, EventArgs e)
         {
+            List<Dot> listDotsDrawed = putColorAndSketch1.GetListDotsDrawed();
+
             // Save list line-drawing to file
-            Bitmap bitmapListLineDrawingDrawed = putColorAndSketch1.getBitmapListLineDrawingDrawed();
+            Bitmap bitmapListLineDrawingDrawed = putColorAndSketch1.GetBitmapListLineDrawingDrawed();
             FileManager.GetInstance().SaveBitmapToPNG(bitmapListLineDrawingDrawed, "D:/phuc.png");
             MessageBox.Show("PNG Image was saved!");
         }
