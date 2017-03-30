@@ -122,7 +122,7 @@ namespace VideoBrowsingSystemContentBased.Widget
         private void DrawDot(Graphics g, Dot dot)
         {
             SolidBrush brush = new SolidBrush(dot.color);
-            g.FillEllipse(brush, dot.location.X, dot.location.Y, dot.radius * 2, dot.radius * 2);
+            g.FillEllipse(brush, dot.location.X - dot.radius, dot.location.Y - dot.radius, dot.radius * 2, dot.radius * 2);
         }
         private void DrawLineDrawing(Graphics g, LineDrawing lineDrawing)
         {
@@ -182,7 +182,7 @@ namespace VideoBrowsingSystemContentBased.Widget
             {
                 if (colorSelected != Color.Empty)
                 {
-                    listShapes.Add(new Dot(new Point(e.X - BRUSH_SIZE_DOT_COLOR / 2, e.Y - BRUSH_SIZE_DOT_COLOR / 2), (float)BRUSH_SIZE_DOT_COLOR / 2f, colorSelected));
+                    listShapes.Add(new Dot(new Point(e.X , e.Y), (float)BRUSH_SIZE_DOT_COLOR / 2f, colorSelected));
                     picbxPaperDrawing.Refresh();
                 }
             }
