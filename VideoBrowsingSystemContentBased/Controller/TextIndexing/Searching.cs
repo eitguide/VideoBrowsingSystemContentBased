@@ -22,6 +22,8 @@ namespace VideoBrowsingSystemContentBased.Controller.TextIndexing
         /// <returns></returns>
         public static List<Object> SearchByQuery(IndexStorage indexStorage, int topRank, String query, SearchType searchType)
         {
+            if (String.IsNullOrEmpty(query))
+                return null;
             IndexSearcher indexSearch = new IndexSearcher(indexStorage.DirectoryIndexing);
 
             //var parser = new MultiFieldQueryParser(Lucene.Net.Util.Version.LUCENE_30, new[]{

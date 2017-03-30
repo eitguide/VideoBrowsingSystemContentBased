@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,7 +34,6 @@ namespace VideoBrowsingSystemContentBased.View
             textCaptionStorage = new IndexStorage(Config.CAPTION_INDEX_STORAGE);
             textCaptionStorage.OpenIndexStore();
 
-
             textSpotIndexStorage = new IndexStorage(Config.TEXTSPOTTING_INDEX_STORAGE);
             textSpotIndexStorage.OpenIndexStore();
         }
@@ -41,6 +41,7 @@ namespace VideoBrowsingSystemContentBased.View
         void btnSearchCap_Click(object sender, EventArgs e)
         {
             List<Object> result = Searching.SearchByQuery(textCaptionStorage, Config.TOP_RANK, txtQuery.Text, SearchType.CAPTION);
+
             if(result != null && result.Count >  0)
             {
                 foreach(TextCaption c in result){
@@ -58,6 +59,9 @@ namespace VideoBrowsingSystemContentBased.View
         {
             List<TextSpot> textSpot = XMLParser.ProcessingXmlData(Config.XML_FOLDER_PATH);
             FileManager.GetInstance().SeriablizeObjectToJson(textSpot, Config.TEXT_PLOTTING_PATH);
+            Console.WriteLine(textSpot.Count);
+            textSpot.Clear();
+            textSpot = null;
         }
 
         void btnTextSpotIndexing_Click(object sender, EventArgs e)
@@ -79,20 +83,24 @@ namespace VideoBrowsingSystemContentBased.View
             btnTextCaptionIndexing.Enabled = false;
 
             lblStatus.Text = "Convert Data Json to List TextCaption";
-            List<TextCaption> caption = JsonConvert.DeserializeObject<List<TextCaption>>(FileManager.GetInstance().ReadContentFile(Config.TEXT_CAPTION_PATH));
-            Console.WriteLine(caption.Count);
 
             lblStatus.Text = "Create IndexStorage";
             IndexStorage indexStorage = new IndexStorage(Config.CAPTION_INDEX_STORAGE);
             indexStorage.OpenIndexStore();
 
-            lblStatus.Text = "Indexing....";
-            Indexing.IndexFromDatabaseStorage(indexStorage, caption);
+           FileInfo[] files =  FileManager.GetInstance().GetAllFileInFolder(Config.TEXT_CAPTION_PATH);
+           foreach (FileInfo f in files)
+           {
+               List<TextCaption> caption = JsonConvert.DeserializeObject<List<TextCaption>>(FileManager.GetInstance().ReadContentFile(f.FullName));
+               Console.WriteLine(caption.Count);
+               lblStatus.Text = "Indexing....";
+               Indexing.IndexFromDatabaseStorage(indexStorage, caption);
+           }
+            
+           
 
             lblStatus.Text = "Close IndexStorage";
             indexStorage.CloseIndexStorage();
-
-    
             btnTextCaptionIndexing.Enabled = true;
 
            

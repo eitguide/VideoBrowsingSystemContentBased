@@ -245,16 +245,18 @@ namespace VideoBrowsingSystemContentBased.Controller
         public void DecodeTextCaptionFromDencap(String jsonCaptionPath, String ouputFile)
         {
             int take = 10;
-
+            
             if (!Directory.Exists(jsonCaptionPath))
                 return;
 
             String[] files = Directory.GetFiles(jsonCaptionPath);
+
             List<TextCaption> textCaptions = new List<TextCaption>();
 
-            foreach (String f in files)
+
+            for (int index = 0; index < files.Length; index++)
             {
-                DenseCap itemDenseCap = DecodeDenseCap(f);
+                DenseCap itemDenseCap = DecodeDenseCap(files[index]);
                 String inputDir = itemDenseCap.opt.input_dir;
 
                 for (int i = 0; i < itemDenseCap.results.Count; i++)
@@ -273,12 +275,17 @@ namespace VideoBrowsingSystemContentBased.Controller
                     builder = null;
                     textCaptions.Add(textCaption);
                 }
+
+                if ((index != 0 && (index % 500 == 0)) || index == (files.Length - 1))
+                {
+                    Console.WriteLine("WriteJson");
+                    String str = JsonConvert.SerializeObject(textCaptions);
+                    WriteFile(str, "densecap_json_" + index.ToString() + ".json" );
+                    textCaptions.Clear();
+                }
                 itemDenseCap = null;
             }
 
-            String str = JsonConvert.SerializeObject(textCaptions);
-            WriteFile(str, ouputFile);
-            textCaptions.Clear();
             textCaptions = null;
         }
 
