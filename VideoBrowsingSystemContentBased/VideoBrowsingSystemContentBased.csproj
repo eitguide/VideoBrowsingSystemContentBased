@@ -75,9 +75,16 @@
     <Compile Include="Model\Variables.cs" />
     <Compile Include="Utils\ColorHelper.cs" />
     <Compile Include="Utils\Decoder.cs" />
+    <Compile Include="Utils\DistanceHelper.cs" />
     <Compile Include="Utils\ImageHelper.cs" />
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="Utils\RandomHelper.cs" />
+    <Compile Include="View\ImageIndexing.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\ImageIndexing.Designer.cs">
+      <DependentUpon>ImageIndexing.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\IndexProcessing.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -115,6 +122,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="View\ImageIndexing.resx">
+      <DependentUpon>ImageIndexing.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\IndexProcessing.resx">
       <DependentUpon>IndexProcessing.cs</DependentUpon>
     </EmbeddedResource>
