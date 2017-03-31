@@ -25,33 +25,6 @@ namespace VideoBrowsingSystemContentBased.View
         {
             this.VisualWord = ColorHelper.GenerateColorVisualWord();
             Console.WriteLine("Size: " + this.VisualWord.Count);
-            
-            int SMALL_DISTANCE = 64;
-            List<Color> listRemove = new List<Color>();
-            foreach (Color c1 in this.VisualWord)
-            {
-                int i =0 ;
-                foreach (Color c2 in this.VisualWord)
-                {
-                    if (c1.R == c2.R && c1.G == c2.G && c1.B == c2.B)
-                        break;
-
-                    double distance = DistanceHelper.CalDistance(c1, c2);
-                    Console.WriteLine("DISTANCE: " + distance);
-                    if (distance <= SMALL_DISTANCE)
-                    {
-                        if (!listRemove.Contains(c2))
-                        {
-                            listRemove.Add(c2);
-                        }
-                    }
-                }
-            }
-            foreach (Color c in listRemove)
-            {
-                this.VisualWord.Remove(c);
-            }
-            Console.WriteLine("Size: " + this.VisualWord.Count);
         }
 
         private void button1_Click(object sender, EventArgs e)
