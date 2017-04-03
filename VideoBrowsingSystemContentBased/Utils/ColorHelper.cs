@@ -24,7 +24,7 @@ namespace VideoBrowsingSystemContentBased.Utils
         {
             List<Color> visualWord = new List<Color>();
             int COLOR_MAX = 255;
-            int STEP = 256 / 4;
+            int STEP = 256 / 5;
 
             int MIX = STEP / 2;
             for (int R = MIX; R <= COLOR_MAX; R += STEP)

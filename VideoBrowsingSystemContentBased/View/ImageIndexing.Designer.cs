@@ -40,6 +40,7 @@
             this.btnVisualize = new System.Windows.Forms.Button();
             this.pnListColor = new System.Windows.Forms.Panel();
             this.btnVisualizeListColor = new System.Windows.Forms.Button();
+            this.btnPCTIndexing = new System.Windows.Forms.Button();
             this.rpVisualize.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -146,11 +147,22 @@
             this.btnVisualizeListColor.UseVisualStyleBackColor = true;
             this.btnVisualizeListColor.Click += new System.EventHandler(this.btnVisualizeListColor_Click);
             // 
+            // btnPCTIndexing
+            // 
+            this.btnPCTIndexing.Location = new System.Drawing.Point(388, 69);
+            this.btnPCTIndexing.Name = "btnPCTIndexing";
+            this.btnPCTIndexing.Size = new System.Drawing.Size(112, 23);
+            this.btnPCTIndexing.TabIndex = 11;
+            this.btnPCTIndexing.Text = "PCT Indexing";
+            this.btnPCTIndexing.UseVisualStyleBackColor = true;
+            this.btnPCTIndexing.Click += new System.EventHandler(this.btnPCTIndexing_Click);
+            // 
             // ImageIndexing
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(566, 579);
+            this.Controls.Add(this.btnPCTIndexing);
             this.Controls.Add(this.btnVisualizeListColor);
             this.Controls.Add(this.pnListColor);
             this.Controls.Add(this.btnVisualize);
@@ -184,5 +196,6 @@
         private System.Windows.Forms.Button btnVisualize;
         private System.Windows.Forms.Panel pnListColor;
         private System.Windows.Forms.Button btnVisualizeListColor;
+        private System.Windows.Forms.Button btnPCTIndexing;
     }
 }

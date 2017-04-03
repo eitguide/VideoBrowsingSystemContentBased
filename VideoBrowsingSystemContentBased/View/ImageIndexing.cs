@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using VideoBrowsingSystemContentBased.Controller;
+using VideoBrowsingSystemContentBased.Controller.ImageIndexing;
 using VideoBrowsingSystemContentBased.Model;
 using VideoBrowsingSystemContentBased.Utils;
 
@@ -14,7 +17,7 @@ namespace VideoBrowsingSystemContentBased.View
 {
     public partial class ImageIndexing : Form
     {
-        private List<Color> VisualWord;
+        private List<VisualWordCell> VisualWord;
         public ImageIndexing()
         {
             InitializeComponent();
@@ -23,16 +26,14 @@ namespace VideoBrowsingSystemContentBased.View
 
         void ImageIndexing_Load(object sender, EventArgs e)
         {
-            this.VisualWord = ColorHelper.GenerateColorVisualWord();
-            Console.WriteLine("Size: " + this.VisualWord.Count);
+  
+            this.VisualWord = VisualWordHelper.CreateVisualWordCell();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            this.VisualWord = ColorHelper.GenerateColorVisualWord();
-            Console.WriteLine("Generate Finished");
+          
         }
-
 
         private void DrawDot(Graphics g, Dot dot)
         {
@@ -48,13 +49,17 @@ namespace VideoBrowsingSystemContentBased.View
 
             Color c = Color.FromArgb(255, R, G, B);
 
-            DrawDot(pnVisualizse.CreateGraphics(), new Dot(new Point(50, 50), 20, c));
-            int index = DistanceHelper.ColorKNN(c, this.VisualWord);
+            List<Color> colorVisualWord = ColorHelper.GenerateColorVisualWord();
 
-            Color result = VisualWord[index];
+            DrawDot(pnVisualizse.CreateGraphics(), new Dot(new Point(50, 50), 20, c));
+            int index = DistanceHelper.ColorKNN(c, colorVisualWord);
+
+            Color result = VisualWord[index].Color;
             Console.WriteLine("Index: " + index + ", " + "Color: " + result.ToString());
 
-            Color resultColor = VisualWord[index];
+
+
+            Color resultColor = colorVisualWord[index];
             DrawDot(pnVisualizse.CreateGraphics(), new Dot(new Point(100, 50), 20, resultColor));
           
 
@@ -66,9 +71,11 @@ namespace VideoBrowsingSystemContentBased.View
             pnListColor.CreateGraphics().SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             int x = 0, y = 0;
             int widthEachColor = 30;
-            for (int i = 0; i < this.VisualWord.Count; i++)
+
+            List<Color> colorVisualWord = ColorHelper.GenerateColorVisualWord();
+            for (int i = 0; i < colorVisualWord.Count; i++)
             {
-                DrawDot(pnListColor.CreateGraphics(), new Dot(new Point(x + widthEachColor / 2, y + widthEachColor / 2), widthEachColor / 2, this.VisualWord[i]));
+                DrawDot(pnListColor.CreateGraphics(), new Dot(new Point(x + widthEachColor / 2, y + widthEachColor / 2), widthEachColor / 2, colorVisualWord[i]));
                 x += widthEachColor;
 
                 // go to new row 
@@ -79,5 +86,33 @@ namespace VideoBrowsingSystemContentBased.View
                 }
             }
         }
+
+        private void btnPCTIndexing_Click(object sender, EventArgs e)
+        {
+            string[] SubDirs = Directory.GetDirectories(Config.PCT_OUPUT_PATH);
+
+            //foreach (String folderPath in SubDirs)
+            //{
+            //    FileInfo[] fileInfos = FileManager.GetInstance().GetAllFileInFolder(folderPath);
+            //    int sizeFiles = fileInfos.Length;
+            //    for (int i = 0; i < sizeFiles; i++)
+            //    {
+            //        PCTFeature pct = PCTReadingFeature.ReadingFeatureFromFile(fileInfos[i].FullName);
+            //    }
+            //}
+
+
+
+            Dictionary<String, List<String>> dic = PCTIndexing.LoadImageIndexStrorage(Config.PCT_INDEX_STORAGE);
+            //PCTIndexing.RunIndexing(Config.PCT_INDEX_STORAGE);
+           
+            List<Dot> dots = new List<Dot>();
+            Dot dot = new Dot(new Point(65,65), 15, Color.FromArgb(25,46,242));
+            dots.Add(dot);
+
+            List<String> result = PCTIndexing.Searching(dic, dots, new Size(320, 240));
+        }
+
+        
     }
 }

@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VideoBrowsingSystemContentBased.Model;
 
 namespace VideoBrowsingSystemContentBased.Utils
 {
@@ -29,7 +30,6 @@ namespace VideoBrowsingSystemContentBased.Utils
                 return -1;
 
             double minDistance = CalDistance(c, listColor[0]);
-            Console.WriteLine("MinDis: " + minDistance);
             int size = listColor.Count;
             int indexColor = 0;
             for (int i = 1; i < size; i++)
@@ -37,7 +37,6 @@ namespace VideoBrowsingSystemContentBased.Utils
                 double dis = CalDistance(c, listColor[i]);
                 if (dis < minDistance)
                 {
-                    Console.WriteLine(dis);
                     minDistance = dis;
                     indexColor = i;
                 }

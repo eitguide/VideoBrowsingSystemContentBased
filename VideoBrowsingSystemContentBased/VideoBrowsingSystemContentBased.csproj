@@ -62,6 +62,8 @@
   <ItemGroup>
     <Compile Include="Config.cs" />
     <Compile Include="Controller\FileManager.cs" />
+    <Compile Include="Controller\ImageIndexing\PCTIndexing.cs" />
+    <Compile Include="Controller\ImageIndexing\PCTReadingFeature.cs" />
     <Compile Include="Controller\TextIndexing\Indexing.cs" />
     <Compile Include="Controller\TextIndexing\IndexStorage.cs" />
     <Compile Include="Model\IShape.cs" />
@@ -70,15 +72,18 @@
     <Compile Include="Controller\TextIndexing\XMLParser.cs" />
     <Compile Include="Model\Dot.cs" />
     <Compile Include="Model\LineDrawing.cs" />
+    <Compile Include="Model\PCTFeature.cs" />
     <Compile Include="Model\TextCaption.cs" />
     <Compile Include="Model\TextSpot.cs" />
     <Compile Include="Model\Variables.cs" />
+    <Compile Include="Model\VisualWordCell.cs" />
     <Compile Include="Utils\ColorHelper.cs" />
     <Compile Include="Utils\Decoder.cs" />
     <Compile Include="Utils\DistanceHelper.cs" />
     <Compile Include="Utils\ImageHelper.cs" />
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="Utils\RandomHelper.cs" />
+    <Compile Include="Utils\VisualWordHelper.cs" />
     <Compile Include="View\ImageIndexing.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -150,7 +155,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Callback\" />
-    <Folder Include="Controller\ImageIndexing\" />
     <Folder Include="Controller\PreprocessingVideo\" />
   </ItemGroup>
   <ItemGroup>

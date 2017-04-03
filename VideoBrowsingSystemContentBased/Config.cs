@@ -32,7 +32,11 @@ namespace VideoBrowsingSystemContentBased
         //Path of foder which store final result of textspotting
         public static String TEXT_PLOTTING_PATH = @"D:/SoureThesis/Data/textplotting.txt";
 
-        public static String FPS_VIDEO_PATH = @"D:\SoureThesis\Data\video_fps.xml";
+        public static String FPS_VIDEO_PATH = @"D:/SoureThesis/Data/video_fps.xml";
+
+        public static String PCT_OUPUT_PATH = @"D:/SoureThesis/Data/pct_output";
+
+        public static String PCT_INDEX_STORAGE = @"D:/SoureThesis/Data/pct_indexing";
         //Rank for searching
         public static int TOP_RANK = 100;
     }

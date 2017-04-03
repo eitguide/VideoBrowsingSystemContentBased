@@ -47,6 +47,7 @@ namespace VideoBrowsingSystemContentBased.Controller
             if (!Directory.Exists(folderPath))
                 return null;
 
+
             DirectoryInfo directory = new DirectoryInfo(folderPath);
             return directory.GetFiles();
         }
