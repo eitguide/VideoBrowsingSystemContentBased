@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using VideoBrowsingSystemContentBased.Controller;
+using VideoBrowsingSystemContentBased.Controller.ImageIndexing;
 using VideoBrowsingSystemContentBased.Controller.TextIndexing;
 using VideoBrowsingSystemContentBased.Model;
 using VideoBrowsingSystemContentBased.TextIndexing;
@@ -31,8 +32,9 @@ namespace VideoBrowsingSystemContentBased
         private Dictionary<String, String> mappingVideoName;
         private Dictionary<String, float> mappingFPS;
         private SearchType searchType = SearchType.CAPTION;
-        private int NUMBER_OF_PIC_BOX_FRAMES = 100;
+        private int NUMBER_OF_MAX_RESULT_FRAMES = 500;
         private int countPicFrameIsShowing;
+        private Dictionary<String, List<String>> pctIndexStorage;
 
         public VideoBrowsingForm()
         {
@@ -80,6 +82,8 @@ namespace VideoBrowsingSystemContentBased
 
             mappingVideoName = FileManager.GetInstance().GetDictionaryVideoName(Config.MAPPING_VIDEO_NAME_PATH);
             mappingFPS = XMLParser.GetFPSDictionary(Config.FPS_VIDEO_PATH);
+
+            pctIndexStorage = PCTIndexing.LoadImageIndexStrorage(Config.PCT_INDEX_STORAGE);
         }
 
         public void InitLayout()
@@ -105,7 +109,7 @@ namespace VideoBrowsingSystemContentBased
 
             rbtnORC.Checked = true;
 
-            for (int i = 0; i < NUMBER_OF_PIC_BOX_FRAMES; i++)
+            for (int i = 0; i < NUMBER_OF_MAX_RESULT_FRAMES; i++)
             {
                 PictureBox pic = new PictureBox();
                 pic.Visible = false;
@@ -183,6 +187,11 @@ namespace VideoBrowsingSystemContentBased
             //}
         }
 
+        private void DrawDot(Graphics g, Dot dot)
+        {
+            SolidBrush brush = new SolidBrush(dot.color);
+            g.FillEllipse(brush, dot.location.X - dot.radius, dot.location.Y - dot.radius, dot.radius * 2, dot.radius * 2);
+        }
 
         #region Events
         // Form
@@ -282,9 +291,57 @@ namespace VideoBrowsingSystemContentBased
             List<Dot> listDotsDrawed = putColorAndSketch1.GetListDotsDrawed();
 
             // Save list line-drawing to file
-            Bitmap bitmapListLineDrawingDrawed = putColorAndSketch1.GetBitmapListLineDrawingDrawed();
-            FileManager.GetInstance().SaveBitmapToPNG(bitmapListLineDrawingDrawed, "D:/phuc.png");
-            MessageBox.Show("PNG Image was saved!");
+            //Bitmap bitmapListLineDrawingDrawed = putColorAndSketch1.GetBitmapListLineDrawingDrawed();
+            //FileManager.GetInstance().SaveBitmapToPNG(bitmapListLineDrawingDrawed, "D:/phuc.png");
+            //MessageBox.Show("PNG Image was saved!");
+
+
+          
+
+            Console.WriteLine("Visual Word  Count: " + pctIndexStorage.Count);
+            PCTIndexing.LogDic(pctIndexStorage);
+
+            //for (int i = 0; i < pctIndexStorage.Count; i++)
+            //{
+            //    //string _key = pctIndexStorage.ElementAt(i).Key;
+            //    //string[] arr = _key.Split('_');
+            //    //if ((int.Parse(arr[3]) == 1 && int.Parse(arr[4]) == 1) || (int.Parse(arr[3]) == 1 && int.Parse(arr[4]) == 2))
+            //    KeyValuePair<string, List<string>> kv = pctIndexStorage.ElementAt(i);
+            //    Console.WriteLine(string.Format("{0}.\t{1}\t{2}", i, kv.Key, kv.Value.Count));
+            //}
+
+
+            
+            //string key = pctIndexStorage.ElementAt(1373).Key;
+            //Console.WriteLine("Key is" + key);
+            //string[] phuc_rgb = key.Split('_');
+            //Color phuc_color = Color.FromArgb(int.Parse(phuc_rgb[0]), int.Parse(phuc_rgb[1]), int.Parse(phuc_rgb[2]));
+            //DrawDot(grbxSearchByText.CreateGraphics(), new Dot(new Point(100, 20), 50, phuc_color));
+
+
+            List<String> result = PCTIndexing.SearchingV2(this.pctIndexStorage, listDotsDrawed, putColorAndSketch1.GetPaperDrawingWidthHeight());
+            if (result == null || result.Count == 0)
+            {
+                MessageBox.Show("Không tìm thấy!");
+                return;
+            }
+            result = result.Take(NUMBER_OF_MAX_RESULT_FRAMES).ToList();
+            
+            List<string> listPath = new List<string>();
+            foreach (string item in result)
+            {
+                string fileName = item + ".jpg";
+                Frame frame = Utils.Decoder.DecodeFrameFromName(fileName);
+
+                String root = Path.Combine(Config.FRAME_DATA_PATH, String.Format("TRECVID2016_{0}", frame.VideoId));
+                fileName = Path.Combine(root, fileName);
+
+                //Console.WriteLine(fileName);
+                listPath.Add(fileName);
+            }
+
+
+            ClearAndAddImagesToPanelFrame(listPath);
         }
         // PictureBox
         void pic_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -342,6 +399,7 @@ namespace VideoBrowsingSystemContentBased
         {
             List<string> listFilePath = e.Argument as List<string>;
             MyUserState userState = new MyUserState();
+            PictureBoxSizeMode displayMode = PictureBoxSizeMode.StretchImage;
 
             // Init for display
             int widthEachImg = pnListFrame.Width / 9, heightEachImg = pnListFrame.Height / 8;  // width & height for each image
@@ -365,12 +423,25 @@ namespace VideoBrowsingSystemContentBased
                         //pic.Location = new Point(x, y);
                         //pic.Size = new Size(widthEachImg, heightEachImg);
                         //pic.SizeMode = displayMode;
-                        userState.index = i;
-                        userState.totalFile = listFilePath.Count;
-                        userState.location = new Point(x, y);
-                        userState.size = new Size(widthEachImg, heightEachImg);
-                        userState.file_url = listFilePath[i];
-                        bgWorker_LoadFrames.ReportProgress(0, userState);
+                        //userState.index = i;
+                        //userState.totalFile = listFilePath.Count;
+                        //userState.location = new Point(x, y);
+                        //userState.size = new Size(widthEachImg, heightEachImg);
+                        //userState.file_url = listFilePath[i];
+                        //bgWorker_LoadFrames.ReportProgress(0, userState);
+                        Invoke((Action)(() => {
+                            pnListFrame.AutoScroll = false;
+
+                            PictureBox pic = pnListFrame.Controls[i] as PictureBox;
+                            pic.Visible = true;
+                            pic.Image = Image.FromFile(listFilePath[i]);
+                            pic.Tag = listFilePath[i];
+                            pic.Location = new Point(x, y);
+                            pic.Size = new Size(widthEachImg, heightEachImg);
+                            pic.SizeMode = displayMode;
+
+                            statusBar1.Panels[0].Text = "Loading " + (i + 1) + "/" + listFilePath.Count + " images";
+                        }));
                         x += widthEachImg;
                         //pn.Controls.Add(pic);
 
@@ -416,6 +487,7 @@ namespace VideoBrowsingSystemContentBased
         private void bgWorker_LoadFrames_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             statusBar1.Panels[0].Text = "Total: " + countPicFrameIsShowing + " (images)";
+            pnListFrame.AutoScroll = true;
         }
         // AxWindowsMediaPlayer
         private void axWMP_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)

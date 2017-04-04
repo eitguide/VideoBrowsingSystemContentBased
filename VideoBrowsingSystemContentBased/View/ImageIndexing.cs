@@ -69,13 +69,14 @@ namespace VideoBrowsingSystemContentBased.View
         {
             pnListColor.AutoScroll = true;
             pnListColor.CreateGraphics().SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            Graphics g = pnListColor.CreateGraphics();
             int x = 0, y = 0;
             int widthEachColor = 30;
 
             List<Color> colorVisualWord = ColorHelper.GenerateColorVisualWord();
             for (int i = 0; i < colorVisualWord.Count; i++)
             {
-                DrawDot(pnListColor.CreateGraphics(), new Dot(new Point(x + widthEachColor / 2, y + widthEachColor / 2), widthEachColor / 2, colorVisualWord[i]));
+                DrawDot(g, new Dot(new Point(x + widthEachColor / 2, y + widthEachColor / 2), widthEachColor / 2, colorVisualWord[i]));
                 x += widthEachColor;
 
                 // go to new row 
@@ -89,28 +90,13 @@ namespace VideoBrowsingSystemContentBased.View
 
         private void btnPCTIndexing_Click(object sender, EventArgs e)
         {
-            string[] SubDirs = Directory.GetDirectories(Config.PCT_OUPUT_PATH);
-
-            //foreach (String folderPath in SubDirs)
-            //{
-            //    FileInfo[] fileInfos = FileManager.GetInstance().GetAllFileInFolder(folderPath);
-            //    int sizeFiles = fileInfos.Length;
-            //    for (int i = 0; i < sizeFiles; i++)
-            //    {
-            //        PCTFeature pct = PCTReadingFeature.ReadingFeatureFromFile(fileInfos[i].FullName);
-            //    }
-            //}
-
-
+            
+            PCTIndexing.RunIndexing(Config.PCT_INDEX_STORAGE);
 
             Dictionary<String, List<String>> dic = PCTIndexing.LoadImageIndexStrorage(Config.PCT_INDEX_STORAGE);
-            //PCTIndexing.RunIndexing(Config.PCT_INDEX_STORAGE);
+            
            
-            List<Dot> dots = new List<Dot>();
-            Dot dot = new Dot(new Point(65,65), 15, Color.FromArgb(25,46,242));
-            dots.Add(dot);
-
-            List<String> result = PCTIndexing.Searching(dic, dots, new Size(320, 240));
+         
         }
 
         

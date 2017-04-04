@@ -71,6 +71,12 @@ namespace VideoBrowsingSystemContentBased.Widget
             return listDotsDrawed;
         }
 
+        public Size GetPaperDrawingWidthHeight()
+        {
+            // always width:height = 16:9
+            return picbxPaperDrawing.Size;
+        }
+
         public void FixLayout(int width)
         {
             picbxColorPicker.Width = width;

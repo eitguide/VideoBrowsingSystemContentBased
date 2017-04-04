@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VideoBrowsingSystemContentBased.Controller.ImageIndexing;
 using VideoBrowsingSystemContentBased.Model;
 
 namespace VideoBrowsingSystemContentBased.Utils
@@ -19,9 +20,9 @@ namespace VideoBrowsingSystemContentBased.Utils
 
             foreach (Color item in colorVisualWord)
 	        {
-		        for (int xIndex = 0; xIndex < 9; xIndex++)
+		        for (int xIndex = 0; xIndex < PCTIndexing.NUMBER_OF_HORIZONTAL_REGION; xIndex++)
                 {
-                    for (int yIndex = 0; yIndex < 6; yIndex++)
+                    for (int yIndex = 0; yIndex < PCTIndexing.NUMBER_OF_VERTICAL_REGION; yIndex++)
                     {
                         listVisualWord.Add(new VisualWordCell(xIndex, yIndex, item));
                     }

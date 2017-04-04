@@ -40,9 +40,9 @@ namespace VideoBrowsingSystemContentBased.Controller.ImageIndexing
                 int y = int.Parse(str[1].Trim());
                 int radius = int.Parse(str[2].Trim());
 
-                int r = int.Parse(str[3].Trim());
+                int b = int.Parse(str[3].Trim());
                 int g = int.Parse(str[4].Trim());
-                int b = int.Parse(str[5].Trim());
+                int r = int.Parse(str[5].Trim());
 
                 Dot dot = new Dot(new Point(x, y), radius, Color.FromArgb(255, r, g, b));
                 pct.ListColorPoint.Add(dot);

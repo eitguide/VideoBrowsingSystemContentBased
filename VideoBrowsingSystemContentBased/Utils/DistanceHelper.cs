@@ -18,6 +18,11 @@ namespace VideoBrowsingSystemContentBased.Utils
             return Math.Sqrt(R_2 + G_2 + B_2);
         }
 
+        public static double CalDistance(Point p1, Point p2)
+        {
+            return Math.Sqrt(Math.Pow(p1.X - p2.X, 2) + Math.Pow(p1.Y - p2.Y, 2));
+        }
+
         /// <summary>
         /// Find Color nearest
         /// </summary>
