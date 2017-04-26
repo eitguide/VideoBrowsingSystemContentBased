@@ -1,6 +1,6 @@
 ﻿namespace VideoBrowsingSystemContentBased.Widget
 {
-    partial class PutColorAndSketch
+    partial class PutColorAndSketchV2
     {
         /// <summary> 
         /// Required designer variable.
@@ -29,16 +29,15 @@
         private void InitializeComponent()
         {
             this.pnlToolBox = new System.Windows.Forms.Panel();
-            this.pnlBrushSize = new System.Windows.Forms.Panel();
             this.btnUndo = new System.Windows.Forms.Button();
             this.btnClear = new System.Windows.Forms.Button();
+            this.pnlBrushSize = new System.Windows.Forms.Panel();
             this.btnDotColors = new System.Windows.Forms.Button();
             this.btnSketch = new System.Windows.Forms.Button();
             this.picbxPaperDrawing = new System.Windows.Forms.PictureBox();
-            this.picbxColorPicker = new System.Windows.Forms.PictureBox();
+            this.pnlColorPicker = new System.Windows.Forms.Panel();
             this.pnlToolBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picbxPaperDrawing)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picbxColorPicker)).BeginInit();
             this.SuspendLayout();
             // 
             // pnlToolBox
@@ -53,15 +52,6 @@
             this.pnlToolBox.Name = "pnlToolBox";
             this.pnlToolBox.Size = new System.Drawing.Size(33, 396);
             this.pnlToolBox.TabIndex = 1;
-            // 
-            // pnlBrushSize
-            // 
-            this.pnlBrushSize.Location = new System.Drawing.Point(0, 74);
-            this.pnlBrushSize.Margin = new System.Windows.Forms.Padding(0);
-            this.pnlBrushSize.Name = "pnlBrushSize";
-            this.pnlBrushSize.Size = new System.Drawing.Size(33, 33);
-            this.pnlBrushSize.TabIndex = 2;
-            this.pnlBrushSize.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlBrushSize_Paint);
             // 
             // btnUndo
             // 
@@ -92,6 +82,15 @@
             this.btnClear.TabIndex = 3;
             this.btnClear.UseVisualStyleBackColor = true;
             this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+            // 
+            // pnlBrushSize
+            // 
+            this.pnlBrushSize.Location = new System.Drawing.Point(0, 74);
+            this.pnlBrushSize.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlBrushSize.Name = "pnlBrushSize";
+            this.pnlBrushSize.Size = new System.Drawing.Size(33, 33);
+            this.pnlBrushSize.TabIndex = 2;
+            this.pnlBrushSize.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlBrushSize_Paint);
             // 
             // btnDotColors
             // 
@@ -138,45 +137,41 @@
             this.picbxPaperDrawing.MouseMove += new System.Windows.Forms.MouseEventHandler(this.picbxPaperDrawing_MouseMove);
             this.picbxPaperDrawing.MouseUp += new System.Windows.Forms.MouseEventHandler(this.picbxPaperDrawing_MouseUp);
             // 
-            // picbxColorPicker
+            // pnlColorPicker
             // 
-            this.picbxColorPicker.Image = global::VideoBrowsingSystemContentBased.Properties.Resources.color_picker;
-            this.picbxColorPicker.Location = new System.Drawing.Point(40, 16);
-            this.picbxColorPicker.Margin = new System.Windows.Forms.Padding(4);
-            this.picbxColorPicker.Name = "picbxColorPicker";
-            this.picbxColorPicker.Size = new System.Drawing.Size(713, 340);
-            this.picbxColorPicker.TabIndex = 0;
-            this.picbxColorPicker.TabStop = false;
-            this.picbxColorPicker.Paint += new System.Windows.Forms.PaintEventHandler(this.picbxColorPicker_Paint);
-            this.picbxColorPicker.MouseClick += new System.Windows.Forms.MouseEventHandler(this.picbxColorPicker_MouseClick);
+            this.pnlColorPicker.Location = new System.Drawing.Point(68, 46);
+            this.pnlColorPicker.Name = "pnlColorPicker";
+            this.pnlColorPicker.Size = new System.Drawing.Size(200, 100);
+            this.pnlColorPicker.TabIndex = 2;
+            this.pnlColorPicker.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlColorPicker_Paint);
+            this.pnlColorPicker.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pnlColorPicker_MouseClick);
             // 
-            // PutColorAndSketch
+            // PutColorAndSketchV2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.pnlColorPicker);
             this.Controls.Add(this.pnlToolBox);
             this.Controls.Add(this.picbxPaperDrawing);
-            this.Controls.Add(this.picbxColorPicker);
             this.Margin = new System.Windows.Forms.Padding(4);
-            this.Name = "PutColorAndSketch";
+            this.Name = "PutColorAndSketchV2";
             this.Size = new System.Drawing.Size(917, 932);
             this.pnlToolBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picbxPaperDrawing)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picbxColorPicker)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.PictureBox picbxPaperDrawing;
-        private System.Windows.Forms.PictureBox picbxColorPicker;
         private System.Windows.Forms.Panel pnlToolBox;
-        private System.Windows.Forms.Button btnSketch;
-        private System.Windows.Forms.Button btnDotColors;
-        private System.Windows.Forms.Panel pnlBrushSize;
         private System.Windows.Forms.Button btnUndo;
         private System.Windows.Forms.Button btnClear;
+        private System.Windows.Forms.Panel pnlBrushSize;
+        private System.Windows.Forms.Button btnDotColors;
+        private System.Windows.Forms.Button btnSketch;
+        private System.Windows.Forms.PictureBox picbxPaperDrawing;
+        private System.Windows.Forms.Panel pnlColorPicker;
 
     }
 }

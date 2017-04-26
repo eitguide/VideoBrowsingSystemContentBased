@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using ColorMine.ColorSpaces;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -52,6 +53,16 @@ namespace VideoBrowsingSystemContentBased.Controller
             return directory.GetFiles();
         }
 
+        /// <summary>
+        /// Get all file-paths in folder and subfolders
+        /// </summary>
+        /// <param name="folderPath"></param>
+        /// <returns></returns>
+        public string[] GetAllFilePathsRecursive(string folderPath)
+        {
+            String[] allFilePaths = System.IO.Directory.GetFiles(folderPath, "*.*", System.IO.SearchOption.AllDirectories);
+            return allFilePaths;
+        }
 
         /// <summary>
         /// Get all frame in videoid Path
@@ -154,6 +165,83 @@ namespace VideoBrowsingSystemContentBased.Controller
             }
         }
 
+        /// <summary>
+        /// Write indexing-dictionary to json file without store json to string
+        /// </summary>
+        /// <param name="dicIndexing">the dictionary store visual-word</param>
+        /// <param name="fileSavePath">path to file with extension for saving, will override if exist</param>
+        public void WriteDicIndexingToJsonFile(Dictionary<string, List<string>> dicIndexing, string fileSavePath)
+        {
+            // init
+            FileStream fs = File.Create(fileSavePath);
+            fs.Close();
+            StreamWriter sw = File.AppendText(fileSavePath);
+            
+            // write the dictionary indexing data to json file
+            sw.Write("{ ");
+            int countKey = 0;
+            foreach (string key in dicIndexing.Keys)
+            {
+                countKey++;
+                sw.Write(string.Format("{0}{1}{2} : [", '"', key, '"'));
+
+                // write values of a key
+                int countValue = 0;
+                foreach (string value in dicIndexing[key])
+                {
+                    countValue++;
+                    sw.Write(string.Format("{0}{1}{2}", '"', value, '"'));
+                    if (countValue < dicIndexing[key].Count)
+                        sw.Write(",");
+                }
+
+                sw.Write("]");
+                if (countKey < dicIndexing.Keys.Count)
+                    sw.Write(",");
+            }
+            sw.Write(" }");
+
+            sw.Close();
+        }
+
+        ///// <summary>
+        ///// Write indexing-dictionary to json file without store json to string
+        ///// </summary>
+        ///// <param name="dicIndexing">the dictionary store visual-word</param>
+        ///// <param name="fileSavePath">path to file with extension for saving, will override if exist</param>
+        //public void WriteDicIndexingToJsonFile_Lab(Dictionary<Key_PCTIndexDicLab, List<string>> dicIndexing, string fileSavePath)
+        //{
+        //    // init file stream writing
+        //    FileStream fs = File.Create(fileSavePath);
+        //    fs.Close();
+        //    StreamWriter sw = File.AppendText(fileSavePath);
+
+        //    // write the dictionary indexing data to json file
+        //    sw.Write("{ ");
+        //    int countKey = 0;
+        //    foreach (Key_PCTIndexDicLab key in dicIndexing.Keys)
+        //    {
+        //        countKey++;
+        //        sw.Write(string.Format("{0}{1}, {2}, {3}, {4}{5} : [", '"', key.L, key.a, key.b, key.region, '"'));
+
+        //        // write values of a key
+        //        int countValue = 0;
+        //        foreach (string value in dicIndexing[key])
+        //        {
+        //            countValue++;
+        //            sw.Write(string.Format("{0}{1}{2}", '"', value, '"'));
+        //            if (countValue < dicIndexing[key].Count)
+        //                sw.Write(",");
+        //        }
+
+        //        sw.Write("]");
+        //        if (countKey < dicIndexing.Keys.Count)
+        //            sw.Write(",");
+        //    }
+        //    sw.Write(" }");
+
+        //    sw.Close();
+        //}
 
         /// <summary>
         /// Serialize Object in C# Program to Json and write it to file with a specific path

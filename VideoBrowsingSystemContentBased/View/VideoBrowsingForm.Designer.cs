@@ -41,14 +41,14 @@
             this.grbxVideoPlayer = new System.Windows.Forms.GroupBox();
             this.axWMP = new AxWMPLib.AxWindowsMediaPlayer();
             this.grbxSearchBySketch = new System.Windows.Forms.GroupBox();
+            this.btnSearchByImage = new System.Windows.Forms.Button();
             this.grbxSearchByText = new System.Windows.Forms.GroupBox();
             this.rbtnContent = new System.Windows.Forms.RadioButton();
             this.rbtnORC = new System.Windows.Forms.RadioButton();
             this.btnSearchByText = new System.Windows.Forms.Button();
             this.txtTextQuery = new System.Windows.Forms.TextBox();
             this.bgWorker_LoadFrames = new System.ComponentModel.BackgroundWorker();
-            this.btnSearchByImage = new System.Windows.Forms.Button();
-            this.putColorAndSketch1 = new VideoBrowsingSystemContentBased.Widget.PutColorAndSketch();
+            this.putColorAndSketchV2 = new VideoBrowsingSystemContentBased.Widget.PutColorAndSketchV2();
             this.tblpRoot.SuspendLayout();
             this.tblpLeft.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.statusBarPanel1)).BeginInit();
@@ -193,7 +193,7 @@
             // grbxSearchBySketch
             // 
             this.grbxSearchBySketch.Controls.Add(this.btnSearchByImage);
-            this.grbxSearchBySketch.Controls.Add(this.putColorAndSketch1);
+            this.grbxSearchBySketch.Controls.Add(this.putColorAndSketchV2);
             this.grbxSearchBySketch.Location = new System.Drawing.Point(0, 98);
             this.grbxSearchBySketch.Margin = new System.Windows.Forms.Padding(4);
             this.grbxSearchBySketch.Name = "grbxSearchBySketch";
@@ -202,6 +202,19 @@
             this.grbxSearchBySketch.TabIndex = 4;
             this.grbxSearchBySketch.TabStop = false;
             this.grbxSearchBySketch.Text = "Search By Sketch";
+            // 
+            // btnSearchByImage
+            // 
+            this.btnSearchByImage.Image = global::VideoBrowsingSystemContentBased.Properties.Resources.search_20x20;
+            this.btnSearchByImage.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnSearchByImage.Location = new System.Drawing.Point(10, 359);
+            this.btnSearchByImage.Margin = new System.Windows.Forms.Padding(4);
+            this.btnSearchByImage.Name = "btnSearchByImage";
+            this.btnSearchByImage.Size = new System.Drawing.Size(108, 34);
+            this.btnSearchByImage.TabIndex = 2;
+            this.btnSearchByImage.Text = "    Search";
+            this.btnSearchByImage.UseVisualStyleBackColor = true;
+            this.btnSearchByImage.Click += new System.EventHandler(this.btnSearchByImage_Click);
             // 
             // grbxSearchByText
             // 
@@ -269,26 +282,13 @@
             this.bgWorker_LoadFrames.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bgWorker_LoadFrames_ProgressChanged);
             this.bgWorker_LoadFrames.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgWorker_LoadFrames_RunWorkerCompleted);
             // 
-            // btnSearchByImage
+            // putColorAndSketchV2
             // 
-            this.btnSearchByImage.Image = global::VideoBrowsingSystemContentBased.Properties.Resources.search_20x20;
-            this.btnSearchByImage.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSearchByImage.Location = new System.Drawing.Point(10, 359);
-            this.btnSearchByImage.Margin = new System.Windows.Forms.Padding(4);
-            this.btnSearchByImage.Name = "btnSearchByImage";
-            this.btnSearchByImage.Size = new System.Drawing.Size(108, 34);
-            this.btnSearchByImage.TabIndex = 2;
-            this.btnSearchByImage.Text = "    Search";
-            this.btnSearchByImage.UseVisualStyleBackColor = true;
-            this.btnSearchByImage.Click += new System.EventHandler(this.btnSearchByImage_Click);
-            // 
-            // putColorAndSketch1
-            // 
-            this.putColorAndSketch1.Location = new System.Drawing.Point(4, 19);
-            this.putColorAndSketch1.Margin = new System.Windows.Forms.Padding(0);
-            this.putColorAndSketch1.Name = "putColorAndSketch1";
-            this.putColorAndSketch1.Size = new System.Drawing.Size(1108, 914);
-            this.putColorAndSketch1.TabIndex = 0;
+            this.putColorAndSketchV2.Location = new System.Drawing.Point(7, 23);
+            this.putColorAndSketchV2.Margin = new System.Windows.Forms.Padding(4);
+            this.putColorAndSketchV2.Name = "putColorAndSketchV2";
+            this.putColorAndSketchV2.Size = new System.Drawing.Size(917, 932);
+            this.putColorAndSketchV2.TabIndex = 3;
             // 
             // VideoBrowsingForm
             // 
@@ -330,7 +330,6 @@
         private System.Windows.Forms.GroupBox grbxFrameShot;
         private System.Windows.Forms.GroupBox grbxSearchByText;
         private System.Windows.Forms.GroupBox grbxSearchBySketch;
-        private Widget.PutColorAndSketch putColorAndSketch1;
         private System.Windows.Forms.RadioButton rbtnContent;
         private System.Windows.Forms.RadioButton rbtnORC;
         private System.Windows.Forms.GroupBox grbxVideoPlayer;
@@ -338,6 +337,7 @@
         private System.Windows.Forms.StatusBar statusBar1;
         private System.Windows.Forms.StatusBarPanel statusBarPanel1;
         private System.Windows.Forms.Button btnSearchByImage;
+        private Widget.PutColorAndSketchV2 putColorAndSketchV2;
 
     }
 }

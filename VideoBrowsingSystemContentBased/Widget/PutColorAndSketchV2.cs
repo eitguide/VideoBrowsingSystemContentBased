@@ -12,9 +12,8 @@ using VideoBrowsingSystemContentBased.Utils;
 
 namespace VideoBrowsingSystemContentBased.Widget
 {
-    public partial class PutColorAndSketch : UserControl
+    public partial class PutColorAndSketchV2 : UserControl
     {
-
         private bool selectedDotColors = false;
         private bool selectedSketch = false;
 
@@ -31,8 +30,9 @@ namespace VideoBrowsingSystemContentBased.Widget
         private int curBrushSizeSketchIndex = 0;
         private int curBrushSizeSketch;
         private Point selectedPixel = Point.Empty;
+        private List<Color> listColorVisualWords;
 
-        public PutColorAndSketch()
+        public PutColorAndSketchV2()
         {
             InitializeComponent();
             curBrushSizeDotColor = BRUSH_SIZES[curBrushSizeDotColorIndex];
@@ -40,6 +40,7 @@ namespace VideoBrowsingSystemContentBased.Widget
 
             CheckOptionDotColors();
             listShapes = new List<IShape>();
+            listColorVisualWords = ColorHelper.GenerateColorVisualWord_Rgb();
 
             // init events not available in [Design]
             pnlBrushSize.MouseWheel += pnlBrushSize_MouseWheel;
@@ -63,7 +64,7 @@ namespace VideoBrowsingSystemContentBased.Widget
             return bitmapListLineDrawingDrawed;
         }
 
-        public List<Dot_RGB> GetListDotsDrawed()
+        public List<Dot_RGB> GetListDotsDrawed_RGB()
         {
             List<Dot_RGB> listDotsDrawed = new List<Dot_RGB>();
             foreach(IShape shape in listShapes)
@@ -71,6 +72,20 @@ namespace VideoBrowsingSystemContentBased.Widget
                 if (shape is Dot_RGB)
                 {
                     listDotsDrawed.Add(shape as Dot_RGB);
+                }
+            }
+            return listDotsDrawed;
+        }
+
+        public List<Dot_Lab> GetListDotsDrawed_Lab()
+        {
+            List<Dot_Lab> listDotsDrawed = new List<Dot_Lab>();
+            foreach (IShape shape in listShapes)
+            {
+                if (shape is Dot_RGB)
+                {
+                    Dot_Lab dotLab = (shape as Dot_RGB).ToDotLab();
+                    listDotsDrawed.Add(dotLab);
                 }
             }
             return listDotsDrawed;
@@ -90,20 +105,19 @@ namespace VideoBrowsingSystemContentBased.Widget
 
         public void FixLayout(int width)
         {
-            picbxColorPicker.Width = width;
-            float ratioImgColorPicker = (float)picbxColorPicker.Image.Width / (float)picbxColorPicker.Image.Height;
-            picbxColorPicker.Height = (int)((float)width / ratioImgColorPicker);
-            picbxColorPicker.Location = new Point(0, 0);
-            picbxColorPicker.SizeMode = PictureBoxSizeMode.StretchImage;
-            
-            bitmapSampleColor = new Bitmap(picbxColorPicker.Image, picbxColorPicker.Width, picbxColorPicker.Height);
-            
-            picbxPaperDrawing.Location = new Point(pnlToolBox.Width, picbxColorPicker.Height);
+            pnlColorPicker.Width = width;
+            pnlColorPicker.Location = new Point(0, 0);
+            pnlColorPicker.Refresh();
+
+            bitmapSampleColor = new Bitmap(pnlColorPicker.Width, pnlColorPicker.Height);
+            pnlColorPicker.DrawToBitmap(bitmapSampleColor, new Rectangle(0, 0, pnlColorPicker.Width, pnlColorPicker.Height));
+
+            picbxPaperDrawing.Location = new Point(pnlToolBox.Width, pnlColorPicker.Height);
             picbxPaperDrawing.Width = width - pnlToolBox.Width;
             picbxPaperDrawing.Height = (int)((float)picbxPaperDrawing.Width * 9f / 16f);
             picbxPaperDrawing.SizeMode = PictureBoxSizeMode.CenterImage;
 
-            pnlToolBox.Location = new Point(0, picbxColorPicker.Height);
+            pnlToolBox.Location = new Point(0, pnlColorPicker.Height);
             pnlToolBox.Width = width - picbxPaperDrawing.Width;
             pnlToolBox.Height = picbxPaperDrawing.Height;
 
@@ -112,8 +126,8 @@ namespace VideoBrowsingSystemContentBased.Widget
             btnSketch.Location = new Point(0, pnlBrushSize.Height + btnDotColors.Height);
             btnUndo.Location = new Point(0, pnlToolBox.Height - btnClear.Height - btnUndo.Height);
             btnClear.Location = new Point(0, pnlToolBox.Height - btnClear.Height);
-                
-            this.Height = picbxColorPicker.Height + picbxPaperDrawing.Height;
+
+            this.Height = pnlColorPicker.Height + picbxPaperDrawing.Height;
         }
 
         private void CheckOptionDotColors()
@@ -185,13 +199,6 @@ namespace VideoBrowsingSystemContentBased.Widget
             }
         }
         // PictureBox
-        private void picbxColorPicker_MouseClick(object sender, MouseEventArgs e)
-        {
-            colorSelected = bitmapSampleColor.GetPixel(e.X, e.Y);
-            selectedPixel = e.Location;
-            picbxColorPicker.Refresh();
-            pnlBrushSize.Refresh();
-        }
         private void picbxPaperDrawing_MouseClick(object sender, MouseEventArgs e)
         {
             if (selectedDotColors)
@@ -260,16 +267,6 @@ namespace VideoBrowsingSystemContentBased.Widget
                 }
             }
         }
-        private void picbxColorPicker_Paint(object sender, PaintEventArgs e)
-        {
-            if (selectedPixel != Point.Empty)
-            {
-                Pen pen = new Pen(Color.Black);
-                pen.DashPattern = new float[] { 1, 1 };
-                int width = 10;
-                e.Graphics.DrawRectangle(pen, selectedPixel.X - width / 2, selectedPixel.Y - width / 2, width, width);
-            }
-        }
         // Panel
         private void pnlBrushSize_Paint(object sender, PaintEventArgs e)
         {
@@ -294,7 +291,7 @@ namespace VideoBrowsingSystemContentBased.Widget
                                                 (pnlBrushSize.Height - (int)textSize.Height) / 2);
             e.Graphics.DrawString(textToDrawn, fontToDrawn, brush, locationToDrawn);
         }
-        void pnlBrushSize_MouseWheel(object sender, MouseEventArgs e)
+        private void pnlBrushSize_MouseWheel(object sender, MouseEventArgs e)
         {
             if (selectedDotColors)
             {
@@ -327,6 +324,40 @@ namespace VideoBrowsingSystemContentBased.Widget
             else
                 throw new Exception("BRUSH_SIZE NOT FOUND!");
         }
+        private void pnlColorPicker_Paint(object sender, PaintEventArgs e)
+        {
+            Graphics g = e.Graphics;
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            int x = 0, y = 0, countRow = 1;
+            int widthEachColor = 30;
+            for (int i = 0; i < listColorVisualWords.Count; i++)
+            {
+                DrawDot(g, new Dot_RGB(new Point(x + widthEachColor / 2, y + widthEachColor / 2), widthEachColor / 2, listColorVisualWords[i]));
+                x += widthEachColor;
+
+                // go to new row 
+                if (x + widthEachColor > pnlColorPicker.Width - widthEachColor / 2)
+                {
+                    countRow++;
+                    x = 0;
+                    y += widthEachColor;
+                }
+            }
+            pnlColorPicker.Height = countRow * widthEachColor + 5;
+        }
+        private void pnlColorPicker_MouseClick(object sender, MouseEventArgs e)
+        {
+            Color colorSelectedTemp = bitmapSampleColor.GetPixel(e.X, e.Y);
+            if (!listColorVisualWords.Contains(colorSelectedTemp))
+                return;
+
+            colorSelected = colorSelectedTemp;
+            selectedPixel = e.Location;
+            //picbxColorPicker.Refresh();
+            pnlBrushSize.Refresh();
+        }
         #endregion
+
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿
+using ColorMine.ColorSpaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -14,294 +15,250 @@ namespace VideoBrowsingSystemContentBased.Controller.ImageIndexing
 {
     public class PCTIndexing
     {
-        public static int NUMBER_OF_HORIZONTAL_REGION = 3;
-        public static int NUMBER_OF_VERTICAL_REGION = 2;
-
-        public static void WriteVisualWordCell(String folder)
+        public static string GetIndexFileNameExtension()
         {
-            List<VisualWordCell> visualWordCells = VisualWordHelper.CreateVisualWordCell();
-
-            foreach (VisualWordCell item in visualWordCells)
+            string colorSpace = null;
+            string formula = null;
+            if (ConfigPCT.COLOR_SPACE_USING == ConfigPCT.ColorSpace.RGB)
             {
-
+                colorSpace = "rgb";
+                if (ConfigPCT.FORMULA_RGB_USING == ConfigPCT.FormulaRGB.RGB_Euclid)
+                    formula = "euclid";
             }
+            else if (ConfigPCT.COLOR_SPACE_USING == ConfigPCT.ColorSpace.Lab)
+            {
+                colorSpace = "lab";
+                if (ConfigPCT.FORMULA_LAB_USING == ConfigPCT.FormulaLab.Lab_CIE76)
+                    formula = "cie76";
+                else if (ConfigPCT.FORMULA_LAB_USING == ConfigPCT.FormulaLab.Lab_CMCIC)
+                    formula = "cmcic";
+                else if (ConfigPCT.FORMULA_LAB_USING == ConfigPCT.FormulaLab.Lab_CIE94)
+                    formula = "cie94";
+                else if (ConfigPCT.FORMULA_LAB_USING == ConfigPCT.FormulaLab.Lab_CIE2000)
+                    formula = "cie2000";
+            }
+            int nearThreshold;
+            if (ConfigPCT.ACCEPT_REGION_NEAR_EQUAL)
+                nearThreshold = ConfigPCT.THRESHOLD_PIXEL_NEAR_EQUAL_FOR_ACCEPT;
+            else
+                nearThreshold = 0;
+
+
+            string indexFileName = string.Format("pct_index_{0}_{1}_{2}x{3}_step{4}_radius{5}_noise{6}_near{7}.json",
+                colorSpace, formula, ConfigPCT.PCT_NUMBER_OF_HORIZONTAL_REGION, ConfigPCT.PCT_NUMBER_OF_VERTICAL_REGION,
+                ConfigPCT.PCT_STEP_INDEX_FILE, ConfigPCT.RADIUS_THRESHOLD, ConfigPCT.COLOR_NOISE_THRESHOLD, nearThreshold);
+
+            return indexFileName;
         }
 
-        public static void RunIndexing(String imageIndexStoragePath)
+        public static void RunIndexing_RGB(string imageIndexStoragePath)
         {
-            List<Color> colorVisualWord = ColorHelper.GenerateColorVisualWord();
-            Dictionary<String, List<String>> dic = new Dictionary<String, List<String>>();
-            List<VisualWordCell> visualWordCells = VisualWordHelper.CreateVisualWordCell();
-            foreach (var item in visualWordCells)
+            #region init
+            List<Color> visualWordColor = ColorHelper.GenerateColorVisualWord_Rgb();    // *
+            Dictionary<string, List<string>> visualWordMain = new Dictionary<String, List<string>>();
+            List<VisualWordCell_RGB> listKeys = VisualWordHelper.CreateListVWKeys_Rgb(); // *
+            foreach (var item in listKeys)
             {
+                // *
                 String key = item.Color.R + "_" + item.Color.G + "_" + item.Color.B + "_" + item.XIndex + "_" + item.YIndex;
-                dic.Add(key, new List<String>());
+                visualWordMain.Add(key, new List<String>());
             }
+            string indexFileNameExtension = GetIndexFileNameExtension();
+            #endregion
 
-
-            string[] SubDirs = Directory.GetDirectories(Config.PCT_OUPUT_PATH);
-
-            // Indexing for each files of each folders
+            // for each folder
             int count = 0;
+            string[] SubDirs = Directory.GetDirectories(ConfigCommon.PCT_OUTPUT_PATH);
             foreach (String folderPath in SubDirs)
             {
                 Console.WriteLine((++count) + ". " + folderPath);
                 FileInfo[] fileInfos = FileManager.GetInstance().GetAllFileInFolder(folderPath);
                 int sizeFiles = fileInfos.Length;
-                for (int i = 0; i < sizeFiles; i++)
+                // for each X file (X = PCTConfig.PCT_STEP_INDEX_FILE)
+                for (int i = 0; i < sizeFiles; i += ConfigPCT.PCT_STEP_INDEX_FILE)
                 {
-                    // Read color feature from file (PCT)
-                    PCTFeature pct = PCTReadingFeature.ReadingFeatureFromFile(fileInfos[i].FullName);
-                    float cellWidth = pct.Width / (float)NUMBER_OF_HORIZONTAL_REGION;
-                    float cellHeight = pct.Height / (float)NUMBER_OF_VERTICAL_REGION;
+                    // read data PCT from file
+                    PCTFeature_RGB dataPCT = PCTReadingFeature.ReadingFeatureFromFile_RGB(fileInfos[i].FullName); // *
 
-                    // Indexing each color of a frame
-                    foreach (Dot colorPoint in pct.ListColorPoint)
+                    // if number of color visual-word > Y, skip (Y = PCTConfig.COLOR_NOISE_THRESHOLD)
+                    int numberColor = CountColorsVW_RGB(dataPCT, visualWordColor);
+                    if (numberColor > ConfigPCT.COLOR_NOISE_THRESHOLD)
+                        continue;
+
+                    foreach (Dot_RGB colorPoint in dataPCT.ListColorPoint)
                     {
-                        //int xIndex = (int)(item.location.X / cellWidth);
-                        //int yIndex = (int)(item.location.Y / cellHeight);
-                        List<RegionOfImage> listRegionDotBelongTo = GetListRegionDotBelongTo(colorPoint, pct.Width, pct.Height);
-
-                        Color color = colorVisualWord[DistanceHelper.ColorKNN(colorPoint.color, colorVisualWord)];
-
-                        foreach (RegionOfImage region in listRegionDotBelongTo)
+                        // if radius >= Z, index it (Z = PCTConfig.RADIUS_THRESHOLD)
+                        if (colorPoint.radius >= ConfigPCT.RADIUS_THRESHOLD)
                         {
-                            String key = color.R + "_" + color.G + "_" + color.B + "_" + region.X + "_" + region.Y;
-                            dic[key].Add(pct.FrameName);
+                            List<RegionOfFrame> listRegionDotBelongTo = Utils.RegionOfFrameHelper.GetListRegionDotBelongTo(colorPoint.location, colorPoint.radius, dataPCT.Width, dataPCT.Height);
+                            Color color = visualWordColor[DistanceHelper.ColorKNN_RGB(colorPoint.color, visualWordColor)];
+
+                            foreach (RegionOfFrame region in listRegionDotBelongTo)
+                            {
+                                String key = color.R + "_" + color.G + "_" + color.B + "_" + region.X + "_" + region.Y;
+                                visualWordMain[key].Add(dataPCT.FrameName);
+                            }
                         }
                     }
-
                 }
             }
 
-            String json = JsonConvert.SerializeObject(dic);
-            FileManager.GetInstance().WriteFile(json, Path.Combine(imageIndexStoragePath, "index.json"));
-
+            // save the indexing to a file
+            //String json = JsonConvert.SerializeObject(visualWordMain);
+            //FileManager.GetInstance().WriteFile(json, Path.Combine(imageIndexStoragePath, "index.json"));
+            string fileSavePath = Path.Combine(imageIndexStoragePath, indexFileNameExtension);
+            if (File.Exists(fileSavePath))
+                File.Delete(fileSavePath);
+            FileManager.GetInstance().WriteDicIndexingToJsonFile(visualWordMain, fileSavePath);
         }
 
-        struct RegionOfImage
+        public static void RunIndexing_Lab(string imageIndexStoragePath)
         {
-            public int X;
-            public int Y;
-            public RegionOfImage(int xIndex, int yIndex) { this.X = xIndex; this.Y = yIndex; }
-        }
-
-        private static List<RegionOfImage> GetListRegionDotBelongTo(Dot dot, int widthFrame, int heightFrame)
-        {
-            List<RegionOfImage> resultListRegionDotBelongTo = new List<RegionOfImage>();
-            float regionWidth = widthFrame / (float)NUMBER_OF_HORIZONTAL_REGION;
-            float regionHeight = heightFrame / (float)NUMBER_OF_VERTICAL_REGION;
-
-            // add first region that dot already belong to
-            RegionOfImage firstRegion;
-            firstRegion.X = (int)(dot.location.X / regionWidth);
-            firstRegion.Y = (int)(dot.location.Y / regionHeight);
-            resultListRegionDotBelongTo.Add(firstRegion);
-
-            double distance;
-            // check left regions
-            if (firstRegion.X > 0)
+            #region init
+            List<Lab> visualWordColor = ColorHelper.GenerateColorVisualWord_Lab();    // *
+            Dictionary<string, List<string>> visualWordMain = new Dictionary<string, List<string>>();
+            List<VisualWordCell_Lab> listKeys = VisualWordHelper.CreateListVWKeys_Lab(); // *
+            foreach (var item in listKeys)
             {
-                #region middle left
-                for (int x = firstRegion.X - 1; x >= 0; x--)
-                {
-                    distance = dot.location.X - regionWidth * (x + 1);
-                    if (dot.radius > distance)
-                    {
-                        RegionOfImage roi = new RegionOfImage(x, firstRegion.Y);
-                        resultListRegionDotBelongTo.Add(roi);
-                    }
-                    else
-                        break;
-                }
-                #endregion
-                #region top left
-                if (firstRegion.Y > 0)
-                    for (int y = firstRegion.Y - 1; y >= 0; y--)
-                    {
-                        for (int x = firstRegion.X - 1; x >= 0; x--)
-                        {
-                            distance = DistanceHelper.CalDistance(dot.location, new Point((int)regionWidth * (x + 1), (int)regionHeight * (y + 1)));
-                            if (dot.radius > distance)
-                            {
-                                RegionOfImage roi = new RegionOfImage(x, y);
-                                resultListRegionDotBelongTo.Add(roi);
-                            }
-                            else
-                                break;
-                        }
-                    }
-                #endregion
-                #region bottom left
-                if (firstRegion.Y < NUMBER_OF_VERTICAL_REGION - 1)
-                    for (int y = firstRegion.Y + 1; y < NUMBER_OF_VERTICAL_REGION; y++)
-                    {
-                        for (int x = firstRegion.X - 1; x >= 0; x--)
-                        {
-                            distance = DistanceHelper.CalDistance(dot.location, new Point((int)regionWidth * (x + 1), (int)regionHeight * y));
-                            if (dot.radius > distance)
-                            {
-                                RegionOfImage roi = new RegionOfImage(x, y);
-                                resultListRegionDotBelongTo.Add(roi);
-                            }
-                            else
-                                break;
-                        }
-                    }
-                #endregion
+                // *
+                string key = item.Color.L + "_" + item.Color.A + "_" + item.Color.B + "_" + item.XIndex + "_" + item.YIndex;
+                visualWordMain.Add(key, new List<String>());
             }
-            // check right regions
-            if (firstRegion.X < NUMBER_OF_HORIZONTAL_REGION - 1)
-            {
-                #region middle right
-                for (int x = firstRegion.X + 1; x < NUMBER_OF_HORIZONTAL_REGION; x++)
-                {
-                    distance = regionWidth * x - dot.location.X;
-                    if (dot.radius > distance)
-                    {
-                        RegionOfImage roi = new RegionOfImage(x, firstRegion.Y);
-                        resultListRegionDotBelongTo.Add(roi);
-                    }
-                    else
-                        break;
-                }
-                #endregion
-                #region top right
-                if (firstRegion.Y > 0)
-                    for (int y = firstRegion.Y - 1; y >= 0; y--)
-                    {
-                        for (int x = firstRegion.X + 1; x < NUMBER_OF_HORIZONTAL_REGION; x++)
-                        {
-                            distance = DistanceHelper.CalDistance(dot.location, new Point((int)regionWidth * x, (int)regionHeight * (y + 1)));
-                            if (dot.radius > distance)
-                            {
-                                RegionOfImage roi = new RegionOfImage(x, y);
-                                resultListRegionDotBelongTo.Add(roi);
-                            }
-                            else
-                                break;
-                        }
-                    }
-                #endregion
-                #region bottom right
-                if (firstRegion.Y < NUMBER_OF_VERTICAL_REGION - 1)
-                    for (int y = firstRegion.Y + 1; y < NUMBER_OF_VERTICAL_REGION; y++)
-                    {
-                        for (int x = firstRegion.X + 1; x < NUMBER_OF_HORIZONTAL_REGION; x++)
-                        {
-                            distance = DistanceHelper.CalDistance(dot.location, new Point((int)regionWidth * x, (int)regionHeight * y));
-                            if (dot.radius > distance)
-                            {
-                                RegionOfImage roi = new RegionOfImage(x, y);
-                                resultListRegionDotBelongTo.Add(roi);
-                            }
-                            else
-                                break;
-                        }
-                    }
-                #endregion
-            }
-            // check middle regions
-            #region check and add region at middle top
-            if (firstRegion.Y > 0)
-                for (int y = firstRegion.Y - 1; y >= 0; y--)
-                {
-                    distance = dot.location.Y - regionHeight * (y + 1);
-                    if (dot.radius > distance)
-                    {
-                        RegionOfImage roi = new RegionOfImage(firstRegion.X, y);
-                        resultListRegionDotBelongTo.Add(roi);
-                    }
-                    else
-                        break;
-                }
-            #endregion
-            #region check and add region at middle bottom
-            if (firstRegion.Y < NUMBER_OF_VERTICAL_REGION - 1)
-                for (int y = firstRegion.Y + 1; y < NUMBER_OF_HORIZONTAL_REGION; y++)
-                {
-                    distance = regionHeight * y - dot.location.Y;
-                    if (dot.radius > distance)
-                    {
-                        RegionOfImage roi = new RegionOfImage(firstRegion.X, y);
-                        resultListRegionDotBelongTo.Add(roi);
-                    }
-                    else
-                        break;
-                }
+            string indexFileNameExtension = GetIndexFileNameExtension();
             #endregion
 
-            return resultListRegionDotBelongTo;
-        }
-
-        public static List<String> Searching(Dictionary<String, List<String>> dicVisualWords, List<Dot> listDot, Size input)
-        {
-            if (listDot == null || listDot.Count == 0)
-                return null;
-
-            float cellWidth = input.Width / (float)NUMBER_OF_HORIZONTAL_REGION;
-            float cellHeight = input.Height / (float)NUMBER_OF_VERTICAL_REGION;
-
-            Dot dot = listDot[0];
-            int xIndex = (int)(listDot[0].location.X / cellWidth);
-            int yIndex = (int)(listDot[0].location.Y / cellHeight);
-
-            List<Color> colorVisualWord = ColorHelper.GenerateColorVisualWord();
-            Color color = colorVisualWord[DistanceHelper.ColorKNN(dot.color, colorVisualWord)];
-            String key = color.R + "_" + color.G + "_" + color.B + "_" + xIndex + "_" + yIndex;
-            if (dicVisualWords.ContainsKey(key))
-                return dicVisualWords[key];
-
-            return null;
-        }
-
-        public static List<String> SearchingV2(Dictionary<String, List<String>> dicVisualWords, List<Dot> listDot, Size paperDrawingSize)
-        {
-            if (listDot == null || listDot.Count == 0)
-                return null;
-
-            float cellWidth = paperDrawingSize.Width / (float)NUMBER_OF_HORIZONTAL_REGION;
-            float cellHeight = paperDrawingSize.Height / (float)NUMBER_OF_VERTICAL_REGION;
-
-            List<Color> colorVisualWord = ColorHelper.GenerateColorVisualWord();
-            //Color color = colorVisualWord[DistanceHelper.ColorKNN(dot.color, colorVisualWord)];
-            //String key = color.R + "_" + color.G + "_" + color.B + "_" + xIndex + "_" + yIndex;
-
-            // Get list visual-words match the list colors > dicMatched
-            //listDot = new List<Dot>() { new Dot(new Point(50, 120), 50, colorVisualWord[2]) };
-            Dictionary<string, List<string>> dicMatched = new Dictionary<string, List<string>>();
-            foreach (Dot dot in listDot)
+            // for each folder
+            int count = 0;
+            string[] SubDirs = Directory.GetDirectories(ConfigCommon.PCT_OUTPUT_PATH);
+            foreach (String folderPath in SubDirs)
             {
-                Color color = colorVisualWord[DistanceHelper.ColorKNN(dot.color, colorVisualWord)];
-                List<RegionOfImage> listRegions = GetListRegionDotBelongTo(dot, paperDrawingSize.Width, paperDrawingSize.Height);
-                foreach (RegionOfImage region in listRegions)
+                Console.WriteLine((++count) + ". " + folderPath);
+                FileInfo[] fileInfos = FileManager.GetInstance().GetAllFileInFolder(folderPath);
+                int sizeFiles = fileInfos.Length;
+                // for each X file (X = PCTConfig.PCT_STEP_INDEX_FILE)
+                for (int i = 0; i < sizeFiles; i += ConfigPCT.PCT_STEP_INDEX_FILE)
                 {
-                    String key = color.R + "_" + color.G + "_" + color.B + "_" + region.X + "_" + region.Y;
-                    if (!dicMatched.ContainsKey(key))
-                        dicMatched.Add(key, dicVisualWords[key]);
+                    // read data PCT from file
+                    PCTFeature_Lab dataPCT = PCTReadingFeature.ReadingFeatureFromFile_Lab(fileInfos[i].FullName); // *
+
+                    // if number of color visual-word > Y, skip (Y = PCTConfig.COLOR_NOISE_THRESHOLD)
+                    int numberColor = CountColorsVW_Lab(dataPCT, visualWordColor);
+                    if (numberColor > ConfigPCT.COLOR_NOISE_THRESHOLD)
+                        continue;
+
+                    foreach (Dot_Lab colorPoint in dataPCT.ListColorPoint)
+                    {
+                        // if radius >= Z, index it (Z = PCTConfig.RADIUS_THRESHOLD)
+                        if (colorPoint.radius >= ConfigPCT.RADIUS_THRESHOLD)
+                        {
+                            List<RegionOfFrame> listRegionDotBelongTo = Utils.RegionOfFrameHelper.GetListRegionDotBelongTo(colorPoint.location, colorPoint.radius, dataPCT.Width, dataPCT.Height);
+                            Lab color = visualWordColor[DistanceHelper.ColorKNN_Lab(colorPoint.color, visualWordColor)];
+
+                            foreach (RegionOfFrame region in listRegionDotBelongTo)
+                            {
+                                //Key_PCTIndexDicLab key = new Key_PCTIndexDicLab(color.L, color.A, color.B, region.X + "_" + region.Y);
+                                string key = color.L + "_" + color.A + "_" + color.B + "_" + region.X + "_" + region.Y;
+                                visualWordMain[key].Add(dataPCT.FrameName);
+                            }
+                        }
+                    }
                 }
             }
 
-            // Intersect all item in dicMatched
-            List<string> listFramesResult = dicMatched.ElementAt(0).Value;
-            for (int i = 1; i < dicMatched.Count; i++)
-            {
-                listFramesResult = dicMatched.ElementAt(i).Value.Intersect(listFramesResult).ToList();
-            }
+            // save the indexing to a file
+            //String json = JsonConvert.SerializeObject(visualWordMain);
+            //FileManager.GetInstance().WriteFile(json, Path.Combine(imageIndexStoragePath, "index.json"));
+            string fileSavePath = Path.Combine(imageIndexStoragePath, indexFileNameExtension);
+            if (File.Exists(fileSavePath))
+                File.Delete(fileSavePath);
+            FileManager.GetInstance().WriteDicIndexingToJsonFile(visualWordMain, fileSavePath);
+        }
 
-            return listFramesResult;
+        private static int CountColorsVW_RGB(PCTFeature_RGB pct, List<Color> colorVisualWord)
+        {
+            //Dictionary<String, Color> map = new Dictionary<string, Color>();
+            List<string> listColorVWs = new List<string>();
+
+            foreach (var item in pct.ListColorPoint)
+            {
+                Color color = colorVisualWord[DistanceHelper.ColorKNN_RGB(item.color, colorVisualWord)];
+                String key = color.R + "_" + color.G + "_" + color.B;
+                if (!listColorVWs.Contains(key))
+                    listColorVWs.Add(key);
+                //if (!map.ContainsKey(key))
+                //    map.Add(key, color);
+
+            }
+            //int totalColor = map.Count;
+            //return totalColor;
+            return listColorVWs.Count;
+        }
+
+        private static int CountColorsVW_Lab(PCTFeature_Lab pct, List<Lab> colorVisualWord)
+        {
+            //Dictionary<String, Color> map = new Dictionary<string, Color>();
+            List<Lab> listColorVWs = new List<Lab>();
+
+            foreach (var item in pct.ListColorPoint)
+            {
+                Lab color = colorVisualWord[DistanceHelper.ColorKNN_Lab(item.color, colorVisualWord)];
+                if (!listColorVWs.Contains(color))
+                    listColorVWs.Add(color);
+                //if (!map.ContainsKey(key))
+                //    map.Add(key, color);
+
+            }
+            //int totalColor = map.Count;
+            //return totalColor;
+            return listColorVWs.Count;
         }
 
         public static Dictionary<String, List<String>> LoadImageIndexStrorage(String path)
         {
-            String filePath = Path.Combine(path, "index.json");
-            String json = FileManager.GetInstance().ReadContentFile(filePath);
+            //string indexFileNameExtension = GetIndexFileNameExtension();
+            //String filePath = Path.Combine(path, indexFileNameExtension);
+            //String json = FileManager.GetInstance().ReadContentFile(filePath);
 
-            Dictionary<String, List<String>> dic = JsonConvert.DeserializeObject<Dictionary<String, List<String>>>(json);
-            return dic;
+            //Dictionary<String, List<String>> dic = JsonConvert.DeserializeObject<Dictionary<String, List<String>>>(json);
+            //return dic;
+            string indexFileNameExtension = GetIndexFileNameExtension();
+            String filePath = Path.Combine(path, indexFileNameExtension);
+            using (StreamReader sr = new StreamReader(filePath))
+            using (JsonReader reader = new JsonTextReader(sr))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                Dictionary<String, List<String>> dic = serializer.Deserialize<Dictionary<String, List<String>>>(reader);
+                return dic;
+            }
         }
 
-        public static void LogDic(Dictionary<String, List<String>> dic)
+        //public static Dictionary<Key_PCTIndexDicLab, List<String>> LoadImageIndexStrorage_Lab(String path)
+        //{
+        //    string indexFileNameExtension = GetIndexFileNameExtension();
+        //    String filePath = Path.Combine(path, indexFileNameExtension);
+        //    using (StreamReader sr = new StreamReader(filePath))
+        //    using (JsonReader reader = new JsonTextReader(sr))
+        //    {
+        //        JsonSerializer serializer = new JsonSerializer();
+        //        Dictionary<string, List<String>> dicTemp = serializer.Deserialize<Dictionary<string, List<String>>>(reader);
+        //        Dictionary<Key_PCTIndexDicLab, List<string>> dic = new Dictionary<Key_PCTIndexDicLab, List<string>>();
+
+        //        foreach(string keyTemp in dicTemp.Keys)
+        //        {
+        //            string[] arr = keyTemp.Split(',');
+        //            double L = double.Parse(arr[0].Trim());
+        //            double a = double.Parse(arr[1].Trim());
+        //            double b = double.Parse(arr[2].Trim());
+        //            string region = arr[3].Trim();
+        //            Key_PCTIndexDicLab key = new Key_PCTIndexDicLab(L, a, b, region);
+        //            dic.Add(key, dicTemp[keyTemp]);
+        //        }
+
+        //        return dic;
+        //    }
+        //}
+
+        public static void LogTheIndexData(Dictionary<String, List<String>> dic)
         {
             int count = 0;
             foreach (KeyValuePair<string, List<String>> entry in dic)

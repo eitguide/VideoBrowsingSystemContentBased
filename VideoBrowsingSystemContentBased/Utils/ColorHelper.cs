@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ColorMine.ColorSpaces;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -20,11 +21,11 @@ namespace VideoBrowsingSystemContentBased.Utils
             return (Color)colorConverter.ConvertFromString(hex);
         }
 
-        public static List<Color> GenerateColorVisualWord()
+        public static List<Color> GenerateColorVisualWord_Rgb()
         {
             //List<Color> visualWord = new List<Color>();
             //int COLOR_MAX = 255;
-            //int STEP = 256 / 2;
+            //int STEP = 256 / 6;
 
             //int MIX = STEP / 2;
             //for (int R = MIX; R <= COLOR_MAX; R += STEP)
@@ -59,9 +60,53 @@ namespace VideoBrowsingSystemContentBased.Utils
                 ColorHelper.ConvertToARGB("#FDECA6"),
                 ColorHelper.ConvertToARGB("#C4FF0E"),
                 ColorHelper.ConvertToARGB("#8CFFFB"),
+                ColorHelper.ConvertToARGB("#005E1A"),
             };
 
             return visualWord;
+        }
+
+        public static List<Lab> GenerateColorVisualWord_Lab()
+        {
+            List<Lab> visualWord = new List<Lab>()
+            {
+                RgbToLab(new Rgb{R = 0,		G = 0,		B = 0}),
+                RgbToLab(new Rgb{R = 88,	G = 88,		B = 88}),
+                RgbToLab(new Rgb{R = 136,	G = 0,		B = 27}),
+                RgbToLab(new Rgb{R = 236,	G = 28,		B = 36}),
+                RgbToLab(new Rgb{R = 255,	G = 127,	B = 39}),
+                RgbToLab(new Rgb{R = 255,	G = 242,	B = 0}),
+                RgbToLab(new Rgb{R = 14,	G = 209,	B = 69}),
+                RgbToLab(new Rgb{R = 0,		G = 168,	B = 243}),
+                RgbToLab(new Rgb{R = 63,	G = 72,		B = 204}),
+                RgbToLab(new Rgb{R = 184,	G = 61,		B = 186}),
+                RgbToLab(new Rgb{R = 255,	G = 255,	B = 255}),
+                RgbToLab(new Rgb{R = 195,	G = 195,	B = 195}),
+                RgbToLab(new Rgb{R = 185,	G = 122,	B = 86}),
+                RgbToLab(new Rgb{R = 255,	G = 174,	B = 200}),
+                RgbToLab(new Rgb{R = 255,	G = 202,	B = 24}),
+                RgbToLab(new Rgb{R = 253,	G = 236,	B = 166}),
+                RgbToLab(new Rgb{R = 196,	G = 255,	B = 14}),
+                RgbToLab(new Rgb{R = 140,	G = 255,	B = 251}),
+                RgbToLab(new Rgb{R = 0,	    G = 94, 	B = 26})
+            };
+
+            return visualWord;
+        }
+
+        public static Lab RgbToLab(Rgb rgbColor)
+        {
+            return rgbColor.To<Lab>();
+        }
+
+        public static Rgb LabToRgb(Lab labColor)
+        {
+            return labColor.To<Rgb>();
+        }
+
+        public static Color GetBlackOrWhiteColorContrast(Color c)
+        {
+            return c.GetBrightness() > 0.5 ? Color.Black : Color.White;
         }
     }
 }

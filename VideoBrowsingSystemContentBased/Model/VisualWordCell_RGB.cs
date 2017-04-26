@@ -7,18 +7,18 @@ using System.Threading.Tasks;
 
 namespace VideoBrowsingSystemContentBased.Model
 {
-    public class VisualWordCell
+    public class VisualWordCell_RGB
     {
         public int XIndex { get; set; }
         public int YIndex { get; set; }
         public Color Color { get; set; }
 
-        public VisualWordCell()
+        public VisualWordCell_RGB()
         {
 
         }
 
-        public VisualWordCell(int xIndex, int yIndex, Color color)
+        public VisualWordCell_RGB(int xIndex, int yIndex, Color color)
         {
             this.XIndex = xIndex;
             this.YIndex = yIndex;

@@ -34,7 +34,7 @@ namespace VideoBrowsingSystemContentBased
         private SearchType searchType = SearchType.CAPTION;
         private int NUMBER_OF_MAX_RESULT_FRAMES = 500;
         private int countPicFrameIsShowing;
-        private Dictionary<String, List<String>> pctIndexStorage;
+        private Dictionary<String, List<String>> pctIndexingData;
 
         public VideoBrowsingForm()
         {
@@ -46,8 +46,54 @@ namespace VideoBrowsingSystemContentBased
             // StartPosition = FormStartPosition.CenterScreen;
             bgWorker_LoadFrames.WorkerReportsProgress = true;
 
-            InitLayout();
+            InitTheLayout();
             InitEvent();
+        }
+
+        void VideoBrowsingForm_Load(object sender, EventArgs e)
+        {
+            textSpotingIndexStorage = new IndexStorage(ConfigCommon.TEXTSPOTTING_INDEX_STORAGE);
+            textSpotingIndexStorage.OpenIndexStore();
+
+            textCaptionIndexStorage = new IndexStorage(ConfigCommon.CAPTION_INDEX_STORAGE);
+            textCaptionIndexStorage.OpenIndexStore();
+
+            mappingVideoName = FileManager.GetInstance().GetDictionaryVideoName(ConfigCommon.MAPPING_VIDEO_NAME_PATH);
+            mappingFPS = XMLParser.GetFPSDictionary(ConfigCommon.FPS_VIDEO_PATH);
+
+            pctIndexingData = PCTIndexing.LoadImageIndexStrorage(ConfigCommon.PCT_INDEX_STORAGE);
+        }
+
+        public void InitTheLayout()
+        {
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle; // disable resize form
+            this.Font = new Font("Arial", 9);
+
+            pnListFrame.AutoScroll = true;
+            //pnFrameShot.BackColor = ColorHelper.ConvertToARGB("#34495e");
+            //pnListFrame.BackColor = ColorHelper.ConvertToARGB("#95a5a6");
+            //grbxListFrame.BackColor = ColorHelper.ConvertToARGB("#95a5a6");
+            axWMP.settings.autoStart = false;
+            axWMP.Dock = DockStyle.Fill;
+
+            grbxSearchBySketch.Width = grbxSearchByText.Width;
+            putColorAndSketchV2.FixLayout(grbxSearchBySketch.Width);
+            btnSearchByImage.Location = new Point((grbxSearchBySketch.Width - btnSearchByImage.Width) / 2, putColorAndSketchV2.Height + 18);
+            grbxSearchBySketch.Height = putColorAndSketchV2.Height + btnSearchByImage.Height + 20;
+
+            grbxVideoPlayer.Location = new Point(0, grbxSearchBySketch.Location.Y + grbxSearchBySketch.Height);
+            grbxVideoPlayer.Width = grbxSearchBySketch.Width;
+            grbxVideoPlayer.Height = tblpRoot.Height - grbxVideoPlayer.Location.Y - 8;
+
+            rbtnORC.Checked = true;
+
+            for (int i = 0; i < NUMBER_OF_MAX_RESULT_FRAMES; i++)
+            {
+                PictureBox pic = new PictureBox();
+                pic.Visible = false;
+                pnListFrame.Controls.Add(pic);
+                pic.Click += pic_Click;
+            }
         }
 
         private void InitEvent()
@@ -67,55 +113,9 @@ namespace VideoBrowsingSystemContentBased
 
         private void PreprocessXML()
         {
-            List<TextSpot> textSpot = XMLParser.ProcessingXmlData(Config.XML_FOLDER_PATH);
-            FileManager.GetInstance().SeriablizeObjectToJson(textSpot, Config.TEXT_PLOTTING_PATH);
+            List<TextSpot> textSpot = XMLParser.ProcessingXmlData(ConfigCommon.XML_FOLDER_PATH);
+            FileManager.GetInstance().SeriablizeObjectToJson(textSpot, ConfigCommon.TEXT_PLOTTING_PATH);
 
-        }
-
-        void VideoBrowsingForm_Load(object sender, EventArgs e)
-        {
-            textSpotingIndexStorage = new IndexStorage(Config.TEXTSPOTTING_INDEX_STORAGE);
-            textSpotingIndexStorage.OpenIndexStore();
-
-            textCaptionIndexStorage = new IndexStorage(Config.CAPTION_INDEX_STORAGE);
-            textCaptionIndexStorage.OpenIndexStore();
-
-            mappingVideoName = FileManager.GetInstance().GetDictionaryVideoName(Config.MAPPING_VIDEO_NAME_PATH);
-            mappingFPS = XMLParser.GetFPSDictionary(Config.FPS_VIDEO_PATH);
-
-            pctIndexStorage = PCTIndexing.LoadImageIndexStrorage(Config.PCT_INDEX_STORAGE);
-        }
-
-        public void InitLayout()
-        {
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle; // disable resize form
-            this.Font = new Font("Arial", 9);
-
-            pnListFrame.AutoScroll = true;
-            //pnFrameShot.BackColor = ColorHelper.ConvertToARGB("#34495e");
-            //pnListFrame.BackColor = ColorHelper.ConvertToARGB("#95a5a6");
-            //grbxListFrame.BackColor = ColorHelper.ConvertToARGB("#95a5a6");
-            axWMP.settings.autoStart = false;
-            axWMP.Dock = DockStyle.Fill;
-
-            grbxSearchBySketch.Width = grbxSearchByText.Width;
-            putColorAndSketch1.FixLayout(grbxSearchBySketch.Width);
-            btnSearchByImage.Location = new Point((grbxSearchBySketch.Width - btnSearchByImage.Width) / 2, putColorAndSketch1.Height + 18);
-            grbxSearchBySketch.Height = putColorAndSketch1.Height + btnSearchByImage.Height + 20;
-
-            grbxVideoPlayer.Location = new Point(0, grbxSearchBySketch.Location.Y + grbxSearchBySketch.Height);
-            grbxVideoPlayer.Width = grbxSearchBySketch.Width;
-            grbxVideoPlayer.Height = tblpRoot.Height - grbxVideoPlayer.Location.Y - 8;
-
-            rbtnORC.Checked = true;
-
-            for (int i = 0; i < NUMBER_OF_MAX_RESULT_FRAMES; i++)
-            {
-                PictureBox pic = new PictureBox();
-                pic.Visible = false;
-                pnListFrame.Controls.Add(pic);
-                pic.Click += pic_Click;
-            }
         }
 
         private void ClearAndAddImagesToPanelFrame(List<string> listFilePath)
@@ -187,7 +187,7 @@ namespace VideoBrowsingSystemContentBased
             //}
         }
 
-        private void DrawDot(Graphics g, Dot dot)
+        private void DrawDot(Graphics g, Dot_RGB dot)
         {
             SolidBrush brush = new SolidBrush(dot.color);
             g.FillEllipse(brush, dot.location.X - dot.radius, dot.location.Y - dot.radius, dot.radius * 2, dot.radius * 2);
@@ -199,15 +199,29 @@ namespace VideoBrowsingSystemContentBased
         {
             if (e.Control)
             {
-                if (e.KeyCode == Keys.O)
+                if (e.KeyCode == ConfigCommon.HOTKEY_SEARCH_BY_TEXT_ORC)
                 {
                     rbtnORC.Checked = true;
                     txtTextQuery.Focus();
                 }
-                else if (e.KeyCode == Keys.P)
+                else if (e.KeyCode == ConfigCommon.HOTKEY_SEARCH_BY_TEXT_CONTENT)
                 {
                     rbtnContent.Checked = true;
                     txtTextQuery.Focus();
+                }
+                else if (e.KeyCode == ConfigCommon.HOTKEY_PICK_COLOR_FROM_FRAMES)
+                {
+                    // get cursor position at client
+                    Point cursorPosition = pnListFrame.PointToClient(Cursor.Position);
+
+                    // get color
+                    if (cursorPosition.X >= 0 && cursorPosition.X < pnListFrame.Width && cursorPosition.Y >= 0 && cursorPosition.Y < pnListFrame.Height)
+                    {
+                        Bitmap bitmapMainFrames = new Bitmap(pnListFrame.Width, pnListFrame.Height);
+                        pnListFrame.DrawToBitmap(bitmapMainFrames, new Rectangle(0, 0, pnListFrame.Width, pnListFrame.Height));
+                        Color c = bitmapMainFrames.GetPixel(cursorPosition.X, cursorPosition.Y);
+                        putColorAndSketchV2.SetColorForBrush(c);
+                    }
                 }
             }
         }
@@ -229,7 +243,7 @@ namespace VideoBrowsingSystemContentBased
             if (searchType == SearchType.CAPTION)
             {
                 List<Object> textCaption = Searching.SearchByQuery(textCaptionIndexStorage,
-                    Config.TOP_RANK, textQuery, searchType);
+                    ConfigCommon.TOP_RANK, textQuery, searchType);
 
                 if (textCaption != null && textCaption.Count > 0)
                 {
@@ -241,7 +255,7 @@ namespace VideoBrowsingSystemContentBased
                         String fileName = Path.GetFileName(text.FrameName);
                         Frame frame = Utils.Decoder.DecodeFrameFromName(fileName);
 
-                        String root = Path.Combine(Config.FRAME_DATA_PATH, String.Format("TRECVID2016_{0}", frame.VideoId));
+                        String root = Path.Combine(ConfigCommon.FRAME_DATA_PATH, String.Format("TRECVID2016_{0}", frame.VideoId));
                         fileName = Path.Combine(root, fileName);
 
                         //Console.WriteLine(fileName);
@@ -258,7 +272,7 @@ namespace VideoBrowsingSystemContentBased
             else if (searchType == SearchType.ORC)
             {
                 List<Object> textSpots = Searching.SearchByQuery(textSpotingIndexStorage,
-                    Config.TOP_RANK, textQuery, searchType);
+                    ConfigCommon.TOP_RANK, textQuery, searchType);
 
                 if (textSpots != null && textSpots.Count > 0)
                 {
@@ -269,7 +283,7 @@ namespace VideoBrowsingSystemContentBased
                         String fileName = Path.GetFileName(text.FileName);
                         Frame frame = Utils.Decoder.DecodeFrameFromName(fileName);
 
-                        String root = Path.Combine(Config.FRAME_DATA_PATH, String.Format("TRECVID2016_{0}", frame.VideoId));
+                        String root = Path.Combine(ConfigCommon.FRAME_DATA_PATH, String.Format("TRECVID2016_{0}", frame.VideoId));
                         fileName = Path.Combine(root, fileName);
 
                         //Console.WriteLine(fileName);
@@ -288,52 +302,39 @@ namespace VideoBrowsingSystemContentBased
         }
         private void btnSearchByImage_Click(object sender, EventArgs e)
         {
-            List<Dot> listDotsDrawed = putColorAndSketch1.GetListDotsDrawed();
+            List<Dot_RGB> listDotsDrawed_RGB = null;
+            List<Dot_Lab> listDotsDrawed_Lab = null;
+            if (ConfigPCT.COLOR_SPACE_USING == ConfigPCT.ColorSpace.RGB)
+                listDotsDrawed_RGB = putColorAndSketchV2.GetListDotsDrawed_RGB(); //*
+            else if (ConfigPCT.COLOR_SPACE_USING == ConfigPCT.ColorSpace.Lab)
+                listDotsDrawed_Lab = putColorAndSketchV2.GetListDotsDrawed_Lab();
 
             // Save list line-drawing to file
-            //Bitmap bitmapListLineDrawingDrawed = putColorAndSketch1.GetBitmapListLineDrawingDrawed();
+            //Bitmap bitmapListLineDrawingDrawed = putColorAndSketchV2.GetBitmapListLineDrawingDrawed();
             //FileManager.GetInstance().SaveBitmapToPNG(bitmapListLineDrawingDrawed, "D:/phuc.png");
             //MessageBox.Show("PNG Image was saved!");
 
-
-          
-
-            Console.WriteLine("Visual Word  Count: " + pctIndexStorage.Count);
-            PCTIndexing.LogDic(pctIndexStorage);
-
-            //for (int i = 0; i < pctIndexStorage.Count; i++)
-            //{
-            //    //string _key = pctIndexStorage.ElementAt(i).Key;
-            //    //string[] arr = _key.Split('_');
-            //    //if ((int.Parse(arr[3]) == 1 && int.Parse(arr[4]) == 1) || (int.Parse(arr[3]) == 1 && int.Parse(arr[4]) == 2))
-            //    KeyValuePair<string, List<string>> kv = pctIndexStorage.ElementAt(i);
-            //    Console.WriteLine(string.Format("{0}.\t{1}\t{2}", i, kv.Key, kv.Value.Count));
-            //}
+            List<String> result = null;
+            if (ConfigPCT.COLOR_SPACE_USING == ConfigPCT.ColorSpace.RGB)
+                result = PCTSearching.SearchingV2_RGB(this.pctIndexingData, listDotsDrawed_RGB, putColorAndSketchV2.GetPaperDrawingWidthHeight()); //*
+            else if (ConfigPCT.COLOR_SPACE_USING == ConfigPCT.ColorSpace.Lab)
+                result = PCTSearching.SearchingV2_Lab(this.pctIndexingData, listDotsDrawed_Lab, putColorAndSketchV2.GetPaperDrawingWidthHeight()); 
 
 
-            
-            //string key = pctIndexStorage.ElementAt(1373).Key;
-            //Console.WriteLine("Key is" + key);
-            //string[] phuc_rgb = key.Split('_');
-            //Color phuc_color = Color.FromArgb(int.Parse(phuc_rgb[0]), int.Parse(phuc_rgb[1]), int.Parse(phuc_rgb[2]));
-            //DrawDot(grbxSearchByText.CreateGraphics(), new Dot(new Point(100, 20), 50, phuc_color));
-
-
-            List<String> result = PCTIndexing.SearchingV2(this.pctIndexStorage, listDotsDrawed, putColorAndSketch1.GetPaperDrawingWidthHeight());
             if (result == null || result.Count == 0)
             {
                 MessageBox.Show("Không tìm thấy!");
                 return;
             }
             result = result.Take(NUMBER_OF_MAX_RESULT_FRAMES).ToList();
-            
+
             List<string> listPath = new List<string>();
             foreach (string item in result)
             {
                 string fileName = item + ".jpg";
                 Frame frame = Utils.Decoder.DecodeFrameFromName(fileName);
 
-                String root = Path.Combine(Config.FRAME_DATA_PATH, String.Format("TRECVID2016_{0}", frame.VideoId));
+                String root = Path.Combine(ConfigCommon.FRAME_DATA_PATH, String.Format("TRECVID2016_{0}", frame.VideoId));
                 fileName = Path.Combine(root, fileName);
 
                 //Console.WriteLine(fileName);
@@ -371,7 +372,7 @@ namespace VideoBrowsingSystemContentBased
 
             ClearAndAddImagesToPanelShot(files.ToList(), pnFrameShot);
             //Console.WriteLine(Path.Combine(Config.VIDEO_DATA_PATH, mappingVideoName[frame.VideoId]));
-            axWMP.URL = Path.Combine(Config.VIDEO_DATA_PATH, mappingVideoName[frame.VideoId]);
+            axWMP.URL = Path.Combine(ConfigCommon.VIDEO_DATA_PATH, mappingVideoName[frame.VideoId]);
             axWMP.Ctlcontrols.currentPosition = (double)(frame.FrameNumber / mappingFPS[frame.VideoId]); // in seconds
             //Console.WriteLine((double)(frame.FrameNumber));
             //Console.WriteLine((double)(mappingFPS[frame.VideoId]));
@@ -429,7 +430,8 @@ namespace VideoBrowsingSystemContentBased
                         //userState.size = new Size(widthEachImg, heightEachImg);
                         //userState.file_url = listFilePath[i];
                         //bgWorker_LoadFrames.ReportProgress(0, userState);
-                        Invoke((Action)(() => {
+                        Invoke((Action)(() =>
+                        {
                             pnListFrame.AutoScroll = false;
 
                             PictureBox pic = pnListFrame.Controls[i] as PictureBox;

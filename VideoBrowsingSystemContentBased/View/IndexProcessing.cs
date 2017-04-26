@@ -31,16 +31,16 @@ namespace VideoBrowsingSystemContentBased.View
             btnParseJson.Click += btnParseJson_Click;
             btnSearchCap.Click += btnSearchCap_Click;
 
-            textCaptionStorage = new IndexStorage(Config.CAPTION_INDEX_STORAGE);
+            textCaptionStorage = new IndexStorage(ConfigCommon.CAPTION_INDEX_STORAGE);
             textCaptionStorage.OpenIndexStore();
 
-            textSpotIndexStorage = new IndexStorage(Config.TEXTSPOTTING_INDEX_STORAGE);
+            textSpotIndexStorage = new IndexStorage(ConfigCommon.TEXTSPOTTING_INDEX_STORAGE);
             textSpotIndexStorage.OpenIndexStore();
         }
 
         void btnSearchCap_Click(object sender, EventArgs e)
         {
-            List<Object> result = Searching.SearchByQuery(textCaptionStorage, Config.TOP_RANK, txtQuery.Text, SearchType.CAPTION);
+            List<Object> result = Searching.SearchByQuery(textCaptionStorage, ConfigCommon.TOP_RANK, txtQuery.Text, SearchType.CAPTION);
 
             if(result != null && result.Count >  0)
             {
@@ -52,13 +52,13 @@ namespace VideoBrowsingSystemContentBased.View
 
         void btnParseJson_Click(object sender, EventArgs e)
         {
-            FileManager.GetInstance().DecodeTextCaptionFromDencap(Config.JSON_DENSECAP_FOLDER_PATH, Config.TEXT_CAPTION_PATH);
+            FileManager.GetInstance().DecodeTextCaptionFromDencap(ConfigCommon.JSON_DENSECAP_FOLDER_PATH, ConfigCommon.TEXT_CAPTION_PATH);
         }
 
         void btnParseXML_Click(object sender, EventArgs e)
         {
-            List<TextSpot> textSpot = XMLParser.ProcessingXmlData(Config.XML_FOLDER_PATH);
-            FileManager.GetInstance().SeriablizeObjectToJson(textSpot, Config.TEXT_PLOTTING_PATH);
+            List<TextSpot> textSpot = XMLParser.ProcessingXmlData(ConfigCommon.XML_FOLDER_PATH);
+            FileManager.GetInstance().SeriablizeObjectToJson(textSpot, ConfigCommon.TEXT_PLOTTING_PATH);
             Console.WriteLine(textSpot.Count);
             textSpot.Clear();
             textSpot = null;
@@ -67,8 +67,8 @@ namespace VideoBrowsingSystemContentBased.View
         void btnTextSpotIndexing_Click(object sender, EventArgs e)
         {
             btnTextSpotIndexing.Enabled = false;
-            List<TextSpot> textSpot = FileManager.GetInstance().DeserializeJson(Config.TEXT_PLOTTING_PATH);
-            IndexStorage indexStorage = new IndexStorage(Config.TEXTSPOTTING_INDEX_STORAGE);
+            List<TextSpot> textSpot = FileManager.GetInstance().DeserializeJson(ConfigCommon.TEXT_PLOTTING_PATH);
+            IndexStorage indexStorage = new IndexStorage(ConfigCommon.TEXTSPOTTING_INDEX_STORAGE);
             indexStorage.OpenIndexStore();
 
             Indexing.IndexFromDatabaseStorage(indexStorage, textSpot);
@@ -85,10 +85,10 @@ namespace VideoBrowsingSystemContentBased.View
             lblStatus.Text = "Convert Data Json to List TextCaption";
 
             lblStatus.Text = "Create IndexStorage";
-            IndexStorage indexStorage = new IndexStorage(Config.CAPTION_INDEX_STORAGE);
+            IndexStorage indexStorage = new IndexStorage(ConfigCommon.CAPTION_INDEX_STORAGE);
             indexStorage.OpenIndexStore();
 
-           FileInfo[] files =  FileManager.GetInstance().GetAllFileInFolder(Config.TEXT_CAPTION_PATH);
+           FileInfo[] files =  FileManager.GetInstance().GetAllFileInFolder(ConfigCommon.TEXT_CAPTION_PATH);
            foreach (FileInfo f in files)
            {
                List<TextCaption> caption = JsonConvert.DeserializeObject<List<TextCaption>>(FileManager.GetInstance().ReadContentFile(f.FullName));
@@ -144,7 +144,7 @@ namespace VideoBrowsingSystemContentBased.View
 
         private void btnSearchTextSpot_Click(object sender, EventArgs e)
         {
-            List<Object> result = Searching.SearchByQuery(textSpotIndexStorage, Config.TOP_RANK, txtQuery.Text, SearchType.ORC);
+            List<Object> result = Searching.SearchByQuery(textSpotIndexStorage, ConfigCommon.TOP_RANK, txtQuery.Text, SearchType.ORC);
             if (result != null && result.Count > 0)
             {
                 foreach (TextSpot c in result)

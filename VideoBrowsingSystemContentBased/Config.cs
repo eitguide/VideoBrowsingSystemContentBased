@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace VideoBrowsingSystemContentBased
 {
-    public class Config
+    public class ConfigCommon
     {
 
         //Path of folder store cattion indexing
@@ -19,7 +20,7 @@ namespace VideoBrowsingSystemContentBased
         public static String TEXTSPOTTING_INDEX_STORAGE = @"D:/SoureThesis/Data/textspot_indexing/";
         //Path of folder which store frame data
         public static String FRAME_DATA_PATH = @"G:\net\dl380g7a\export\ddn11a2\ledduy\trecvid-avs\keyframe-5\tv2016\test.iacc.3/";
-        
+
         //Path of folder which store video data
         public static String VIDEO_DATA_PATH = "G:/iacc.3/";
 
@@ -34,10 +35,47 @@ namespace VideoBrowsingSystemContentBased
 
         public static String FPS_VIDEO_PATH = @"D:/SoureThesis/Data/video_fps.xml";
 
-        public static String PCT_OUPUT_PATH = @"D:/SoureThesis/Data/pct_output";
+        public static String PCT_OUTPUT_PATH = @"D:/SoureThesis/Data/pct_output";
 
         public static String PCT_INDEX_STORAGE = @"D:/SoureThesis/Data/pct_indexing";
         //Rank for searching
         public static int TOP_RANK = 100;
+
+        //Hotkeys
+        public static Keys HOTKEY_SEARCH_BY_TEXT_ORC = Keys.O;      // [Ctrl] + [O]
+        public static Keys HOTKEY_SEARCH_BY_TEXT_CONTENT = Keys.P;  // [Ctrl] + [P]
+        public static Keys HOTKEY_PICK_COLOR_FROM_FRAMES = Keys.X;  // [Ctrl] + [X]
+
+    }
+
+    public class ConfigPCT
+    {
+        public enum ColorSpace
+        {
+            RGB,    // indexing, searching will use System.Drawing.Color class
+            Lab     // indexing, searching will use ColorMine.ColorSpaces.Lab class
+        }
+        public enum FormulaRGB // when remove/add value in this enum, after that edit in ColorKNN function
+        {
+            RGB_Euclid
+        }
+        public enum FormulaLab
+        {
+            Lab_CIE76,      
+            Lab_CMCIC,      
+            Lab_CIE94,      
+            Lab_CIE2000     
+        }
+        // Search by dotting color config (if change [*] config, you must run indexing PCT again):
+        public static ColorSpace COLOR_SPACE_USING = ColorSpace.Lab;                // [*]
+        public static FormulaRGB FORMULA_RGB_USING = FormulaRGB.RGB_Euclid;         // [*]
+        public static FormulaLab FORMULA_LAB_USING = FormulaLab.Lab_CIE2000;        // [*]
+        public static int PCT_NUMBER_OF_HORIZONTAL_REGION = 4;                      // [*]
+        public static int PCT_NUMBER_OF_VERTICAL_REGION = 3;                        // [*]
+        public static int PCT_STEP_INDEX_FILE = 2;                                  // [*]. if this=1 will index every files
+        public static int RADIUS_THRESHOLD = 8;                                     // [*]
+        public static int COLOR_NOISE_THRESHOLD = 6;                                // [*]. if number colors visualed > this, skip 
+        public static bool ACCEPT_REGION_NEAR_EQUAL = true;                         // [*]
+        public static int THRESHOLD_PIXEL_NEAR_EQUAL_FOR_ACCEPT = 10;               // [*]
     }
 }
