@@ -102,14 +102,19 @@ namespace VideoBrowsingSystemContentBased.Controller.ImageIndexing
                     }
                 }
             }
-
+            
+            foreach (var item in listKeys)
+            {
+                string key = item.Color.R + "_" + item.Color.G + "_" + item.Color.B + "_" + item.XIndex + "_" + item.YIndex;
+                visualWordMain[key] = visualWordMain[key].Distinct().ToList();
+            }
             // save the indexing to a file
             //String json = JsonConvert.SerializeObject(visualWordMain);
             //FileManager.GetInstance().WriteFile(json, Path.Combine(imageIndexStoragePath, "index.json"));
             string fileSavePath = Path.Combine(imageIndexStoragePath, indexFileNameExtension);
             if (File.Exists(fileSavePath))
                 File.Delete(fileSavePath);
-            FileManager.GetInstance().WriteDicIndexingToJsonFile(visualWordMain, fileSavePath);
+            FileManager.GetInstance().WriteDicIndexingToFiles(visualWordMain, fileSavePath);
         }
 
         public static void RunIndexing_Lab(string imageIndexStoragePath)
@@ -159,19 +164,28 @@ namespace VideoBrowsingSystemContentBased.Controller.ImageIndexing
                                 //Key_PCTIndexDicLab key = new Key_PCTIndexDicLab(color.L, color.A, color.B, region.X + "_" + region.Y);
                                 string key = color.L + "_" + color.A + "_" + color.B + "_" + region.X + "_" + region.Y;
                                 visualWordMain[key].Add(dataPCT.FrameName);
+                                //if (!visualWordMain[key].Contains(dataPCT.FrameName)) // slow
+                                //    visualWordMain[key].Add(dataPCT.FrameName);
                             }
                         }
                     }
                 }
             }
 
+            foreach (var item in listKeys)
+            {
+                string key = item.Color.L + "_" + item.Color.A + "_" + item.Color.B + "_" + item.XIndex + "_" + item.YIndex;
+                Console.WriteLine("Distincting value of key " + key + " ...");
+                visualWordMain[key] = visualWordMain[key].Distinct().ToList();
+            }
             // save the indexing to a file
             //String json = JsonConvert.SerializeObject(visualWordMain);
             //FileManager.GetInstance().WriteFile(json, Path.Combine(imageIndexStoragePath, "index.json"));
             string fileSavePath = Path.Combine(imageIndexStoragePath, indexFileNameExtension);
             if (File.Exists(fileSavePath))
                 File.Delete(fileSavePath);
-            FileManager.GetInstance().WriteDicIndexingToJsonFile(visualWordMain, fileSavePath);
+            //FileManager.GetInstance().WriteDicIndexingToJsonFile(visualWordMain, fileSavePath);
+            FileManager.GetInstance().WriteDicIndexingToFiles(visualWordMain, fileSavePath);
         }
 
         private static int CountColorsVW_RGB(PCTFeature_RGB pct, List<Color> colorVisualWord)
@@ -228,6 +242,19 @@ namespace VideoBrowsingSystemContentBased.Controller.ImageIndexing
             {
                 JsonSerializer serializer = new JsonSerializer();
                 Dictionary<String, List<String>> dic = serializer.Deserialize<Dictionary<String, List<String>>>(reader);
+                return dic;
+            }
+        }
+
+        public static Dictionary<string, string> LoadImageIndexStrorageV2(string indexFilePath)
+        {
+            string indexFileNameExtension = GetIndexFileNameExtension();
+            string jsonFilePath = Path.Combine(indexFilePath, indexFileNameExtension);
+            using (StreamReader sr = new StreamReader(jsonFilePath))
+            using (JsonReader reader = new JsonTextReader(sr))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                Dictionary<string, string> dic = serializer.Deserialize<Dictionary<string, string>>(reader);
                 return dic;
             }
         }

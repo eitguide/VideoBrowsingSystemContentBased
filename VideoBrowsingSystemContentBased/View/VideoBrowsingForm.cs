@@ -34,7 +34,8 @@ namespace VideoBrowsingSystemContentBased
         private SearchType searchType = SearchType.CAPTION;
         private int NUMBER_OF_MAX_RESULT_FRAMES = 500;
         private int countPicFrameIsShowing;
-        private Dictionary<String, List<String>> pctIndexingData;
+        private Dictionary<string, string> pctIndexingData;
+        //private Dictionary<String, List<String>> pctIndexingData;
 
         public VideoBrowsingForm()
         {
@@ -61,7 +62,7 @@ namespace VideoBrowsingSystemContentBased
             mappingVideoName = FileManager.GetInstance().GetDictionaryVideoName(ConfigCommon.MAPPING_VIDEO_NAME_PATH);
             mappingFPS = XMLParser.GetFPSDictionary(ConfigCommon.FPS_VIDEO_PATH);
 
-            pctIndexingData = PCTIndexing.LoadImageIndexStrorage(ConfigCommon.PCT_INDEX_STORAGE);
+            pctIndexingData = PCTIndexing.LoadImageIndexStrorageV2(ConfigCommon.PCT_INDEX_STORAGE);
         }
 
         public void InitTheLayout()
@@ -316,9 +317,10 @@ namespace VideoBrowsingSystemContentBased
 
             List<String> result = null;
             if (ConfigPCT.COLOR_SPACE_USING == ConfigPCT.ColorSpace.RGB)
-                result = PCTSearching.SearchingV2_RGB(this.pctIndexingData, listDotsDrawed_RGB, putColorAndSketchV2.GetPaperDrawingWidthHeight()); //*
+                result = null;
+                //result = PCTSearching.SearchingV3_RGB(this.pctIndexingData, listDotsDrawed_RGB, putColorAndSketchV2.GetPaperDrawingWidthHeight()); //*
             else if (ConfigPCT.COLOR_SPACE_USING == ConfigPCT.ColorSpace.Lab)
-                result = PCTSearching.SearchingV2_Lab(this.pctIndexingData, listDotsDrawed_Lab, putColorAndSketchV2.GetPaperDrawingWidthHeight()); 
+                result = PCTSearching.SearchingV3_Lab(this.pctIndexingData, listDotsDrawed_Lab, putColorAndSketchV2.GetPaperDrawingWidthHeight()); 
 
 
             if (result == null || result.Count == 0)

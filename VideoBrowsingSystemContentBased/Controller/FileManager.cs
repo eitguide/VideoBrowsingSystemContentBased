@@ -204,6 +204,49 @@ namespace VideoBrowsingSystemContentBased.Controller
             sw.Close();
         }
 
+        /// <summary>
+        /// Write indexing-dictionary to json file without store json to string
+        /// </summary>
+        /// <param name="dicIndexing">the dictionary store visual-word</param>
+        /// <param name="jsonFilePathToSave">path to file with extension for saving, will override if exist</param>
+        public void WriteDicIndexingToFiles(Dictionary<string, List<string>> dicIndexing, string jsonFilePathToSave)
+        {
+            string valueFilePrefix = "value_";
+            string valuesSaveDir = Path.GetDirectoryName(jsonFilePathToSave) + "\\list_values_of_indexing";
+            
+            // 1. write json file: real key, virtual value
+            FileStream fs = File.Create(jsonFilePathToSave);
+            fs.Close();
+            StreamWriter swJsonFile = File.AppendText(jsonFilePathToSave);
+            swJsonFile.Write("{ ");
+            int countKey = 0;
+            foreach (string key in dicIndexing.Keys)
+            {
+                countKey++;
+                swJsonFile.Write(string.Format("\"{0}\" : \"{1}/{2}{3}.txt\"", key, valuesSaveDir.Replace('\\', '/'), valueFilePrefix, (countKey - 1)));
+                if (countKey < dicIndexing.Keys.Count)
+                    swJsonFile.Write(",");
+            }
+            swJsonFile.Write(" }");
+            swJsonFile.Close();
+
+            // 2. write multi files: real value
+            if(!Directory.Exists(valuesSaveDir))
+                Directory.CreateDirectory(valuesSaveDir);
+            int i = 0;
+            foreach (string key in dicIndexing.Keys)
+            {
+                string valueFileToSave = valuesSaveDir + string.Format("\\{0}{1}.txt", valueFilePrefix, i++);
+                FileStream fs2 = File.Create(valueFileToSave); // create override
+                fs2.Close();
+                StreamWriter swValueFile = File.AppendText(valueFileToSave);
+                foreach (string value in dicIndexing[key])
+                    swValueFile.Write(value + "\n");
+                swValueFile.Close();
+            }
+            
+        }
+
         ///// <summary>
         ///// Write indexing-dictionary to json file without store json to string
         ///// </summary>
@@ -381,6 +424,12 @@ namespace VideoBrowsingSystemContentBased.Controller
         public void SaveBitmapToPNG(Bitmap _bitmap, string _fileNamePath)
         {
             _bitmap.Save(_fileNamePath, System.Drawing.Imaging.ImageFormat.Png);
+        }
+
+        internal List<string> GetAllLinesFromFile(string valueFilePath)
+        {
+            List<string> allLinesText = File.ReadAllLines(valueFilePath).ToList();
+            return allLinesText;
         }
     }
 }

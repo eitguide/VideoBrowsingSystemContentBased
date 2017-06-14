@@ -42,13 +42,13 @@
             this.axWMP = new AxWMPLib.AxWindowsMediaPlayer();
             this.grbxSearchBySketch = new System.Windows.Forms.GroupBox();
             this.btnSearchByImage = new System.Windows.Forms.Button();
+            this.putColorAndSketchV2 = new VideoBrowsingSystemContentBased.Widget.PutColorAndSketchV2();
             this.grbxSearchByText = new System.Windows.Forms.GroupBox();
             this.rbtnContent = new System.Windows.Forms.RadioButton();
             this.rbtnORC = new System.Windows.Forms.RadioButton();
             this.btnSearchByText = new System.Windows.Forms.Button();
             this.txtTextQuery = new System.Windows.Forms.TextBox();
             this.bgWorker_LoadFrames = new System.ComponentModel.BackgroundWorker();
-            this.putColorAndSketchV2 = new VideoBrowsingSystemContentBased.Widget.PutColorAndSketchV2();
             this.tblpRoot.SuspendLayout();
             this.tblpLeft.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.statusBarPanel1)).BeginInit();
@@ -216,6 +216,14 @@
             this.btnSearchByImage.UseVisualStyleBackColor = true;
             this.btnSearchByImage.Click += new System.EventHandler(this.btnSearchByImage_Click);
             // 
+            // putColorAndSketchV2
+            // 
+            this.putColorAndSketchV2.Location = new System.Drawing.Point(7, 23);
+            this.putColorAndSketchV2.Margin = new System.Windows.Forms.Padding(4);
+            this.putColorAndSketchV2.Name = "putColorAndSketchV2";
+            this.putColorAndSketchV2.Size = new System.Drawing.Size(917, 932);
+            this.putColorAndSketchV2.TabIndex = 3;
+            // 
             // grbxSearchByText
             // 
             this.grbxSearchByText.Controls.Add(this.rbtnContent);
@@ -234,24 +242,24 @@
             // rbtnContent
             // 
             this.rbtnContent.AutoSize = true;
-            this.rbtnContent.Location = new System.Drawing.Point(309, 63);
+            this.rbtnContent.Location = new System.Drawing.Point(251, 63);
             this.rbtnContent.Name = "rbtnContent";
-            this.rbtnContent.Size = new System.Drawing.Size(78, 21);
+            this.rbtnContent.Size = new System.Drawing.Size(138, 21);
             this.rbtnContent.TabIndex = 3;
             this.rbtnContent.TabStop = true;
-            this.rbtnContent.Text = "Content";
+            this.rbtnContent.Text = "Image Captioning";
             this.rbtnContent.UseVisualStyleBackColor = true;
             this.rbtnContent.Click += new System.EventHandler(this.rbtnContent_Click);
             // 
             // rbtnORC
             // 
             this.rbtnORC.AutoSize = true;
-            this.rbtnORC.Location = new System.Drawing.Point(236, 63);
+            this.rbtnORC.Location = new System.Drawing.Point(133, 63);
             this.rbtnORC.Name = "rbtnORC";
-            this.rbtnORC.Size = new System.Drawing.Size(59, 21);
+            this.rbtnORC.Size = new System.Drawing.Size(112, 21);
             this.rbtnORC.TabIndex = 2;
             this.rbtnORC.TabStop = true;
-            this.rbtnORC.Text = "ORC";
+            this.rbtnORC.Text = "Text Spotting";
             this.rbtnORC.UseVisualStyleBackColor = true;
             this.rbtnORC.Click += new System.EventHandler(this.rbtnORC_Click);
             // 
@@ -281,14 +289,6 @@
             this.bgWorker_LoadFrames.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgWorker_LoadFrames_DoWork);
             this.bgWorker_LoadFrames.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bgWorker_LoadFrames_ProgressChanged);
             this.bgWorker_LoadFrames.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgWorker_LoadFrames_RunWorkerCompleted);
-            // 
-            // putColorAndSketchV2
-            // 
-            this.putColorAndSketchV2.Location = new System.Drawing.Point(7, 23);
-            this.putColorAndSketchV2.Margin = new System.Windows.Forms.Padding(4);
-            this.putColorAndSketchV2.Name = "putColorAndSketchV2";
-            this.putColorAndSketchV2.Size = new System.Drawing.Size(917, 932);
-            this.putColorAndSketchV2.TabIndex = 3;
             // 
             // VideoBrowsingForm
             // 

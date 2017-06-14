@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using VideoBrowsingSystemContentBased.Utils;
+using VideoBrowsingSystemContentBased.View;
 
 namespace VideoBrowsingSystemContentBased
 {
@@ -14,8 +16,11 @@ namespace VideoBrowsingSystemContentBased
         [STAThread]
         static void Main()
         {
+            DistanceHelper.InitPCT();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            //Application.Run(new ViewPCTImage());
+            //Application.Run(new ImageIndexing());
             Application.Run(new VideoBrowsingForm());
         }
     }
