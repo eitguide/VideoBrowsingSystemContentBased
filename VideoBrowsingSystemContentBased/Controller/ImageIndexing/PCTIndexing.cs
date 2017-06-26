@@ -1,5 +1,4 @@
-﻿
-using ColorMine.ColorSpaces;
+﻿using ColorMine.ColorSpaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -102,7 +101,7 @@ namespace VideoBrowsingSystemContentBased.Controller.ImageIndexing
                     }
                 }
             }
-            
+
             foreach (var item in listKeys)
             {
                 string key = item.Color.R + "_" + item.Color.G + "_" + item.Color.B + "_" + item.XIndex + "_" + item.YIndex;

@@ -317,8 +317,8 @@ namespace VideoBrowsingSystemContentBased
 
             List<String> result = null;
             if (ConfigPCT.COLOR_SPACE_USING == ConfigPCT.ColorSpace.RGB)
-                result = null;
-                //result = PCTSearching.SearchingV3_RGB(this.pctIndexingData, listDotsDrawed_RGB, putColorAndSketchV2.GetPaperDrawingWidthHeight()); //*
+                //result = null;
+                result = PCTSearching.SearchingV3_RGB(this.pctIndexingData, listDotsDrawed_RGB, putColorAndSketchV2.GetPaperDrawingWidthHeight()); //*
             else if (ConfigPCT.COLOR_SPACE_USING == ConfigPCT.ColorSpace.Lab)
                 result = PCTSearching.SearchingV3_Lab(this.pctIndexingData, listDotsDrawed_Lab, putColorAndSketchV2.GetPaperDrawingWidthHeight()); 
 
