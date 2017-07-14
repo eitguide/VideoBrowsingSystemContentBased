@@ -32,10 +32,13 @@ namespace VideoBrowsingSystemContentBased
         private Dictionary<String, String> mappingVideoName;
         private Dictionary<String, float> mappingFPS;
         private SearchType searchType = SearchType.CAPTION;
-        private int NUMBER_OF_MAX_RESULT_FRAMES = 500;
-        private int countPicFrameIsShowing;
         private Dictionary<string, string> pctIndexingData;
         //private Dictionary<String, List<String>> pctIndexingData;
+
+        // data list frame shown
+        private const int NUMBER_OF_MAX_RESULT_FRAMES = 1000;
+        private int countPicFrameIsShowing;
+        private List<PictureBox> listPicBxFrames;
 
         public VideoBrowsingForm()
         {
@@ -45,7 +48,6 @@ namespace VideoBrowsingSystemContentBased
             //this.Width = 1080;
             //this.Height = 720;
             // StartPosition = FormStartPosition.CenterScreen;
-            bgWorker_LoadFrames.WorkerReportsProgress = true;
 
             InitTheLayout();
             InitEvent();
@@ -70,7 +72,7 @@ namespace VideoBrowsingSystemContentBased
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle; // disable resize form
             this.Font = new Font("Arial", 9);
 
-            pnListFrame.AutoScroll = true;
+            //pnListFrame.AutoScroll = true;
             //pnFrameShot.BackColor = ColorHelper.ConvertToARGB("#34495e");
             //pnListFrame.BackColor = ColorHelper.ConvertToARGB("#95a5a6");
             //grbxListFrame.BackColor = ColorHelper.ConvertToARGB("#95a5a6");
@@ -88,19 +90,21 @@ namespace VideoBrowsingSystemContentBased
 
             rbtnORC.Checked = true;
 
-            for (int i = 0; i < NUMBER_OF_MAX_RESULT_FRAMES; i++)
-            {
-                PictureBox pic = new PictureBox();
-                pic.Visible = false;
-                pnListFrame.Controls.Add(pic);
-                pic.Click += pic_Click;
-            }
+            //for (int i = 0; i < NUMBER_OF_MAX_RESULT_FRAMES; i++)
+            //{
+            //    PictureBox pic = new PictureBox();
+            //    pic.Visible = false;
+            //    pnListFrame.Controls.Add(pic);
+            //    pic.Click += pic_Click;
+            //}
         }
 
         private void InitEvent()
         {
             txtTextQuery.KeyDown += txtTextQuery_KeyDown;
             btnSearchByText.Click += btnSearch_Click;
+            lazypicscrListFrame.numberOfPicsShownChange += lazypicscrListFrame_numberOfPicsShownChange;
+            lazypicscrListFrame.anyPickClicked += lazypicscrListFrame_anyPickClicked;
         }
 
         void txtTextQuery_KeyDown(object sender, KeyEventArgs e)
@@ -117,18 +121,6 @@ namespace VideoBrowsingSystemContentBased
             List<TextSpot> textSpot = XMLParser.ProcessingXmlData(ConfigCommon.XML_FOLDER_PATH);
             FileManager.GetInstance().SeriablizeObjectToJson(textSpot, ConfigCommon.TEXT_PLOTTING_PATH);
 
-        }
-
-        private void ClearAndAddImagesToPanelFrame(List<string> listFilePath)
-        {
-            if (listFilePath.Count == 0)
-                return;
-
-            for (int i = 0; i < countPicFrameIsShowing; i++)
-            {
-                (pnListFrame.Controls[i] as PictureBox).Visible = false;
-            }
-            bgWorker_LoadFrames.RunWorkerAsync(listFilePath);
         }
 
         private void ClearAndAddImagesToPanelShot(List<string> listFilePath, Panel pn)
@@ -213,13 +205,17 @@ namespace VideoBrowsingSystemContentBased
                 else if (e.KeyCode == ConfigCommon.HOTKEY_PICK_COLOR_FROM_FRAMES)
                 {
                     // get cursor position at client
-                    Point cursorPosition = pnListFrame.PointToClient(Cursor.Position);
+                    //Point cursorPosition = pnListFrame.PointToClient(Cursor.Position);
+                    Point cursorPosition = lazypicscrListFrame.PointToClient(Cursor.Position);
 
                     // get color
-                    if (cursorPosition.X >= 0 && cursorPosition.X < pnListFrame.Width && cursorPosition.Y >= 0 && cursorPosition.Y < pnListFrame.Height)
+                    //if (cursorPosition.X >= 0 && cursorPosition.X < pnListFrame.Width && cursorPosition.Y >= 0 && cursorPosition.Y < pnListFrame.Height)
+                    if (cursorPosition.X >= 0 && cursorPosition.X < lazypicscrListFrame.Width && cursorPosition.Y >= 0 && cursorPosition.Y < lazypicscrListFrame.Height)
                     {
-                        Bitmap bitmapMainFrames = new Bitmap(pnListFrame.Width, pnListFrame.Height);
-                        pnListFrame.DrawToBitmap(bitmapMainFrames, new Rectangle(0, 0, pnListFrame.Width, pnListFrame.Height));
+                        //Bitmap bitmapMainFrames = new Bitmap(pnListFrame.Width, pnListFrame.Height);
+                        //pnListFrame.DrawToBitmap(bitmapMainFrames, new Rectangle(0, 0, pnListFrame.Width, pnListFrame.Height));
+                        Bitmap bitmapMainFrames = new Bitmap(lazypicscrListFrame.Width, lazypicscrListFrame.Height);
+                        lazypicscrListFrame.DrawToBitmap(bitmapMainFrames, new Rectangle(0, 0, lazypicscrListFrame.Width, lazypicscrListFrame.Height));
                         Color c = bitmapMainFrames.GetPixel(cursorPosition.X, cursorPosition.Y);
                         putColorAndSketchV2.SetColorForBrush(c);
                     }
@@ -239,7 +235,7 @@ namespace VideoBrowsingSystemContentBased
             if (rbtnContent.Checked)
                 searchType = SearchType.CAPTION;
             else if (rbtnORC.Checked)
-                searchType = SearchType.ORC;
+                searchType = SearchType.OCR;
 
             if (searchType == SearchType.CAPTION)
             {
@@ -270,7 +266,7 @@ namespace VideoBrowsingSystemContentBased
                 else
                     Console.WriteLine("Search xong ne");
             }
-            else if (searchType == SearchType.ORC)
+            else if (searchType == SearchType.OCR)
             {
                 List<Object> textSpots = Searching.SearchByQuery(textSpotingIndexStorage,
                     ConfigCommon.TOP_RANK, textQuery, searchType);
@@ -299,7 +295,8 @@ namespace VideoBrowsingSystemContentBased
                     Console.WriteLine("Search xong ne");
             }
 
-            ClearAndAddImagesToPanelFrame(listPath);
+            //ClearAndAddImagesToPanelFrame(listPath);
+            lazypicscrListFrame.startLazyShowing(listPath);
         }
         private void btnSearchByImage_Click(object sender, EventArgs e)
         {
@@ -344,7 +341,8 @@ namespace VideoBrowsingSystemContentBased
             }
 
 
-            ClearAndAddImagesToPanelFrame(listPath);
+            //ClearAndAddImagesToPanelFrame(listPath);
+            lazypicscrListFrame.startLazyShowing(listPath);
         }
         // PictureBox
         void pic_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -359,27 +357,6 @@ namespace VideoBrowsingSystemContentBased
                 //photoViewer.Start();
             }
         }
-        void pic_Click(object sender, EventArgs e)
-        {
-            String filePath = ((PictureBox)sender).Tag as String;
-            String frameName = Path.GetFileName(filePath);
-
-            Frame frame = Utils.Decoder.DecodeFrameFromName(frameName);
-
-            String[] files = Searching.GetShotFrame(frame, Path.GetDirectoryName(filePath));
-            //foreach (String item in files)
-            //{
-            //    Logger.d(item);
-            //}
-
-            ClearAndAddImagesToPanelShot(files.ToList(), pnFrameShot);
-            //Console.WriteLine(Path.Combine(Config.VIDEO_DATA_PATH, mappingVideoName[frame.VideoId]));
-            axWMP.URL = Path.Combine(ConfigCommon.VIDEO_DATA_PATH, mappingVideoName[frame.VideoId]);
-            axWMP.Ctlcontrols.currentPosition = (double)(frame.FrameNumber / mappingFPS[frame.VideoId]); // in seconds
-            //Console.WriteLine((double)(frame.FrameNumber));
-            //Console.WriteLine((double)(mappingFPS[frame.VideoId]));
-            //Console.WriteLine((double)(frame.FrameNumber / mappingFPS[frame.VideoId]));
-        }
         // RadioButton
         private void rbtnORC_Click(object sender, EventArgs e)
         {
@@ -388,110 +365,6 @@ namespace VideoBrowsingSystemContentBased
         private void rbtnContent_Click(object sender, EventArgs e)
         {
             txtTextQuery.Focus();
-        }
-        // BackgroundWorker
-        struct MyUserState
-        {
-            public int index;
-            public int totalFile;
-            public Point location;
-            public Size size;
-            public string file_url;
-        }
-        private void bgWorker_LoadFrames_DoWork(object sender, DoWorkEventArgs e)
-        {
-            List<string> listFilePath = e.Argument as List<string>;
-            MyUserState userState = new MyUserState();
-            PictureBoxSizeMode displayMode = PictureBoxSizeMode.StretchImage;
-
-            // Init for display
-            int widthEachImg = pnListFrame.Width / 9, heightEachImg = pnListFrame.Height / 8;  // width & height for each image
-
-            // Clear all controls in panel
-            //pn.Controls.Clear();
-
-            // Load default images
-            {
-                int x = 0, y = 0;
-                countPicFrameIsShowing = 0;
-                for (int i = 0; i < listFilePath.Count; i++)
-                {
-                    if (System.IO.File.Exists(listFilePath[i]))
-                    {
-                        // PictureBox pic = new PictureBox();
-                        //PictureBox pic = pnListFrame.Controls[i] as PictureBox;
-                        countPicFrameIsShowing++;
-                        //pic.Visible = true;
-                        //pic.Image = Properties.Resources.default_picture;
-                        //pic.Location = new Point(x, y);
-                        //pic.Size = new Size(widthEachImg, heightEachImg);
-                        //pic.SizeMode = displayMode;
-                        //userState.index = i;
-                        //userState.totalFile = listFilePath.Count;
-                        //userState.location = new Point(x, y);
-                        //userState.size = new Size(widthEachImg, heightEachImg);
-                        //userState.file_url = listFilePath[i];
-                        //bgWorker_LoadFrames.ReportProgress(0, userState);
-                        Invoke((Action)(() =>
-                        {
-                            pnListFrame.AutoScroll = false;
-
-                            PictureBox pic = pnListFrame.Controls[i] as PictureBox;
-                            pic.Visible = true;
-                            pic.Image = Image.FromFile(listFilePath[i]);
-                            pic.Tag = listFilePath[i];
-                            pic.Location = new Point(x, y);
-                            pic.Size = new Size(widthEachImg, heightEachImg);
-                            pic.SizeMode = displayMode;
-
-                            statusBar1.Panels[0].Text = "Loading " + (i + 1) + "/" + listFilePath.Count + " images";
-                        }));
-                        x += widthEachImg;
-                        //pn.Controls.Add(pic);
-
-                        // go to new row if (x + width) > pn.width
-                        if (x + widthEachImg > pnListFrame.Width)
-                        {
-                            x = 0;
-                            y += heightEachImg;
-                        }
-                    }
-                }
-            }
-
-            // Load true images
-            //for (int i = 0; i < listFilePath.Count; i++)
-            //{
-            //    //PictureBox pic = pnListFrame.Controls[i] as PictureBox;
-            //    //pic.Image = Image.FromFile(listFilePath[i]);
-            //    //pic.Tag = listFilePath[i];
-
-            //    ifi.state = BG_STATE.LOAD_TRUE;
-            //    ifi.index = i;
-            //    ifi.file_url = listFilePath[i];
-            //    bgWorker_LoadFrames.ReportProgress(0, ifi);
-            //}
-        }
-        private void bgWorker_LoadFrames_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            MyUserState userState = (MyUserState)e.UserState;
-            PictureBoxSizeMode displayMode = PictureBoxSizeMode.StretchImage;
-
-            PictureBox pic = pnListFrame.Controls[userState.index] as PictureBox;
-            pic.Location = userState.location;
-            pic.Size = userState.size;
-            //pic.Image = Properties.Resources.default_picture;
-            pic.Image = Image.FromFile(userState.file_url);
-            pic.Tag = userState.file_url;
-            pic.SizeMode = displayMode;
-            pic.Visible = true;
-
-            statusBar1.Panels[0].Text = "Loading " + (userState.index + 1).ToString() + "/" + userState.totalFile.ToString() + " images";
-        }
-        private void bgWorker_LoadFrames_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            statusBar1.Panels[0].Text = "Total: " + countPicFrameIsShowing + " (images)";
-            pnListFrame.AutoScroll = true;
         }
         // AxWindowsMediaPlayer
         private void axWMP_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -509,6 +382,32 @@ namespace VideoBrowsingSystemContentBased
                     txtTextQuery.Focus();
                 }
             }
+        }
+        // LazyPictureScrolling
+        void lazypicscrListFrame_numberOfPicsShownChange(object sender, int numberOfPicsShown, int totalOfPics, int maxOfPicsCanShown)
+        {
+            statusBar1.Panels[0].Text = string.Format("Showing {0}/{1} images", numberOfPicsShown, totalOfPics);
+        }
+        void lazypicscrListFrame_anyPickClicked(object sender, EventArgs e)
+        {
+            String filePath = ((PictureBox)sender).ImageLocation as String;
+            String frameName = Path.GetFileName(filePath);
+
+            Frame frame = Utils.Decoder.DecodeFrameFromName(frameName);
+
+            String[] files = Searching.GetShotFrame(frame, Path.GetDirectoryName(filePath));
+            //foreach (String item in files)
+            //{
+            //    Logger.d(item);
+            //}
+
+            ClearAndAddImagesToPanelShot(files.ToList(), pnFrameShot);
+            //Console.WriteLine(Path.Combine(Config.VIDEO_DATA_PATH, mappingVideoName[frame.VideoId]));
+            axWMP.URL = Path.Combine(ConfigCommon.VIDEO_DATA_PATH, mappingVideoName[frame.VideoId]);
+            axWMP.Ctlcontrols.currentPosition = (double)(frame.FrameNumber / mappingFPS[frame.VideoId]); // in seconds
+            //Console.WriteLine((double)(frame.FrameNumber));
+            //Console.WriteLine((double)(mappingFPS[frame.VideoId]));
+            //Console.WriteLine((double)(frame.FrameNumber / mappingFPS[frame.VideoId]));
         }
         #endregion
 

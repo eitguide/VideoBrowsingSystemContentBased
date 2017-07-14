@@ -95,6 +95,12 @@
     <Compile Include="Utils\RegionOfFrameHelper.cs" />
     <Compile Include="Utils\SortingHelper.cs" />
     <Compile Include="Utils\VisualWordHelper.cs" />
+    <Compile Include="View\EvaluationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\EvaluationForm.Designer.cs">
+      <DependentUpon>EvaluationForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\ImageIndexing.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -128,6 +134,12 @@
     <Compile Include="Widget\ImageView.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Widget\LazyPictureScrolling.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Widget\LazyPictureScrolling.Designer.cs">
+      <DependentUpon>LazyPictureScrolling.cs</DependentUpon>
+    </Compile>
     <Compile Include="Widget\PutColorAndSketch.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -150,6 +162,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="View\EvaluationForm.resx">
+      <DependentUpon>EvaluationForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\ImageIndexing.resx">
       <DependentUpon>ImageIndexing.cs</DependentUpon>
     </EmbeddedResource>
@@ -161,6 +176,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\ViewPCTImage.resx">
       <DependentUpon>ViewPCTImage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Widget\LazyPictureScrolling.resx">
+      <DependentUpon>LazyPictureScrolling.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Widget\PutColorAndSketch.resx">
       <DependentUpon>PutColorAndSketch.cs</DependentUpon>

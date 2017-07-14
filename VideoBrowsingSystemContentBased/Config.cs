@@ -39,7 +39,7 @@ namespace VideoBrowsingSystemContentBased
 
         public static String PCT_INDEX_STORAGE = @"D:/SoureThesis/Data/pct_indexing";
         //Rank for searching
-        public static int TOP_RANK = 100;
+        public static int TOP_RANK = 500; // achived: 100
 
         //Hotkeys
         public static Keys HOTKEY_SEARCH_BY_TEXT_ORC = Keys.O;      // [Ctrl] + [O]
@@ -77,5 +77,13 @@ namespace VideoBrowsingSystemContentBased
         public static int COLOR_NOISE_THRESHOLD = 6;                                // [*]. if number colors visualed > this, skip 
         public static bool ACCEPT_REGION_NEAR_EQUAL = true;                         // [*]
         public static int THRESHOLD_PIXEL_NEAR_EQUAL_FOR_ACCEPT = 10;               // [*]
+    }
+
+    public class ConfigEvaluation
+    {
+        public static string trecEvalFile = @"C:\Users\puyed\Documents\trec_eval.9.0\trec_eval.exe";
+        public static string qrelsFile = @"C:\Users\puyed\Documents\trec_eval.9.0\thesis\avs.qrels.my_fix.tv16";
+        public static string queriesFile = @"C:\Users\puyed\Documents\trec_eval.9.0\thesis\tv16.avs.topics.txt";
+        public static string resultsFile = @"C:\Users\puyed\Documents\trec_eval.9.0\thesis\avs.results.txt";
     }
 }

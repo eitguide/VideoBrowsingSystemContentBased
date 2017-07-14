@@ -19,9 +19,11 @@ namespace VideoBrowsingSystemContentBased
             DistanceHelper.InitPCT();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            //Application.Run(new IndexProcessing());
             //Application.Run(new ViewPCTImage());
             //Application.Run(new ImageIndexing());
             Application.Run(new VideoBrowsingForm());
+            //Application.Run(new EvaluationForm());
         }
     }
 }

@@ -144,7 +144,7 @@ namespace VideoBrowsingSystemContentBased.View
 
         private void btnSearchTextSpot_Click(object sender, EventArgs e)
         {
-            List<Object> result = Searching.SearchByQuery(textSpotIndexStorage, ConfigCommon.TOP_RANK, txtQuery.Text, SearchType.ORC);
+            List<Object> result = Searching.SearchByQuery(textSpotIndexStorage, ConfigCommon.TOP_RANK, txtQuery.Text, SearchType.OCR);
             if (result != null && result.Count > 0)
             {
                 foreach (TextSpot c in result)

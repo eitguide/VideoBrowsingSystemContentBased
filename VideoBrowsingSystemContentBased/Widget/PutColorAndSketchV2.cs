@@ -348,7 +348,7 @@ namespace VideoBrowsingSystemContentBased.Widget
         private void pnlColorPicker_MouseClick(object sender, MouseEventArgs e)
         {
             Color colorSelectedTemp = bitmapSampleColor.GetPixel(e.X, e.Y);
-            if (!listColorVisualWords.Contains(colorSelectedTemp))
+            if (!listColorVisualWords.Contains(colorSelectedTemp) && colorSelectedTemp.ToArgb() != Color.Black.ToArgb() && colorSelectedTemp.ToArgb() != Color.White.ToArgb())
                 return;
 
             colorSelected = colorSelectedTemp;

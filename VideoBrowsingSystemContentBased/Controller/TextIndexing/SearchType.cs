@@ -9,7 +9,7 @@ namespace VideoBrowsingSystemContentBased.Controller.TextIndexing
     public enum SearchType
     {
         //Support ORC 
-        ORC,
+        OCR,
         //Support Caption
         CAPTION,
     }

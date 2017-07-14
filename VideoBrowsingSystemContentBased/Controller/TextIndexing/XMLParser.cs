@@ -23,8 +23,10 @@ namespace VideoBrowsingSystemContentBased.TextIndexing
 
             List<TextSpot> textPlt = new List<TextSpot>();
 
+            int i = 0;
             foreach (var item in fileInfos)
             {
+                Console.WriteLine(item + " " + ++i);
                 //FullName: get Absulute Path
                 //Name: Get Name of files
                 XmlDocument xmlDocument = new XmlDocument();
