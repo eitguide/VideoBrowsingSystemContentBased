@@ -208,11 +208,42 @@ namespace VideoBrowsingSystemContentBased.Controller
         /// Write indexing-dictionary to json file without store json to string
         /// </summary>
         /// <param name="dicIndexing">the dictionary store visual-word</param>
+        /// <param name="fileSavePath">path to file with extension for saving, will override if exist</param>
+        public void WriteTextCaptionIndexingToJsonFile(List<TextCaption> listTextCaptions, string fileSavePath)
+        {
+            // init
+            FileStream fs = File.Create(fileSavePath);
+            fs.Close();
+            StreamWriter sw = File.AppendText(fileSavePath);
+
+            // write the dictionary indexing data to json file
+            sw.Write("[\n");
+            int countKey = 0;
+            foreach (TextCaption textCaption in listTextCaptions)
+            {
+                sw.Write("{\n");
+
+                string newFrameName = textCaption.FrameName.Replace(@"\", @"\\");
+                sw.Write("\t\"FrameName\" : \"" + newFrameName + "\",\n");
+                sw.Write("\t\"Caption\" : \"" + textCaption.Caption + "\"\n");
+
+                sw.Write("},\n");
+            }
+            sw.Write("]");
+
+            sw.Close();
+        }
+
+        /// <summary>
+        /// Write indexing-dictionary to json file without store json to string
+        /// </summary>
+        /// <param name="dicIndexing">the dictionary store visual-word</param>
         /// <param name="jsonFilePathToSave">path to file with extension for saving, will override if exist</param>
         public void WriteDicIndexingToFiles(Dictionary<string, List<string>> dicIndexing, string jsonFilePathToSave)
         {
             string valueFilePrefix = "value_";
-            string valuesSaveDir = Path.GetDirectoryName(jsonFilePathToSave) + "\\list_values_of_indexing";
+            //string valuesSaveDir = Path.GetDirectoryName(jsonFilePathToSave) + "\\list_values_of_indexing";
+            string valuesSaveDir = Path.GetDirectoryName(jsonFilePathToSave) + "\\" + Path.GetFileNameWithoutExtension(jsonFilePathToSave);
             
             // 1. write json file: real key, virtual value
             FileStream fs = File.Create(jsonFilePathToSave);

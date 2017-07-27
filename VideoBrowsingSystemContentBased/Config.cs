@@ -38,6 +38,7 @@ namespace VideoBrowsingSystemContentBased
         public static String PCT_OUTPUT_PATH = @"D:/SoureThesis/Data/pct_output";
 
         public static String PCT_INDEX_STORAGE = @"D:/SoureThesis/Data/pct_indexing";
+        public static String PCT_INDEX_STORAGE_EVAL = @"D:/SoureThesis/Data/pct_indexing_eval";
         //Rank for searching
         public static int TOP_RANK = 500; // achived: 100
 
@@ -83,7 +84,13 @@ namespace VideoBrowsingSystemContentBased
     {
         public static string trecEvalFile = @"C:\Users\puyed\Documents\trec_eval.9.0\trec_eval.exe";
         public static string qrelsFile = @"C:\Users\puyed\Documents\trec_eval.9.0\thesis\avs.qrels.my_fix.tv16";
-        public static string queriesFile = @"C:\Users\puyed\Documents\trec_eval.9.0\thesis\tv16.avs.topics.txt";
+
+        public static string topicFile = @"C:\Users\puyed\Documents\trec_eval.9.0\thesis\tv16.avs.topics.txt";
+        public static string topicFile_textSpotting = @"C:\Users\puyed\Documents\trec_eval.9.0\thesis\textspotting.topics.txt";
+        public static string topicFile_color = @"C:\Users\puyed\Documents\trec_eval.9.0\thesis\color.topics.txt";
         public static string resultsFile = @"C:\Users\puyed\Documents\trec_eval.9.0\thesis\avs.results.txt";
+        public static string resultsFile_textSpotting = @"C:\Users\puyed\Documents\trec_eval.9.0\thesis\textspotting.results.txt";
+        public static string resultsFile_color = @"C:\Users\puyed\Documents\trec_eval.9.0\thesis\color.results.txt";
+        public static string scaledvideo_textSpotting = @"C:\Users\puyed\Documents\trec_eval.9.0\thesis\textspotting.scaledvideos.txt";
     }
 }

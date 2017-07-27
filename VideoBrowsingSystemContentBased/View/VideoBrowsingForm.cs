@@ -44,7 +44,7 @@ namespace VideoBrowsingSystemContentBased
         {
             InitializeComponent();
             Load += VideoBrowsingForm_Load;
-            this.MaximizeBox = false;
+            //this.MaximizeBox = false;
             //this.Width = 1080;
             //this.Height = 720;
             // StartPosition = FormStartPosition.CenterScreen;
@@ -69,8 +69,10 @@ namespace VideoBrowsingSystemContentBased
 
         public void InitTheLayout()
         {
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle; // disable resize form
+            //this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle; // disable resize form
             this.Font = new Font("Arial", 9);
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.MinimumSize = new System.Drawing.Size(800, 700);
 
             //pnListFrame.AutoScroll = true;
             //pnFrameShot.BackColor = ColorHelper.ConvertToARGB("#34495e");
@@ -86,7 +88,8 @@ namespace VideoBrowsingSystemContentBased
 
             grbxVideoPlayer.Location = new Point(0, grbxSearchBySketch.Location.Y + grbxSearchBySketch.Height);
             grbxVideoPlayer.Width = grbxSearchBySketch.Width;
-            grbxVideoPlayer.Height = tblpRoot.Height - grbxVideoPlayer.Location.Y - 8;
+            //grbxVideoPlayer.Height = tblpRoot.Height - grbxVideoPlayer.Location.Y - 8;
+            grbxVideoPlayer.Height = tblpLeft.Height - grbxVideoPlayer.Location.Y - 8;
 
             rbtnORC.Checked = true;
 
@@ -239,6 +242,7 @@ namespace VideoBrowsingSystemContentBased
 
             if (searchType == SearchType.CAPTION)
             {
+                //string[] listScaledVideoId = File.ReadAllLines(ConfigEvaluation.scaledvideo_textSpotting);
                 List<Object> textCaption = Searching.SearchByQuery(textCaptionIndexStorage,
                     ConfigCommon.TOP_RANK, textQuery, searchType);
 
@@ -250,10 +254,18 @@ namespace VideoBrowsingSystemContentBased
                     {
 
                         String fileName = Path.GetFileName(text.FrameName);
-                        Frame frame = Utils.Decoder.DecodeFrameFromName(fileName);
+                        Frame frame;
+                        if (Path.GetExtension(fileName) == ".jpg")
+                            frame = Utils.Decoder.DecodeFrameFromName(fileName);
+                        else
+                            frame = Utils.Decoder.DecodeFrameFromNameTxt(fileName);
 
+                        //if (!listScaledVideoId.Contains(frame.VideoId))
+                        //    continue;
                         String root = Path.Combine(ConfigCommon.FRAME_DATA_PATH, String.Format("TRECVID2016_{0}", frame.VideoId));
                         fileName = Path.Combine(root, fileName);
+                        fileName = fileName.Replace(".txt", ".jpg");
+
 
                         //Console.WriteLine(fileName);
                         listPath.Add(fileName);
@@ -262,7 +274,10 @@ namespace VideoBrowsingSystemContentBased
                 }
 
                 if (textCaption == null)
+                {
                     Console.WriteLine("Ko co ket qua");
+                    MessageBox.Show("Không có kết quả!", "", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                }
                 else
                     Console.WriteLine("Search xong ne");
             }
@@ -290,7 +305,10 @@ namespace VideoBrowsingSystemContentBased
                 }
 
                 if (textSpots == null)
+                {
                     Console.WriteLine("Ko co ket qua");
+                    MessageBox.Show("Không có kết quả!", "", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                }
                 else
                     Console.WriteLine("Search xong ne");
             }
@@ -317,21 +335,25 @@ namespace VideoBrowsingSystemContentBased
                 //result = null;
                 result = PCTSearching.SearchingV3_RGB(this.pctIndexingData, listDotsDrawed_RGB, putColorAndSketchV2.GetPaperDrawingWidthHeight()); //*
             else if (ConfigPCT.COLOR_SPACE_USING == ConfigPCT.ColorSpace.Lab)
-                result = PCTSearching.SearchingV3_Lab(this.pctIndexingData, listDotsDrawed_Lab, putColorAndSketchV2.GetPaperDrawingWidthHeight()); 
+                result = PCTSearching.SearchingV3_Lab(this.pctIndexingData, listDotsDrawed_Lab, putColorAndSketchV2.GetPaperDrawingWidthHeight());
 
 
             if (result == null || result.Count == 0)
             {
-                MessageBox.Show("Không tìm thấy!");
+                MessageBox.Show("Không có kết quả!", "", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                 return;
             }
             result = result.Take(NUMBER_OF_MAX_RESULT_FRAMES).ToList();
 
             List<string> listPath = new List<string>();
+            //string[] listScaledVideoId = File.ReadAllLines(ConfigEvaluation.scaledvideo_textSpotting);
             foreach (string item in result)
             {
                 string fileName = item + ".jpg";
                 Frame frame = Utils.Decoder.DecodeFrameFromName(fileName);
+
+                //if (!listScaledVideoId.Contains(frame.VideoId))
+                //    continue;
 
                 String root = Path.Combine(ConfigCommon.FRAME_DATA_PATH, String.Format("TRECVID2016_{0}", frame.VideoId));
                 fileName = Path.Combine(root, fileName);

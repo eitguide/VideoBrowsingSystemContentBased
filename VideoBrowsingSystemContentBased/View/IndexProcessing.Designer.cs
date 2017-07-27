@@ -39,71 +39,80 @@
             this.btnSearchTextSpot = new System.Windows.Forms.Button();
             this.btnSearchCap = new System.Windows.Forms.Button();
             this.txtQuery = new System.Windows.Forms.TextBox();
+            this.btnExpandCaptionIndex = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnTextSpotIndexing
             // 
-            this.btnTextSpotIndexing.Location = new System.Drawing.Point(12, 99);
+            this.btnTextSpotIndexing.Location = new System.Drawing.Point(16, 122);
+            this.btnTextSpotIndexing.Margin = new System.Windows.Forms.Padding(4);
             this.btnTextSpotIndexing.Name = "btnTextSpotIndexing";
-            this.btnTextSpotIndexing.Size = new System.Drawing.Size(110, 23);
+            this.btnTextSpotIndexing.Size = new System.Drawing.Size(147, 28);
             this.btnTextSpotIndexing.TabIndex = 0;
             this.btnTextSpotIndexing.Text = "TextSpot Indexing";
             this.btnTextSpotIndexing.UseVisualStyleBackColor = true;
             // 
             // btnTextCaptionIndexing
             // 
-            this.btnTextCaptionIndexing.Location = new System.Drawing.Point(145, 99);
+            this.btnTextCaptionIndexing.Location = new System.Drawing.Point(193, 122);
+            this.btnTextCaptionIndexing.Margin = new System.Windows.Forms.Padding(4);
             this.btnTextCaptionIndexing.Name = "btnTextCaptionIndexing";
-            this.btnTextCaptionIndexing.Size = new System.Drawing.Size(133, 23);
+            this.btnTextCaptionIndexing.Size = new System.Drawing.Size(177, 28);
             this.btnTextCaptionIndexing.TabIndex = 1;
             this.btnTextCaptionIndexing.Text = "TextCaptionIndexig";
             this.btnTextCaptionIndexing.UseVisualStyleBackColor = true;
             // 
             // fdjhfjkd
             // 
-            this.fdjhfjkd.Location = new System.Drawing.Point(29, 178);
+            this.fdjhfjkd.Location = new System.Drawing.Point(39, 219);
+            this.fdjhfjkd.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.fdjhfjkd.Name = "fdjhfjkd";
-            this.fdjhfjkd.Size = new System.Drawing.Size(40, 23);
+            this.fdjhfjkd.Size = new System.Drawing.Size(53, 28);
             this.fdjhfjkd.TabIndex = 2;
             this.fdjhfjkd.Text = "Status";
             // 
             // lblStatus
             // 
-            this.lblStatus.Location = new System.Drawing.Point(75, 178);
+            this.lblStatus.Location = new System.Drawing.Point(100, 219);
+            this.lblStatus.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(203, 23);
+            this.lblStatus.Size = new System.Drawing.Size(271, 28);
             this.lblStatus.TabIndex = 3;
             // 
             // btnParseXML
             // 
-            this.btnParseXML.Location = new System.Drawing.Point(12, 45);
+            this.btnParseXML.Location = new System.Drawing.Point(16, 55);
+            this.btnParseXML.Margin = new System.Windows.Forms.Padding(4);
             this.btnParseXML.Name = "btnParseXML";
-            this.btnParseXML.Size = new System.Drawing.Size(110, 23);
+            this.btnParseXML.Size = new System.Drawing.Size(147, 28);
             this.btnParseXML.TabIndex = 4;
             this.btnParseXML.Text = "ParseXML";
             this.btnParseXML.UseVisualStyleBackColor = true;
             // 
             // btnParseJson
             // 
-            this.btnParseJson.Location = new System.Drawing.Point(145, 45);
+            this.btnParseJson.Location = new System.Drawing.Point(193, 55);
+            this.btnParseJson.Margin = new System.Windows.Forms.Padding(4);
             this.btnParseJson.Name = "btnParseJson";
-            this.btnParseJson.Size = new System.Drawing.Size(133, 23);
+            this.btnParseJson.Size = new System.Drawing.Size(177, 28);
             this.btnParseJson.TabIndex = 5;
             this.btnParseJson.Text = "Parse Json DenseCap";
             this.btnParseJson.UseVisualStyleBackColor = true;
             // 
             // pbTest
             // 
-            this.pbTest.Location = new System.Drawing.Point(12, 143);
+            this.pbTest.Location = new System.Drawing.Point(16, 176);
+            this.pbTest.Margin = new System.Windows.Forms.Padding(4);
             this.pbTest.Name = "pbTest";
-            this.pbTest.Size = new System.Drawing.Size(266, 23);
+            this.pbTest.Size = new System.Drawing.Size(355, 28);
             this.pbTest.TabIndex = 6;
             // 
             // btnDoWork
             // 
-            this.btnDoWork.Location = new System.Drawing.Point(284, 143);
+            this.btnDoWork.Location = new System.Drawing.Point(379, 176);
+            this.btnDoWork.Margin = new System.Windows.Forms.Padding(4);
             this.btnDoWork.Name = "btnDoWork";
-            this.btnDoWork.Size = new System.Drawing.Size(65, 23);
+            this.btnDoWork.Size = new System.Drawing.Size(87, 28);
             this.btnDoWork.TabIndex = 7;
             this.btnDoWork.Text = "DoWork";
             this.btnDoWork.UseVisualStyleBackColor = true;
@@ -111,9 +120,10 @@
             // 
             // btnSearchTextSpot
             // 
-            this.btnSearchTextSpot.Location = new System.Drawing.Point(325, 45);
+            this.btnSearchTextSpot.Location = new System.Drawing.Point(433, 55);
+            this.btnSearchTextSpot.Margin = new System.Windows.Forms.Padding(4);
             this.btnSearchTextSpot.Name = "btnSearchTextSpot";
-            this.btnSearchTextSpot.Size = new System.Drawing.Size(75, 23);
+            this.btnSearchTextSpot.Size = new System.Drawing.Size(100, 28);
             this.btnSearchTextSpot.TabIndex = 8;
             this.btnSearchTextSpot.Text = "Search TS";
             this.btnSearchTextSpot.UseVisualStyleBackColor = true;
@@ -121,25 +131,38 @@
             // 
             // btnSearchCap
             // 
-            this.btnSearchCap.Location = new System.Drawing.Point(325, 98);
+            this.btnSearchCap.Location = new System.Drawing.Point(433, 121);
+            this.btnSearchCap.Margin = new System.Windows.Forms.Padding(4);
             this.btnSearchCap.Name = "btnSearchCap";
-            this.btnSearchCap.Size = new System.Drawing.Size(75, 23);
+            this.btnSearchCap.Size = new System.Drawing.Size(100, 28);
             this.btnSearchCap.TabIndex = 9;
             this.btnSearchCap.Text = "Search Cap";
             this.btnSearchCap.UseVisualStyleBackColor = true;
             // 
             // txtQuery
             // 
-            this.txtQuery.Location = new System.Drawing.Point(38, 12);
+            this.txtQuery.Location = new System.Drawing.Point(51, 15);
+            this.txtQuery.Margin = new System.Windows.Forms.Padding(4);
             this.txtQuery.Name = "txtQuery";
-            this.txtQuery.Size = new System.Drawing.Size(362, 20);
+            this.txtQuery.Size = new System.Drawing.Size(481, 22);
             this.txtQuery.TabIndex = 10;
+            // 
+            // btnExpandCaptionIndex
+            // 
+            this.btnExpandCaptionIndex.Location = new System.Drawing.Point(219, 98);
+            this.btnExpandCaptionIndex.Name = "btnExpandCaptionIndex";
+            this.btnExpandCaptionIndex.Size = new System.Drawing.Size(190, 23);
+            this.btnExpandCaptionIndex.TabIndex = 11;
+            this.btnExpandCaptionIndex.Text = "Expand Caption Index";
+            this.btnExpandCaptionIndex.UseVisualStyleBackColor = true;
+            this.btnExpandCaptionIndex.Click += new System.EventHandler(this.btnExpandCaptionIndex_Click);
             // 
             // IndexProcessing
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(419, 210);
+            this.ClientSize = new System.Drawing.Size(559, 258);
+            this.Controls.Add(this.btnExpandCaptionIndex);
             this.Controls.Add(this.txtQuery);
             this.Controls.Add(this.btnSearchCap);
             this.Controls.Add(this.btnSearchTextSpot);
@@ -151,6 +174,7 @@
             this.Controls.Add(this.fdjhfjkd);
             this.Controls.Add(this.btnTextCaptionIndexing);
             this.Controls.Add(this.btnTextSpotIndexing);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "IndexProcessing";
             this.Text = "IndexProcessing";
             this.Load += new System.EventHandler(this.IndexProcessing_Load);
@@ -172,5 +196,6 @@
         private System.Windows.Forms.Button btnSearchTextSpot;
         private System.Windows.Forms.Button btnSearchCap;
         private System.Windows.Forms.TextBox txtQuery;
+        private System.Windows.Forms.Button btnExpandCaptionIndex;
     }
 }

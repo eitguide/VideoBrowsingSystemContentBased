@@ -28,7 +28,7 @@ namespace VideoBrowsingSystemContentBased.Widget
         #region Class's Fields
 
         private const int NUMBER_OF_MAX_PICS = 1000;
-        private const int NUMBER_OF_FIRST_PICS = 40;    // giá trị này phải tính dựa vào chiều cao của container và chiều cao của picturebox, nhưng hiện tại tạm thời gán tay (!)
+        private const int NUMBER_OF_FIRST_PICS = 70;    // giá trị này phải tính dựa vào chiều cao của container và chiều cao của picturebox, nhưng hiện tại tạm thời gán tay (!)
         private const int NUMBER_OF_JUMP_PICS = 10;
 
         private List<string> listUrlPicsToShow;         // input

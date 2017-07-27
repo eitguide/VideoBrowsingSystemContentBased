@@ -114,7 +114,8 @@ namespace VideoBrowsingSystemContentBased.Widget
 
             picbxPaperDrawing.Location = new Point(pnlToolBox.Width, pnlColorPicker.Height);
             picbxPaperDrawing.Width = width - pnlToolBox.Width;
-            picbxPaperDrawing.Height = (int)((float)picbxPaperDrawing.Width * 9f / 16f);
+            //picbxPaperDrawing.Height = (int)((float)picbxPaperDrawing.Width * 9f / 16f);
+            picbxPaperDrawing.Height = (int)((float)picbxPaperDrawing.Width * 240f / 370f);   // 426x240 or 320x240
             picbxPaperDrawing.SizeMode = PictureBoxSizeMode.CenterImage;
 
             pnlToolBox.Location = new Point(0, pnlColorPicker.Height);
@@ -206,6 +207,7 @@ namespace VideoBrowsingSystemContentBased.Widget
                 if (colorSelected != Color.Empty)
                 {
                     listShapes.Add(new Dot_RGB(new Point(e.X , e.Y), (float)curBrushSizeDotColor / 2f, colorSelected));
+                    //Console.WriteLine(string.Format("{0}_{1}_{2}_{3}_{4}", e.X, e.Y, colorSelected.R, colorSelected.G, colorSelected.B));
                     picbxPaperDrawing.Refresh();
                 }
             }
