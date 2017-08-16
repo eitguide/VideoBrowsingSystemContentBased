@@ -9,7 +9,7 @@
 4. Mở file `Config.cs` để thiết lập các đường dẫn cho các thuộc tính sau:
 
 	* `VIDEO_DATA_PATH` gán đến thư mục chứa 4,593 video IACC.3 TRECVID 2016.
-	* `FRAME_DATA_PATH` gán đến thư mục chứa các khoảng 1.6 triệu key-frame IACC.3 TRECVID 2016 (chứa các thư mục con từ `TRECVID2016_35345` đến `TRECVID_39937`).
+	* `FRAME_DATA_PATH` gán đến thư mục chứa các khoảng 1.6 triệu key-frame IACC.3 TRECVID 2016 (chứa các thư mục con từ `TRECVID2016_35345` đến `TRECVID2016_39937`).
 	* `CAPTION_INDEX_STORAGE` gán đến thư mục `caption_indexing` đã giải nén ở bước 2.
 	* `TEXTSPOTTING_INDEX_STORAGE` gán đến thư mục `textspot_indexing` đã giải nén ở bước 2.
 	* `PCT_INDEX_STORAGE` gán đến thư mục `pct_indexing` đã giải nén ở bước 2.
