@@ -13,8 +13,8 @@
 	* `CAPTION_INDEX_STORAGE` gán đến thư mục `caption_indexing` đã giải nén ở bước 2.
 	* `TEXTSPOTTING_INDEX_STORAGE` gán đến thư mục `textspot_indexing` đã giải nén ở bước 2.
 	* `PCT_INDEX_STORAGE` gán đến thư mục `pct_indexing` đã giải nén ở bước 2.
-	* `MAPPING_VIDEO_NAME_PATH` gán đến thư mục `video_name.txt` đã giải nén ở bước 2.
-	* `FPS_VIDEO_PATH` gán đến thư mục `video_fps.xml` đã giải nén ở bước 2.
+	* `MAPPING_VIDEO_NAME_PATH` gán đến file `video_name.txt` đã giải nén ở bước 2.
+	* `FPS_VIDEO_PATH` gán đến file `video_fps.xml` đã giải nén ở bước 2.
 	* `COLOR_SPACE_USING` gán là `ColorSpace.Lab` nếu muốn dùng không gian màu Lab, là `ColorSpace.Rgb` nếu muốn dùng không gian màu RGB cho chức năng tìm kiếm dựa trên phác họa màu sắc.
 
 5. Nhấn F5 để biên dịch và chạy chương trình.
