@@ -36,7 +36,7 @@ namespace VideoBrowsingSystemContentBased
         //private Dictionary<String, List<String>> pctIndexingData;
 
         // data list frame shown
-        private const int NUMBER_OF_MAX_RESULT_FRAMES = 1000;
+        private int NUMBER_OF_MAX_RESULT_FRAMES = ConfigCommon.TOP_RANK;
         private int countPicFrameIsShowing;
         private List<PictureBox> listPicBxFrames;
 

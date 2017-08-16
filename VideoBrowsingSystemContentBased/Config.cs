@@ -40,7 +40,7 @@ namespace VideoBrowsingSystemContentBased
         public static String PCT_INDEX_STORAGE = @"D:/SoureThesis/Data/pct_indexing";
         public static String PCT_INDEX_STORAGE_EVAL = @"D:/SoureThesis/Data/pct_indexing_eval";
         //Rank for searching
-        public static int TOP_RANK = 500; // achived: 100
+        public static  int TOP_RANK = 500; // achived: 100
 
         //Hotkeys
         public static Keys HOTKEY_SEARCH_BY_TEXT_ORC = Keys.O;      // [Ctrl] + [O]
