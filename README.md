@@ -4,7 +4,7 @@
 
 2. Tải file [Data.zip](https://drive.google.com/file/d/0B0RVmhI7YXU-eE9LVEFZT0lZczg/view?usp=sharing) (là dữ liệu index và một số file liên qua khác) và giải nén.
 
-3. Mở project (file `./VideoBrowsingSystemContentBased/VideoBrowsingSystemContentBased.csproj`) bằng Visual Studio 2013.
+3. Mở project (file `./VideoBrowsingSystemContentBased.sln`) bằng Visual Studio 2013.
 
 4. Mở file `Config.cs` để thiết lập các đường dẫn cho các thuộc tính sau:
 
