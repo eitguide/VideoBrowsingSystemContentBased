@@ -101,11 +101,11 @@ namespace VideoBrowsingSystemContentBased.Controller.ImageIndexing
 
             // Intersect all item in dicMatched (để lọc bỏ frame trùng ở kết quả)
             //List<string> listFramesResult = dicInputColorsMatchedTheIndex.ElementAt(0).Value;
-            List<string> listFramesResult = FileManager.GetInstance().GetAllLinesFromFile(dicVisualWords[listKeyMatchTheInputDot[0]]);
+            List<string> listFramesResult = FileManager.GetInstance().GetAllLinesFromFile(dicVisualWords[listKeyMatchTheInputDot[0]].Replace("D:", ConfigCommon.PCT_INDEX_STORAGE[0] + ":"));
             for (int i = 1; i < listKeyMatchTheInputDot.Count; i++)
             {
                 //listFramesResult = dicInputColorsMatchedTheIndex.ElementAt(i).Value.Intersect(listFramesResult).ToList();
-                List<string> listFrame = FileManager.GetInstance().GetAllLinesFromFile(dicVisualWords[listKeyMatchTheInputDot[i]]);
+                List<string> listFrame = FileManager.GetInstance().GetAllLinesFromFile(dicVisualWords[listKeyMatchTheInputDot[i]].Replace("D:", ConfigCommon.PCT_INDEX_STORAGE[0] + ":"));
                 listFramesResult = listFramesResult.Intersect(listFrame).ToList();
             }
 
@@ -182,11 +182,11 @@ namespace VideoBrowsingSystemContentBased.Controller.ImageIndexing
 
             // Intersect all item in dicMatched (để lọc bỏ frame trùng ở kết quả)
             //List<string> listFramesResult = dicInputColorsMatchedTheIndex.ElementAt(0).Value;
-            List<string> listFramesResult = FileManager.GetInstance().GetAllLinesFromFile(dicVisualWords[listKeyMatchTheInputDot[0]]);
+            List<string> listFramesResult = FileManager.GetInstance().GetAllLinesFromFile(dicVisualWords[listKeyMatchTheInputDot[0]].Replace("D:", ConfigCommon.PCT_INDEX_STORAGE[0] + ":"));
             for (int i = 1; i < listKeyMatchTheInputDot.Count; i++)
             {
                 //listFramesResult = dicInputColorsMatchedTheIndex.ElementAt(i).Value.Intersect(listFramesResult).ToList();
-                List<string> listFrame = FileManager.GetInstance().GetAllLinesFromFile(dicVisualWords[listKeyMatchTheInputDot[i]]);
+                List<string> listFrame = FileManager.GetInstance().GetAllLinesFromFile(dicVisualWords[listKeyMatchTheInputDot[i]].Replace("D:", ConfigCommon.PCT_INDEX_STORAGE[0] + ":"));
                 listFramesResult = listFramesResult.Intersect(listFrame).ToList();
             }
 
