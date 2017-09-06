@@ -2,7 +2,7 @@
 
 1. Cài đặt bộ giải mã video [Media Player Codec Pack](http://www.mediaplayercodecpack.com/) để hệ thống có thể xem video kết quả tìm được.
 
-2. Tải file [Data.zip](https://drive.google.com/file/d/0B0RVmhI7YXU-eE9LVEFZT0lZczg/view?usp=sharing) (là dữ liệu index và một số file liên qua khác) và giải nén.
+2. Tải file [Data.zip](https://drive.google.com/file/d/0By1ovVNS_1ACc085R2czdlFscGM/view?usp=sharing) (là dữ liệu index và một số file liên qua khác) và giải nén.
 
 3. Mở project (file `./VideoBrowsingSystemContentBased.sln`) bằng Visual Studio 2013.
 
